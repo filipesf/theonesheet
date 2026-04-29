@@ -1,67 +1,105 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Toaster, toast } from 'sonner';
 import { createBelbaWorkedExample, toExportFile } from '../domain/schema';
 import { LibraryPage } from '../features/library/LibraryPage';
 import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
-import { PrintedCharacterSheet } from '../features/sheet/PrintedCharacterSheet';
+import { CharacterNewPlaceholder } from './CharacterNewPlaceholder';
+import { EditorShell } from './EditorShell';
+import { PrintedShell } from './PrintedShell';
+import { SettingsPlaceholder } from './SettingsPlaceholder';
 import { TopNav } from './TopNav';
-import { buildHash, navigate, useRoute } from './router';
+import { DeleteCharacterDialog } from './ui/DeleteCharacterDialog';
+import { ImportCharacterDialog } from './ui/ImportCharacterDialog';
+import { RenameCharacterDialog } from './ui/RenameCharacterDialog';
+import { buildHash, navigate, useRoute, type Route } from './router';
+
+function routeId(route: Route): string | null {
+  if (route.name === 'characterEditor' || route.name === 'characterPrinted') {
+    return route.id;
+  }
+  return null;
+}
 
 export default function App() {
   const { t } = useTranslation();
   const route = useRoute();
   const library = useCharacterLibrary();
 
+  const [renameTargetId, setRenameTargetId] = useState<string | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+
+  const activeId = routeId(route);
+
   const activeCharacter = useMemo(() => {
-    if (route.name !== 'sheet') return null;
-    return library.characters.find((item) => item.id === route.id)?.character ?? null;
-  }, [route, library.characters]);
+    if (!activeId) return null;
+    return library.characters.find((item) => item.id === activeId)?.character ?? null;
+  }, [activeId, library.characters]);
+
+  const renameTarget = useMemo(
+    () => library.characters.find((item) => item.id === renameTargetId) ?? null,
+    [library.characters, renameTargetId],
+  );
+  const deleteTarget = useMemo(
+    () => library.characters.find((item) => item.id === deleteTargetId) ?? null,
+    [library.characters, deleteTargetId],
+  );
 
   useEffect(() => {
-    if (route.name === 'sheet' && route.id !== library.activeCharacterId) {
-      library.switchCharacter(route.id);
+    if (activeId && activeId !== library.activeCharacterId) {
+      library.switchCharacter(activeId);
     }
-  }, [route, library]);
+  }, [activeId, library]);
+
+  // Reset scroll on route change, except when toggling between editor and
+  // printed views of the same character — preserves position on Print/Edit.
+  const previousRoute = useRef<Route | null>(null);
+  useEffect(() => {
+    const previous = previousRoute.current;
+    previousRoute.current = route;
+    if (!previous) return;
+    const samePair =
+      (previous.name === 'characterEditor' || previous.name === 'characterPrinted') &&
+      (route.name === 'characterEditor' || route.name === 'characterPrinted') &&
+      previous.id === route.id;
+    if (!samePair) {
+      window.scrollTo(0, 0);
+    }
+  }, [route]);
 
   function handleCreate() {
+    navigate({ name: 'characterNew' });
+  }
+
+  function handleQuickForge() {
     const id = library.createCharacter();
-    navigate({ name: 'sheet', id });
+    navigate({ name: 'characterEditor', id });
   }
 
   function handleApplyBelba() {
     const base = createBelbaWorkedExample();
     const result = library.importCharacter(JSON.stringify(toExportFile(base)));
     if (result.ok) {
-      navigate({ name: 'sheet', id: result.id });
+      navigate({ name: 'characterEditor', id: result.id });
     }
   }
 
   function handleExport() {
-    const id = route.name === 'sheet' ? route.id : library.activeCharacterId;
+    const id = activeId ?? library.activeCharacterId;
     if (!id) {
-      alert(t('common.alert.export-need-character'));
+      toast.warning(t('toast.export.no-active'));
       return;
     }
     const payload = library.exportCharacter(id);
     if (!payload) {
-      alert(t('common.alert.export-failed'));
+      toast.error(t('toast.export.failed'));
       return;
     }
     navigator.clipboard.writeText(payload).then(
-      () => alert(t('common.alert.copied')),
-      () => alert(t('common.alert.copy-failed')),
+      () => toast.success(t('toast.export.copied')),
+      () => toast.error(t('toast.export.clipboard-failed')),
     );
-  }
-
-  function handleImport() {
-    const input = prompt(t('common.prompt.import'));
-    if (!input) return;
-    const result = library.importCharacter(input);
-    if (!result.ok) {
-      alert(result.error);
-      return;
-    }
-    navigate({ name: 'sheet', id: result.id });
   }
 
   return (
@@ -70,8 +108,9 @@ export default function App() {
         route={route}
         onCreate={handleCreate}
         onExport={handleExport}
-        onImport={handleImport}
+        onImport={() => setImportOpen(true)}
         hasActiveCharacter={Boolean(library.activeCharacterId)}
+        activeCharacterId={library.activeCharacterId}
       />
 
       {route.name === 'library' && (
@@ -79,72 +118,109 @@ export default function App() {
           characters={library.characters}
           activeCharacterId={library.activeCharacterId}
           onCreate={handleCreate}
-          onView={(id) => navigate({ name: 'sheet', id })}
-          onEdit={(id) => navigate({ name: 'sheet', id })}
+          onView={(id) => navigate({ name: 'characterPrinted', id })}
+          onEdit={(id) => navigate({ name: 'characterEditor', id })}
           onDuplicate={(id) => {
             const newId = library.duplicateCharacter(id);
-            if (newId) navigate({ name: 'sheet', id: newId });
+            if (newId) navigate({ name: 'characterEditor', id: newId });
           }}
-          onRename={(id) => {
-            const current = library.characters.find((item) => item.id === id);
-            const name = prompt(t('common.prompt.rename'), current?.name ?? '');
-            if (name && name.trim()) {
-              library.renameCharacter(id, name.trim());
-            }
-          }}
-          onDelete={(id) => {
-            if (confirm(t('common.confirm.delete'))) {
-              library.deleteCharacter(id);
-            }
-          }}
+          onRename={(id) => setRenameTargetId(id)}
+          onDelete={(id) => setDeleteTargetId(id)}
           onApplyBelba={handleApplyBelba}
         />
       )}
 
-      {route.name === 'sheet' && (
-        <SheetRoute
-          character={activeCharacter}
-          onChange={library.updateCharacter}
-        />
+      {route.name === 'characterNew' && (
+        <CharacterNewPlaceholder onQuickForge={handleQuickForge} />
       )}
+
+      {route.name === 'characterEditor' && (
+        activeCharacter ? (
+          <EditorShell character={activeCharacter} onChange={library.updateCharacter} />
+        ) : (
+          <MissingCharacter />
+        )
+      )}
+
+      {route.name === 'characterPrinted' && (
+        activeCharacter ? (
+          <PrintedShell character={activeCharacter} onChange={library.updateCharacter} />
+        ) : (
+          <MissingCharacter />
+        )
+      )}
+
+      {route.name === 'settings' && <SettingsPlaceholder />}
+
+      <RenameCharacterDialog
+        open={renameTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setRenameTargetId(null);
+        }}
+        currentName={renameTarget?.name ?? ''}
+        onConfirm={(name) => {
+          if (!renameTarget) return;
+          library.renameCharacter(renameTarget.id, name);
+          toast.success(t('toast.rename.done'));
+        }}
+      />
+
+      <DeleteCharacterDialog
+        open={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTargetId(null);
+        }}
+        characterName={deleteTarget?.name ?? ''}
+        onConfirm={() => {
+          if (!deleteTarget) return;
+          library.deleteCharacter(deleteTarget.id);
+          toast.success(t('toast.delete.done'));
+        }}
+      />
+
+      <ImportCharacterDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        onImport={(payload) => {
+          const result = library.importCharacter(payload);
+          if (!result.ok) return { ok: false, code: result.code };
+          return { ok: true, id: result.id };
+        }}
+        onSuccess={(id) => {
+          toast.success(t('toast.import.done'));
+          navigate({ name: 'characterEditor', id });
+        }}
+      />
+
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
+        className="no-print"
+      />
     </div>
   );
 }
 
-function SheetRoute({
-  character,
-  onChange,
-}: {
-  character: ReturnType<typeof useCharacterLibrary>['activeCharacter'];
-  onChange: (
-    character: NonNullable<ReturnType<typeof useCharacterLibrary>['activeCharacter']>,
-  ) => void;
-}) {
+function MissingCharacter() {
   const { t } = useTranslation();
-  if (!character) {
-    return (
-      <main className="mx-auto max-w-[1200px] px-6 py-16 text-center">
-        <p className="font-label text-[11px] tracking-[0.25em] uppercase text-ink-red mb-3">
-          {t('common.lost-page.eyebrow')}
-        </p>
-        <h1 className="font-display text-3xl text-ink-navy mb-3">
-          {t('common.lost-page.title')}
-        </h1>
-        <p className="font-body text-base text-ink-navy/70 mb-6">
-          {t('common.lost-page.body')}
-        </p>
-        <a
-          href={buildHash({ name: 'library' })}
-          className="inline-block font-label text-[11px] tracking-[0.2em] uppercase bg-ink-red text-parchment-soft px-5 py-2.5 cursor-pointer hover:bg-ink-red-soft transition-colors"
-        >
-          {t('common.lost-page.back-to-library')}
-        </a>
-      </main>
-    );
-  }
   return (
-    <main className="mx-auto max-w-[1600px] px-4 sm:px-6 py-6 sm:py-8">
-      <PrintedCharacterSheet character={character} onChange={onChange} />
+    <main className="mx-auto max-w-[1200px] px-6 py-16 text-center">
+      <p className="font-label text-[11px] tracking-[0.25em] uppercase text-ink-red mb-3">
+        {t('common.lost-page.eyebrow')}
+      </p>
+      <h1 className="font-display text-3xl text-ink-navy mb-3">
+        {t('common.lost-page.title')}
+      </h1>
+      <p className="font-body text-base text-ink-navy/70 mb-6">
+        {t('common.lost-page.body')}
+      </p>
+      <a
+        href={buildHash({ name: 'library' })}
+        className="inline-block font-label text-[11px] tracking-[0.2em] uppercase bg-ink-red text-parchment-soft px-5 py-2.5 cursor-pointer hover:bg-ink-red-soft transition-colors"
+      >
+        {t('common.lost-page.back-to-library')}
+      </a>
     </main>
   );
 }

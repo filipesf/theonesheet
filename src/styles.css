@@ -66,3 +66,10 @@ input[type="number"] {
     display: none !important;
   }
 }
+
+/* Mirror the print rule on the printed route's screen view, so the top nav
+ * (and other no-print chrome) disappears when reviewing the sheet on-screen.
+ */
+body[data-view="printed"] .no-print {
+  display: none !important;
+}

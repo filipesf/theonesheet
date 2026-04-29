@@ -1,9 +1,11 @@
 import { migrateV0ToV0 } from '../domain/migrations/v0';
 import type { Character, ExportedCharacterFile } from '../domain/types';
 
+export type ImportErrorCode = 'invalid-json' | 'incompatible-schema';
+
 export type ImportResult =
   | { ok: true; character: Character }
-  | { ok: false; error: string };
+  | { ok: false; code: ImportErrorCode; error: string };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -21,11 +23,15 @@ export function importCharacterFromJson(content: string): ImportResult {
   try {
     parsed = JSON.parse(content);
   } catch {
-    return { ok: false, error: 'Invalid JSON file.' };
+    return { ok: false, code: 'invalid-json', error: 'Invalid JSON file.' };
   }
 
   if (!isExportFile(parsed)) {
-    return { ok: false, error: 'Incompatible file format or schema version.' };
+    return {
+      ok: false,
+      code: 'incompatible-schema',
+      error: 'Incompatible file format or schema version.',
+    };
   }
 
   const character = parsed.character as Character;

@@ -97,7 +97,7 @@ export function useCharacterLibrary() {
   const importCharacter = useCallback((content: string) => {
     const result = importCharacterFromJson(content);
     if (!result.ok) {
-      return result;
+      return { ok: false as const, code: result.code, error: result.error };
     }
 
     const importedId = crypto.randomUUID();

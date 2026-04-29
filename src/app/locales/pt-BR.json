@@ -1,12 +1,30 @@
 {
   "app": {
     "title": "The One Sheet",
-    "brand-tagline": "Sua ficha de O Um Anel"
+    "brand-tagline": "Sua ficha de O Um Anel",
+    "placeholder": {
+      "back-to-library": "Voltar à biblioteca",
+      "character-new": {
+        "eyebrow": "◆ Em breve",
+        "title": "Assistente de criação a caminho",
+        "body": "O fluxo passo a passo de criação chega na próxima onda. Por enquanto, você pode forjar um herói em branco e preencher a ficha à mão.",
+        "quick-forge": "Forjar herói rapidamente"
+      },
+      "settings": {
+        "eyebrow": "◆ Em breve",
+        "title": "Configurações",
+        "body": "Tema, idioma e atalhos de import/export aparecerão aqui em breve."
+      }
+    }
+  },
+  "editor": {
+    "print": "Imprimir"
   },
   "nav": {
     "brand-aria": "The One Sheet — voltar à biblioteca",
     "heroes": "Heróis",
     "sheet": "Ficha",
+    "settings": "Configurações",
     "tools": "Ferramentas ▾",
     "export-active": "Exportar personagem ativo",
     "import-json": "Importar JSON do personagem",
@@ -185,24 +203,54 @@
   },
   "common": {
     "dash": "—",
-    "alert": {
-      "export-need-character": "Abra um personagem antes de exportar.",
-      "export-failed": "Não foi possível exportar este personagem.",
-      "copied": "JSON do personagem copiado para a área de transferência.",
-      "copy-failed": "Falha ao copiar para a área de transferência. Tente novamente."
-    },
-    "prompt": {
-      "import": "Cole o JSON exportado do personagem",
-      "rename": "Renomear personagem"
-    },
-    "confirm": {
-      "delete": "Excluir personagem? Esta ação não pode ser desfeita."
-    },
     "lost-page": {
       "eyebrow": "◆ Página perdida",
       "title": "Este herói não está na sua biblioteca",
       "body": "Volte à biblioteca para escolher outro, ou forje uma nova ficha.",
       "back-to-library": "Voltar aos Heróis"
+    }
+  },
+  "toast": {
+    "export": {
+      "no-active": "Abra um herói antes de exportar.",
+      "failed": "Não foi possível exportar este herói.",
+      "copied": "JSON do herói copiado para a área de transferência.",
+      "clipboard-failed": "Falha ao copiar para a área de transferência."
+    },
+    "delete": {
+      "done": "Herói excluído."
+    },
+    "import": {
+      "done": "Herói importado."
+    },
+    "rename": {
+      "done": "Herói renomeado."
+    }
+  },
+  "dialog": {
+    "common": {
+      "cancel": "Cancelar"
+    },
+    "rename": {
+      "title": "Renomear herói",
+      "label": "Nome",
+      "submit": "Renomear",
+      "error-required": "Informe um nome.",
+      "error-too-long": "O nome deve ter no máximo 80 caracteres."
+    },
+    "delete": {
+      "title": "Excluir herói",
+      "body": "Tem certeza que deseja excluir {{name}}? Esta ação não pode ser desfeita.",
+      "submit": "Excluir"
+    },
+    "import": {
+      "title": "Importar herói",
+      "label": "Cole o JSON exportado",
+      "placeholder": "{ \"schemaVersion\": \"v0\", … }",
+      "submit": "Importar",
+      "error-required": "Cole o JSON antes de importar.",
+      "error-invalid-json": "JSON inválido. Verifique o conteúdo colado.",
+      "error-incompatible-schema": "Formato ou versão de esquema incompatível."
     }
   }
 }

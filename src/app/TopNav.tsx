@@ -8,10 +8,22 @@ type TopNavProps = {
   onImport: () => void;
   onCreate: () => void;
   hasActiveCharacter: boolean;
+  activeCharacterId: string | null;
 };
 
-export function TopNav({ route, onExport, onImport, onCreate, hasActiveCharacter }: TopNavProps) {
+export function TopNav({
+  route,
+  onExport,
+  onImport,
+  onCreate,
+  hasActiveCharacter,
+  activeCharacterId,
+}: TopNavProps) {
   const { t } = useTranslation();
+  const onSheetRoute = route.name === 'characterEditor' || route.name === 'characterPrinted';
+  const sheetHref = activeCharacterId
+    ? buildHash({ name: 'characterEditor', id: activeCharacterId })
+    : buildHash({ name: 'library' });
   return (
     <header className="no-print sticky top-0 z-40 bg-[#1a1410] text-parchment-soft border-b border-ink-red/40">
       <div className="mx-auto max-w-[1600px] flex items-center gap-6 px-4 sm:px-6 h-14">
@@ -31,7 +43,7 @@ export function TopNav({ route, onExport, onImport, onCreate, hasActiveCharacter
             {t('nav.heroes')}
           </NavLink>
           {hasActiveCharacter && (
-            <NavLink active={route.name === 'sheet'} href={route.name === 'sheet' ? buildHash(route) : '#/library'}>
+            <NavLink active={onSheetRoute} href={sheetHref}>
               {t('nav.sheet')}
             </NavLink>
           )}
@@ -39,6 +51,12 @@ export function TopNav({ route, onExport, onImport, onCreate, hasActiveCharacter
 
         <div className="ml-auto flex items-center gap-2">
           <ToolsMenu onExport={onExport} onImport={onImport} />
+          <NavLink
+            active={route.name === 'settings'}
+            href={buildHash({ name: 'settings' })}
+          >
+            {t('nav.settings')}
+          </NavLink>
           <PrimaryAction onClick={onCreate}>{t('nav.new-hero')}</PrimaryAction>
         </div>
       </div>
