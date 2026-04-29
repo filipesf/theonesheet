@@ -1,4 +1,5 @@
 export type SheetSection =
+  | 'creation'
   | 'identity'
   | 'attributes'
   | 'skills'
@@ -7,7 +8,16 @@ export type SheetSection =
   | 'rewards'
   | 'notes';
 
-const SECTIONS: SheetSection[] = ['identity', 'attributes', 'skills', 'gear', 'conditions', 'rewards', 'notes'];
+const SECTIONS: SheetSection[] = [
+  'creation',
+  'identity',
+  'attributes',
+  'skills',
+  'gear',
+  'conditions',
+  'rewards',
+  'notes',
+];
 
 type Props = {
   active: SheetSection;

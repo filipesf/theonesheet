@@ -253,9 +253,9 @@ Add guided creation support for Phases 1-8 of the PRD without forcing a route-pe
 ### Success Criteria
 
 #### Automated Verification
-- [ ] Worked example test passes: `pnpm test`
-- [ ] Creation validation tests pass: `pnpm test`
-- [ ] Type checking still passes: `pnpm tsc --noEmit`
+- [x] Worked example test passes: `pnpm test`
+- [x] Creation validation tests pass: `pnpm test`
+- [x] Type checking still passes: `pnpm tsc --noEmit`
 
 #### Manual Verification
 - [ ] A new user can create a hero without editing raw JSON.

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { createBelbaWorkedExample } from '../domain/schema';
+import { CreationPanel } from '../features/creation/CreationPanel';
 import { CharacterLibrary } from '../features/library/CharacterLibrary';
 import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
 import { SheetTabs, type SheetSection } from '../features/sheet/SheetTabs';
@@ -38,7 +40,17 @@ export default function App() {
 
         <section>
           <SheetTabs active={section} onSelect={setSection} />
-          {library.activeCharacter ? (
+          {library.activeCharacter && section === 'creation' ? (
+            <CreationPanel
+              character={library.activeCharacter}
+              onApplyBelbaPreset={() => {
+                const base = createBelbaWorkedExample();
+                if (library.activeCharacter) {
+                  library.updateCharacter({ ...base, id: library.activeCharacter.id, company_id: library.activeCharacter.company_id });
+                }
+              }}
+            />
+          ) : library.activeCharacter ? (
             <CharacterEditor
               section={section}
               character={library.activeCharacter}

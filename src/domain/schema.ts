@@ -1,6 +1,7 @@
 import { CULTURES } from '../ref-data/cultures';
 import { createEmptyCombatProficiencies } from '../ref-data/proficiencies';
 import { createEmptySkills } from '../ref-data/skills';
+import { normaliseCharacter } from './normalise';
 import type { Character, ExportedCharacterFile, HeroicCulture } from './types';
 
 function randomId(): string {
@@ -81,4 +82,54 @@ export function toExportFile(character: Character): ExportedCharacterFile {
     exportedAt: new Date().toISOString(),
     character,
   };
+}
+
+export function createBelbaWorkedExample(): Character {
+  const character = createEmptyCharacter('HOBBITS_OF_THE_SHIRE');
+  character.name = 'Belba Bolger';
+  character.age = 28;
+  character.calling = 'TREASURE_HUNTER';
+  character.shadow_path = 'Dragon-Sickness';
+  character.attributes.strength = 4;
+  character.attributes.heart = 5;
+  character.attributes.wits = 5;
+  character.distinctive_features = ['Keen-Eyed', 'Inquisitive', 'Burglary'];
+  character.rewards = [{ name: 'Hardiness', origin: 'STARTING' }];
+  character.virtues = [{ name: 'Mastery', origin: 'STARTING' }];
+  character.current_endurance = 24;
+  character.current_hope = 15;
+  character.treasure = 30;
+  character.war_gear.weapons = [
+    { type: 'Sword', load: 2 },
+    { type: 'Bow', load: 2 },
+  ];
+  character.war_gear.armour = { type: 'Leather Shirt', load: 3 };
+  character.experience.total_skill_points_spent = 10;
+  character.experience.total_adventure_points_spent = 0;
+
+  const skillNamesToFavoured = new Set(['Stealth', 'Scan', 'Explore', 'Healing', 'Persuade']);
+  character.skills = character.skills.map((skill) => {
+    if (skill.name === 'Stealth') {
+      return { ...skill, rating: 4, favoured: true };
+    }
+    if (skill.name === 'Scan') {
+      return { ...skill, rating: 1, favoured: true };
+    }
+    if (skill.name === 'Athletics' || skill.name === 'Travel' || skill.name === 'Hunting' || skill.name === 'Lore') {
+      return { ...skill, rating: 1, favoured: skillNamesToFavoured.has(skill.name) };
+    }
+    return { ...skill, favoured: skillNamesToFavoured.has(skill.name) };
+  });
+
+  character.combat_proficiencies = character.combat_proficiencies.map((proficiency) => {
+    if (proficiency.name === 'SWORDS') {
+      return { ...proficiency, rating: 2 };
+    }
+    if (proficiency.name === 'BOWS') {
+      return { ...proficiency, rating: 1 };
+    }
+    return proficiency;
+  });
+
+  return normaliseCharacter(character);
 }
