@@ -47,7 +47,7 @@ export function CharacterEditor({ character, section, onChange }: Props) {
           {section === 'skills' && <SkillsAndProficienciesPanel character={character} onUpdate={update} />}
         </div>
       ) : (
-        <div className="sheet-region-grid">
+        <div className="sheet-region-grid sheet-region-grid-fullsheet">
           <IdentityHeader character={character} onUpdate={update} />
           <AttributeColumnGroup character={character} onUpdate={update} />
           <SkillsAndProficienciesPanel character={character} onUpdate={update} />

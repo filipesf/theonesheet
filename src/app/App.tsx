@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { createBelbaWorkedExample } from '../domain/schema';
-import { CreationPanel } from '../features/creation/CreationPanel';
 import { CharacterLibrary } from '../features/library/CharacterLibrary';
 import { ImportExportPanel } from '../features/library/import-export/ImportExportPanel';
 import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
-import { SheetTabs, type SheetSection } from '../features/sheet/SheetTabs';
-import { CharacterEditor } from '../features/sheet/editor/CharacterEditor';
+import { PrintedCharacterSheet } from '../features/sheet/PrintedCharacterSheet';
 
 export default function App() {
-  const [section, setSection] = useState<SheetSection>('identity');
   const [libraryOpen, setLibraryOpen] = useState(false);
   const library = useCharacterLibrary();
 
@@ -55,25 +52,21 @@ export default function App() {
             onExport={library.exportCharacter}
             onImport={library.importCharacter}
           />
-          <SheetTabs active={section} onSelect={setSection} />
+          <button
+            type="button"
+            onClick={() => {
+              const base = createBelbaWorkedExample();
+              if (library.activeCharacter) {
+                library.updateCharacter({ ...base, id: library.activeCharacter.id, company_id: library.activeCharacter.company_id });
+              }
+            }}
+          >
+            Apply Belba Example
+          </button>
         </div>
         <section className="sheet-workspace">
-          {library.activeCharacter && section === 'creation' ? (
-            <CreationPanel
-              character={library.activeCharacter}
-              onApplyBelbaPreset={() => {
-                const base = createBelbaWorkedExample();
-                if (library.activeCharacter) {
-                  library.updateCharacter({ ...base, id: library.activeCharacter.id, company_id: library.activeCharacter.company_id });
-                }
-              }}
-            />
-          ) : library.activeCharacter ? (
-            <CharacterEditor
-              section={section}
-              character={library.activeCharacter}
-              onChange={library.updateCharacter}
-            />
+          {library.activeCharacter ? (
+            <PrintedCharacterSheet character={library.activeCharacter} onChange={library.updateCharacter} />
           ) : (
             <p>Create your first character from the library.</p>
           )}
