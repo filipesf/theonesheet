@@ -1,26 +1,88 @@
-import { useState } from 'react';
-import { createBelbaWorkedExample } from '../domain/schema';
-import { CharacterLibrary } from '../features/library/CharacterLibrary';
-import { ImportExportPanel } from '../features/library/import-export/ImportExportPanel';
+import { useEffect, useMemo } from 'react';
+import { createBelbaWorkedExample, toExportFile } from '../domain/schema';
+import { LibraryPage } from '../features/library/LibraryPage';
 import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
 import { PrintedCharacterSheet } from '../features/sheet/PrintedCharacterSheet';
+import { TopNav } from './TopNav';
+import { buildHash, navigate, useRoute } from './router';
 
 export default function App() {
-  const [libraryOpen, setLibraryOpen] = useState(false);
+  const route = useRoute();
   const library = useCharacterLibrary();
 
+  const activeCharacter = useMemo(() => {
+    if (route.name !== 'sheet') return null;
+    return library.characters.find((item) => item.id === route.id)?.character ?? null;
+  }, [route, library.characters]);
+
+  useEffect(() => {
+    if (route.name === 'sheet' && route.id !== library.activeCharacterId) {
+      library.switchCharacter(route.id);
+    }
+  }, [route, library]);
+
+  function handleCreate() {
+    const id = library.createCharacter();
+    navigate({ name: 'sheet', id });
+  }
+
+  function handleApplyBelba() {
+    const base = createBelbaWorkedExample();
+    const result = library.importCharacter(JSON.stringify(toExportFile(base)));
+    if (result.ok) {
+      navigate({ name: 'sheet', id: result.id });
+    }
+  }
+
+  function handleExport() {
+    const id = route.name === 'sheet' ? route.id : library.activeCharacterId;
+    if (!id) {
+      alert('Open a character first to export it.');
+      return;
+    }
+    const payload = library.exportCharacter(id);
+    if (!payload) {
+      alert('Could not export this character.');
+      return;
+    }
+    navigator.clipboard.writeText(payload).then(
+      () => alert('Character JSON copied to clipboard.'),
+      () => alert('Clipboard copy failed. Please try again.'),
+    );
+  }
+
+  function handleImport() {
+    const input = prompt('Paste character export JSON');
+    if (!input) return;
+    const result = library.importCharacter(input);
+    if (!result.ok) {
+      alert(result.error);
+      return;
+    }
+    navigate({ name: 'sheet', id: result.id });
+  }
+
   return (
-    <main className="sheet-app-shell">
-      <aside className={`library-drawer${libraryOpen ? ' is-open' : ''}`}>
-        <CharacterLibrary
+    <div className="min-h-screen bg-parchment text-ink-navy">
+      <TopNav
+        route={route}
+        onCreate={handleCreate}
+        onExport={handleExport}
+        onImport={handleImport}
+        hasActiveCharacter={Boolean(library.activeCharacterId)}
+      />
+
+      {route.name === 'library' && (
+        <LibraryPage
           characters={library.characters}
           activeCharacterId={library.activeCharacterId}
-          onCreate={library.createCharacter}
-          onSelect={(id) => {
-            library.switchCharacter(id);
-            setLibraryOpen(false);
+          onCreate={handleCreate}
+          onView={(id) => navigate({ name: 'sheet', id })}
+          onEdit={(id) => navigate({ name: 'sheet', id })}
+          onDuplicate={(id) => {
+            const newId = library.duplicateCharacter(id);
+            if (newId) navigate({ name: 'sheet', id: newId });
           }}
-          onDuplicate={library.duplicateCharacter}
           onRename={(id) => {
             const current = library.characters.find((item) => item.id === id);
             const name = prompt('Rename character', current?.name ?? '');
@@ -29,49 +91,57 @@ export default function App() {
             }
           }}
           onDelete={(id) => {
-            if (confirm('Delete character?')) {
+            if (confirm('Delete character? This cannot be undone.')) {
               library.deleteCharacter(id);
             }
           }}
+          onApplyBelba={handleApplyBelba}
         />
-      </aside>
+      )}
 
-      <section className="sheet-stage">
-        <header className="sheet-stage-header">
-          <div>
-            <h1>The One Sheet</h1>
-            <p>Single-page local character manager</p>
-          </div>
-          <button type="button" className="library-toggle" onClick={() => setLibraryOpen((value) => !value)}>
-            {libraryOpen ? 'Hide library' : 'Open library'}
-          </button>
-        </header>
-        <div className="sheet-utility-controls">
-          <ImportExportPanel
-            activeCharacterId={library.activeCharacterId}
-            onExport={library.exportCharacter}
-            onImport={library.importCharacter}
-          />
-          <button
-            type="button"
-            onClick={() => {
-              const base = createBelbaWorkedExample();
-              if (library.activeCharacter) {
-                library.updateCharacter({ ...base, id: library.activeCharacter.id, company_id: library.activeCharacter.company_id });
-              }
-            }}
-          >
-            Apply Belba Example
-          </button>
-        </div>
-        <section className="sheet-workspace">
-          {library.activeCharacter ? (
-            <PrintedCharacterSheet character={library.activeCharacter} onChange={library.updateCharacter} />
-          ) : (
-            <p>Create your first character from the library.</p>
-          )}
-        </section>
-      </section>
+      {route.name === 'sheet' && (
+        <SheetRoute
+          character={activeCharacter}
+          onChange={library.updateCharacter}
+        />
+      )}
+    </div>
+  );
+}
+
+function SheetRoute({
+  character,
+  onChange,
+}: {
+  character: ReturnType<typeof useCharacterLibrary>['activeCharacter'];
+  onChange: (
+    character: NonNullable<ReturnType<typeof useCharacterLibrary>['activeCharacter']>,
+  ) => void;
+}) {
+  if (!character) {
+    return (
+      <main className="mx-auto max-w-[1200px] px-6 py-16 text-center">
+        <p className="font-label text-[11px] tracking-[0.25em] uppercase text-ink-red mb-3">
+          ◆ Lost page
+        </p>
+        <h1 className="font-display text-3xl text-ink-navy mb-3">
+          This hero is not in your library
+        </h1>
+        <p className="font-body text-base text-ink-navy/70 mb-6">
+          Return to the library to choose another, or forge a new sheet.
+        </p>
+        <a
+          href={buildHash({ name: 'library' })}
+          className="inline-block font-label text-[11px] tracking-[0.2em] uppercase bg-ink-red text-parchment-soft px-5 py-2.5 cursor-pointer hover:bg-ink-red-soft transition-colors"
+        >
+          Back to Heroes
+        </a>
+      </main>
+    );
+  }
+  return (
+    <main className="mx-auto max-w-[1600px] px-4 sm:px-6 py-6 sm:py-8">
+      <PrintedCharacterSheet character={character} onChange={onChange} />
     </main>
   );
 }

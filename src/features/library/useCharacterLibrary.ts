@@ -36,27 +36,27 @@ export function useCharacterLibrary() {
     return state.characters.find((item) => item.id === state.activeCharacterId)?.character ?? null;
   }, [state.activeCharacterId, state.characters]);
 
-  const createCharacter = useCallback(() => {
+  const createCharacter = useCallback((): string => {
+    const character = normaliseCharacter(createEmptyCharacter());
     setState((current) => {
       const existingNames = current.characters.map((item) => item.name);
-      const character = normaliseCharacter(createEmptyCharacter());
-      const name = nextName(character.name, existingNames);
+      const name = nextName('Untitled Hero', existingNames);
       const record: CharacterRecord = { id: character.id, name, character: { ...character, name } };
       return {
         activeCharacterId: record.id,
         characters: [...current.characters, record],
       };
     });
+    return character.id;
   }, []);
 
-  const duplicateCharacter = useCallback((id: string) => {
+  const duplicateCharacter = useCallback((id: string): string | null => {
+    const source = state.characters.find((item) => item.id === id);
+    if (!source) return null;
+    const newId = crypto.randomUUID();
     setState((current) => {
-      const source = current.characters.find((item) => item.id === id);
-      if (!source) {
-        return current;
-      }
       const existingNames = current.characters.map((item) => item.name);
-      const duplicate = normaliseCharacter({ ...source.character, id: crypto.randomUUID() });
+      const duplicate = normaliseCharacter({ ...source.character, id: newId });
       const name = nextName(`${source.name} Copy`, existingNames);
       const record: CharacterRecord = { id: duplicate.id, name, character: { ...duplicate, name } };
       return {
@@ -64,7 +64,8 @@ export function useCharacterLibrary() {
         characters: [...current.characters, record],
       };
     });
-  }, []);
+    return newId;
+  }, [state.characters]);
 
   const renameCharacter = useCallback((id: string, name: string) => {
     setState((current) => ({
@@ -98,9 +99,10 @@ export function useCharacterLibrary() {
       return result;
     }
 
+    const importedId = crypto.randomUUID();
     setState((current) => {
       const existingNames = current.characters.map((item) => item.name);
-      const imported = { ...result.character, id: crypto.randomUUID() };
+      const imported = { ...result.character, id: importedId };
       const name = nextName(imported.name || 'Imported Hero', existingNames);
       const record: CharacterRecord = {
         id: imported.id,
@@ -114,7 +116,7 @@ export function useCharacterLibrary() {
       };
     });
 
-    return { ok: true as const };
+    return { ok: true as const, id: importedId };
   }, []);
 
   const switchCharacter = useCallback((id: string) => {
