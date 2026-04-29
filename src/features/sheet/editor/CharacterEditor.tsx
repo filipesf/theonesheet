@@ -3,8 +3,12 @@ import { normaliseCharacter } from '../../../domain/normalise';
 import { validateCharacter } from '../../../domain/validate';
 import type { Character } from '../../../domain/types';
 import type { SheetSection } from '../SheetTabs';
-import { SheetSectionFrame } from '../ui/SheetSectionFrame';
-import { SheetStatLozenge } from '../ui/SheetStatLozenge';
+import { AttributeColumnGroup } from '../regions/AttributeColumnGroup';
+import { ConditionsPanel } from '../regions/ConditionsPanel';
+import { GearPanel } from '../regions/GearPanel';
+import { IdentityHeader } from '../regions/IdentityHeader';
+import { NotesPanel } from '../regions/NotesPanel';
+import { RewardsVirtuesPanel } from '../regions/RewardsVirtuesPanel';
 
 type Props = {
   character: Character;
@@ -14,6 +18,7 @@ type Props = {
 
 export function CharacterEditor({ character, section, onChange }: Props) {
   const issues = useMemo(() => validateCharacter(character), [character]);
+  const showSectionOnly = section !== 'creation';
 
   function update(partial: Partial<Character>) {
     onChange(normaliseCharacter({ ...character, ...partial }));
@@ -29,139 +34,26 @@ export function CharacterEditor({ character, section, onChange }: Props) {
         </div>
       )}
 
-      {section === 'identity' && (
-        <SheetSectionFrame title="Identity" subtitle="Name and life details">
-          <div className="form-grid">
-            <label>
-              Name
-              <input
-                value={character.name}
-                onChange={(event) => update({ name: event.target.value })}
-              />
-            </label>
-            <label>
-              Age
-              <input
-                type="number"
-                value={character.age}
-                onChange={(event) => update({ age: Number(event.target.value) })}
-              />
-            </label>
-          </div>
-        </SheetSectionFrame>
-      )}
-
-      {section === 'attributes' && (
-        <SheetSectionFrame title="Attributes" subtitle="Core ratings and target numbers" variant="attribute">
-          <div className="form-grid">
-            <label>
-              Strength
-              <input
-                type="number"
-                value={character.attributes.strength}
-                onChange={(event) =>
-                  update({
-                    attributes: { ...character.attributes, strength: Number(event.target.value) },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Heart
-              <input
-                type="number"
-                value={character.attributes.heart}
-                onChange={(event) =>
-                  update({
-                    attributes: { ...character.attributes, heart: Number(event.target.value) },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Wits
-              <input
-                type="number"
-                value={character.attributes.wits}
-                onChange={(event) =>
-                  update({
-                    attributes: { ...character.attributes, wits: Number(event.target.value) },
-                  })
-                }
-              />
-            </label>
-          </div>
-          <div className="sheet-stat-row">
-            <SheetStatLozenge label="TN Strength" value={character.attributes.tn_strength} />
-            <SheetStatLozenge label="TN Heart" value={character.attributes.tn_heart} />
-            <SheetStatLozenge label="TN Wits" value={character.attributes.tn_wits} />
-          </div>
-        </SheetSectionFrame>
-      )}
-
-      {section === 'gear' && (
-        <SheetSectionFrame title="Gear" subtitle="Fatigue and combat readiness" variant="resource">
-          <div className="form-grid">
-            <label>
-              Fatigue
-              <input
-                type="number"
-                value={character.fatigue}
-                onChange={(event) => update({ fatigue: Number(event.target.value) })}
-              />
-            </label>
-          </div>
-          <div className="sheet-stat-row">
-            <SheetStatLozenge label="Effective Parry" value={character.effective_parry} />
-            <SheetStatLozenge label="Load" value={character.load} />
-          </div>
-        </SheetSectionFrame>
-      )}
-
-      {section === 'conditions' && (
-        <SheetSectionFrame title="Conditions" subtitle="Endurance, hope, and shadow" variant="resource">
-          <div className="form-grid">
-            <label>
-              Current Endurance
-              <input
-                type="number"
-                value={character.current_endurance}
-                onChange={(event) => update({ current_endurance: Number(event.target.value) })}
-              />
-            </label>
-            <label>
-              Current Hope
-              <input
-                type="number"
-                value={character.current_hope}
-                onChange={(event) => update({ current_hope: Number(event.target.value) })}
-              />
-            </label>
-            <label>
-              Shadow
-              <input
-                type="number"
-                value={character.shadow}
-                onChange={(event) => update({ shadow: Number(event.target.value) })}
-              />
-            </label>
-          </div>
-          <div className="sheet-stat-row">
-            <SheetStatLozenge label="Weary" value={character.conditions.weary ? 'Yes' : 'No'} />
-            <SheetStatLozenge label="Miserable" value={character.conditions.miserable ? 'Yes' : 'No'} />
-          </div>
-        </SheetSectionFrame>
-      )}
-
-      {section === 'skills' && <p>Skills editor arrives in Phase 3.</p>}
-      {section === 'rewards' && <p>Rewards and virtues editor arrives in Phase 3.</p>}
-      {section === 'notes' && (
-        <SheetSectionFrame title="Notes" subtitle="Freeform chronicles and reminders">
-          <label>
-            Notes
-            <textarea value={character.notes} onChange={(event) => update({ notes: event.target.value })} rows={6} />
-          </label>
-        </SheetSectionFrame>
+      {showSectionOnly ? (
+        <div className="sheet-region-grid">
+          {section === 'identity' && <IdentityHeader character={character} onUpdate={update} />}
+          {section === 'attributes' && <AttributeColumnGroup character={character} onUpdate={update} />}
+          {section === 'conditions' && <ConditionsPanel character={character} onUpdate={update} />}
+          {section === 'gear' && <GearPanel character={character} onUpdate={update} />}
+          {section === 'rewards' && <RewardsVirtuesPanel />}
+          {section === 'notes' && <NotesPanel character={character} onUpdate={update} />}
+          {section === 'skills' && <p>Skills editor arrives in Phase 4.</p>}
+        </div>
+      ) : (
+        <div className="sheet-region-grid">
+          <IdentityHeader character={character} onUpdate={update} />
+          <AttributeColumnGroup character={character} onUpdate={update} />
+          <ConditionsPanel character={character} onUpdate={update} />
+          <GearPanel character={character} onUpdate={update} />
+          <RewardsVirtuesPanel />
+          <NotesPanel character={character} onUpdate={update} />
+          <p>Skills editor arrives in Phase 4.</p>
+        </div>
       )}
     </section>
   );

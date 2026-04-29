@@ -163,6 +163,16 @@ h3 {
   gap: var(--sheet-gap);
 }
 
+.sheet-region-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sheet-gap);
+}
+
+.sheet-region-grid > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 .sheet-section-frame {
   border: 1px solid var(--sheet-line);
   border-radius: var(--sheet-radius);
@@ -311,6 +321,10 @@ button:focus-visible {
 
   .library-drawer.is-open {
     transform: translateX(0);
+  }
+
+  .sheet-region-grid {
+    grid-template-columns: 1fr;
   }
 }
 
