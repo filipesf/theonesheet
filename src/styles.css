@@ -173,6 +173,49 @@ h3 {
   grid-column: 1 / -1;
 }
 
+.sheet-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.sheet-skill-column {
+  border: 1px solid var(--sheet-soft-line);
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: #fff9ee;
+}
+
+.sheet-skill-column h4 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+}
+
+.sheet-skill-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) 56px auto;
+  gap: 0.35rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.sheet-skill-row input[type='number'] {
+  text-align: center;
+}
+
+.favoured-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.sheet-proficiencies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.5rem;
+}
+
 .sheet-section-frame {
   border: 1px solid var(--sheet-line);
   border-radius: var(--sheet-radius);
@@ -324,6 +367,10 @@ button:focus-visible {
   }
 
   .sheet-region-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sheet-skills-grid {
     grid-template-columns: 1fr;
   }
 }

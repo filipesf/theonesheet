@@ -9,6 +9,7 @@ import { GearPanel } from '../regions/GearPanel';
 import { IdentityHeader } from '../regions/IdentityHeader';
 import { NotesPanel } from '../regions/NotesPanel';
 import { RewardsVirtuesPanel } from '../regions/RewardsVirtuesPanel';
+import { SkillsAndProficienciesPanel } from '../regions/SkillsAndProficienciesPanel';
 
 type Props = {
   character: Character;
@@ -42,17 +43,17 @@ export function CharacterEditor({ character, section, onChange }: Props) {
           {section === 'gear' && <GearPanel character={character} onUpdate={update} />}
           {section === 'rewards' && <RewardsVirtuesPanel />}
           {section === 'notes' && <NotesPanel character={character} onUpdate={update} />}
-          {section === 'skills' && <p>Skills editor arrives in Phase 4.</p>}
+          {section === 'skills' && <SkillsAndProficienciesPanel character={character} onUpdate={update} />}
         </div>
       ) : (
         <div className="sheet-region-grid">
           <IdentityHeader character={character} onUpdate={update} />
           <AttributeColumnGroup character={character} onUpdate={update} />
+          <SkillsAndProficienciesPanel character={character} onUpdate={update} />
           <ConditionsPanel character={character} onUpdate={update} />
           <GearPanel character={character} onUpdate={update} />
           <RewardsVirtuesPanel />
           <NotesPanel character={character} onUpdate={update} />
-          <p>Skills editor arrives in Phase 4.</p>
         </div>
       )}
     </section>
