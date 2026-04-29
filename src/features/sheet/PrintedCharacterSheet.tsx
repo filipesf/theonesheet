@@ -1,4 +1,6 @@
 import type { ChangeEvent, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { normaliseCharacter } from '../../domain/normalise';
 import {
   CALLINGS,
@@ -7,11 +9,11 @@ import {
 } from '../../domain/types';
 import type { Character, Skill } from '../../domain/types';
 import {
-  CALLING_LABELS,
-  HEROIC_CULTURE_LABELS,
   PATRONS,
-  STANDARD_OF_LIVING_LABELS,
+  callingKey,
+  heroicCultureKey,
   resolvePatronName,
+  standardOfLivingKey,
 } from '../../ref-data/labels';
 import { ConditionCheck } from './ui/ConditionCheck';
 import { Diamond, DiamondLabel } from './ui/Diamond';
@@ -23,17 +25,17 @@ type Props = {
   onChange: (character: Character) => void;
 };
 
-const CATEGORY_TITLE: Record<Skill['category'], string> = {
-  STRENGTH: 'Strength',
-  HEART: 'Heart',
-  WITS: 'Wits',
+const ATTRIBUTE_KEY: Record<Skill['category'], 'strength' | 'heart' | 'wits'> = {
+  STRENGTH: 'strength',
+  HEART: 'heart',
+  WITS: 'wits',
 };
 
-const COMBAT_PROFICIENCY_LABELS: Record<'AXES' | 'BOWS' | 'SPEARS' | 'SWORDS', string> = {
-  AXES: 'Axes',
-  BOWS: 'Bows',
-  SPEARS: 'Spears',
-  SWORDS: 'Swords',
+const COMBAT_PROFICIENCY_KEY: Record<'AXES' | 'BOWS' | 'SPEARS' | 'SWORDS', string> = {
+  AXES: 'axes',
+  BOWS: 'bows',
+  SPEARS: 'spears',
+  SWORDS: 'swords',
 };
 
 const CATEGORY_DERIVED: Record<
@@ -41,12 +43,12 @@ const CATEGORY_DERIVED: Record<
   {
     ratingField: 'strength' | 'heart' | 'wits';
     tnField: 'tn_strength' | 'tn_heart' | 'tn_wits';
-    derivedLabel: string;
+    derivedKey: 'endurance' | 'hope' | 'parry';
   }
 > = {
-  STRENGTH: { ratingField: 'strength', tnField: 'tn_strength', derivedLabel: 'Endurance' },
-  HEART: { ratingField: 'heart', tnField: 'tn_heart', derivedLabel: 'Hope' },
-  WITS: { ratingField: 'wits', tnField: 'tn_wits', derivedLabel: 'Parry' },
+  STRENGTH: { ratingField: 'strength', tnField: 'tn_strength', derivedKey: 'endurance' },
+  HEART: { ratingField: 'heart', tnField: 'tn_heart', derivedKey: 'hope' },
+  WITS: { ratingField: 'wits', tnField: 'tn_wits', derivedKey: 'parry' },
 };
 
 function joinList(values: readonly string[]): string {
@@ -61,6 +63,8 @@ function splitList(value: string): string[] {
 }
 
 export function PrintedCharacterSheet({ character, onChange }: Props) {
+  const { t } = useTranslation();
+
   function update(patch: Partial<Character>) {
     onChange(normaliseCharacter({ ...character, ...patch }));
   }
@@ -94,7 +98,7 @@ export function PrintedCharacterSheet({ character, onChange }: Props) {
   return (
     <article
       className="sheet relative w-full max-w-[1500px] mx-auto bg-parchment border-2 border-ink-red shadow-[0_2px_24px_-12px_rgba(31,44,92,0.4)]"
-      aria-label="The One Ring character sheet"
+      aria-label={t('sheet.aria.sheet-root')}
     >
       <div className="border border-ink-red p-5 sm:p-7">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_236px] gap-6 lg:gap-8">
@@ -138,16 +142,17 @@ function NameCartouche({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <header className="border-2 border-ink-red px-4 pt-2 pb-3 text-center">
       <span className="font-label text-[10px] tracking-[0.25em] uppercase text-ink-red">
-        Name
+        {t('sheet.label.name')}
       </span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="Enter your hero's name…"
-        aria-label="Character name"
+        placeholder={t('sheet.placeholder.name')}
+        aria-label={t('sheet.aria.character-name')}
         className="block w-full bg-transparent border-0 outline-none text-center font-hand text-3xl sm:text-4xl text-ink-navy placeholder:text-ink-navy/30"
       />
     </header>
@@ -163,29 +168,30 @@ function IdentityStrip({
   patronValue: string;
   onChange: (patch: Partial<Character>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
       <div className="flex flex-col gap-3">
         <SelectField
-          label="Heroic Culture"
+          label={t('sheet.label.heroic-culture')}
           value={character.heroic_culture}
           options={HEROIC_CULTURES.map((culture) => ({
             value: culture,
-            label: HEROIC_CULTURE_LABELS[culture],
+            label: t(heroicCultureKey(culture)),
           }))}
           onChange={(value) => onChange({ heroic_culture: value as Character['heroic_culture'] })}
         />
         <TextField
-          label="Cultural Blessing"
+          label={t('sheet.label.cultural-blessing')}
           value={character.cultural_blessing}
           onChange={(value) => onChange({ cultural_blessing: value })}
         />
         <SelectField
-          label="Calling"
+          label={t('sheet.label.calling')}
           value={character.calling}
           options={CALLINGS.map((calling) => ({
             value: calling,
-            label: CALLING_LABELS[calling],
+            label: t(callingKey(calling)),
           }))}
           onChange={(value) => onChange({ calling: value as Character['calling'] })}
         />
@@ -193,23 +199,23 @@ function IdentityStrip({
       <div className="flex flex-col gap-3">
         <div className="grid grid-cols-[60px_minmax(0,1fr)_72px] gap-3 items-end">
           <NumberField
-            label="Age"
+            label={t('sheet.label.age')}
             value={character.age}
             onChange={(value) => onChange({ age: value })}
           />
           <SelectField
-            label="Standard of Living"
+            label={t('sheet.label.standard-of-living')}
             value={character.standard_of_living}
             options={STANDARD_OF_LIVING.map((value) => ({
               value,
-              label: STANDARD_OF_LIVING_LABELS[value],
+              label: t(standardOfLivingKey(value)),
             }))}
             onChange={(value) =>
               onChange({ standard_of_living: value as Character['standard_of_living'] })
             }
           />
           <div className="flex flex-col items-center gap-1">
-            <DiamondLabel>Treasure</DiamondLabel>
+            <DiamondLabel>{t('sheet.label.treasure')}</DiamondLabel>
             <Diamond size="md">
               <input
                 type="number"
@@ -217,40 +223,40 @@ function IdentityStrip({
                 onChange={(event) =>
                   onChange({ treasure: Number(event.target.value) || 0 })
                 }
-                aria-label="Treasure"
+                aria-label={t('sheet.aria.treasure')}
                 className="w-10 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
               />
             </Diamond>
           </div>
         </div>
         <SelectField
-          label="Patron"
+          label={t('sheet.label.patron')}
           value={patronValue}
           options={[
-            { value: '', label: '—' },
+            { value: '', label: t('common.dash') },
             ...PATRONS.map((p) => ({ value: p.id, label: p.name })),
           ]}
           onChange={(value) => onChange({ company_id: value })}
           displayFallback={resolvePatronName(character.company_id)}
         />
         <TextField
-          label="Shadow Path"
+          label={t('sheet.label.shadow-path')}
           value={character.shadow_path}
           onChange={(value) => onChange({ shadow_path: value })}
         />
       </div>
       <div className="flex flex-col gap-3">
         <TextField
-          label="Distinctive Features"
+          label={t('sheet.label.distinctive-features')}
           value={joinList(character.distinctive_features)}
           onChange={(value) => onChange({ distinctive_features: splitList(value) })}
-          placeholder="Patient, Rustic, Folk-lore"
+          placeholder={t('sheet.placeholder.distinctive-features')}
         />
         <TextField
-          label="Flaws"
+          label={t('sheet.label.flaws')}
           value={joinList(character.flaws)}
           onChange={(value) => onChange({ flaws: splitList(value) })}
-          placeholder="—"
+          placeholder={t('sheet.placeholder.flaws')}
         />
       </div>
     </section>
@@ -266,6 +272,7 @@ function AttributeClusters({
   character: Character;
   onUpdateAttribute: (field: 'strength' | 'heart' | 'wits', value: number) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className="grid grid-cols-3 gap-6 sm:gap-8">
       {(['STRENGTH', 'HEART', 'WITS'] as const).map((category) => {
@@ -278,16 +285,18 @@ function AttributeClusters({
             : category === 'HEART'
               ? character.max_hope
               : character.effective_parry;
+        const attributeKey = ATTRIBUTE_KEY[category];
         return (
           <div key={category} className="flex flex-col items-center gap-3">
             <h3 className="font-display text-xl tracking-[0.22em] uppercase text-ink-red">
-              {CATEGORY_TITLE[category]}
+              {t(`sheet.attribute.${attributeKey}`)}
             </h3>
             <AttributeCluster
               tn={tn}
               rating={rating}
               derived={derived}
-              derivedLabel={meta.derivedLabel}
+              derivedLabel={t(`sheet.label.derived.${meta.derivedKey}`)}
+              ratingAriaLabel={t(`sheet.aria.${attributeKey}-rating`)}
               onChangeRating={(value) => onUpdateAttribute(meta.ratingField, value)}
             />
           </div>
@@ -302,19 +311,22 @@ function AttributeCluster({
   rating,
   derived,
   derivedLabel,
+  ratingAriaLabel,
   onChangeRating,
 }: {
   tn: number;
   rating: number;
   derived: number;
   derivedLabel: string;
+  ratingAriaLabel: string;
   onChangeRating: (value: number) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-[auto_auto] gap-x-3 items-center">
       <div className="flex flex-col items-center gap-1.5">
         <Diamond size="lg">{tn}</Diamond>
-        <DiamondLabel>TN</DiamondLabel>
+        <DiamondLabel>{t('sheet.label.tn')}</DiamondLabel>
       </div>
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
@@ -323,11 +335,11 @@ function AttributeCluster({
               type="number"
               value={rating}
               onChange={(event) => onChangeRating(Number(event.target.value) || 0)}
-              aria-label={`${derivedLabel === 'Endurance' ? 'Strength' : derivedLabel === 'Hope' ? 'Heart' : 'Wits'} rating`}
+              aria-label={ratingAriaLabel}
               className="w-10 bg-transparent border-0 outline-none text-center font-hand text-2xl text-ink-navy"
             />
           </Diamond>
-          <DiamondLabel>Rating</DiamondLabel>
+          <DiamondLabel>{t('sheet.label.rating')}</DiamondLabel>
         </div>
         <div className="flex items-center gap-2">
           <Diamond size="md">{derived}</Diamond>
@@ -347,9 +359,10 @@ function SkillsSection({
   character: Character;
   updateSkill: (name: string, patch: Partial<Skill>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section>
-      <SectionHeader>Skills</SectionHeader>
+      <SectionHeader>{t('sheet.section.skills')}</SectionHeader>
       <div className="grid grid-cols-3 gap-6 sm:gap-8 pt-4">
         {(['STRENGTH', 'HEART', 'WITS'] as const).map((category) => (
           <ul key={category} className="flex flex-col gap-1.5">
@@ -395,10 +408,11 @@ function ProfRewardsVirtuesBand({
   updateProficiency: (name: 'AXES' | 'BOWS' | 'SPEARS' | 'SWORDS', rating: number) => void;
   update: (patch: Partial<Character>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className="grid grid-cols-3 gap-6 sm:gap-8">
       <div>
-        <SectionHeader>Combat Proficiencies</SectionHeader>
+        <SectionHeader>{t('sheet.section.combat-proficiencies')}</SectionHeader>
         <ul className="flex flex-col gap-1.5 pt-4">
           {character.combat_proficiencies.map((proficiency) => (
             <li
@@ -406,7 +420,7 @@ function ProfRewardsVirtuesBand({
               className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-ink-red/30 py-1"
             >
               <span className="font-body text-base text-ink-navy">
-                {COMBAT_PROFICIENCY_LABELS[proficiency.name]}
+                {t(`sheet.combat-proficiency.${COMBAT_PROFICIENCY_KEY[proficiency.name]}`)}
               </span>
               <PipRow
                 rating={proficiency.rating}
@@ -419,18 +433,20 @@ function ProfRewardsVirtuesBand({
       </div>
 
       <RewardLikeColumn
-        title="Rewards"
-        statLabel="Valour"
+        title={t('sheet.section.rewards')}
+        statLabel={t('sheet.label.valour')}
         statValue={character.valour}
         onStatChange={(value) => update({ valour: value })}
         items={character.rewards.map((r) => r.name)}
+        emptyMessage={t('sheet.empty.no-rewards')}
       />
       <RewardLikeColumn
-        title="Virtues"
-        statLabel="Wisdom"
+        title={t('sheet.section.virtues')}
+        statLabel={t('sheet.label.wisdom')}
         statValue={character.wisdom}
         onStatChange={(value) => update({ wisdom: value })}
         items={character.virtues.map((v) => v.name)}
+        emptyMessage={t('sheet.empty.no-virtues')}
       />
     </section>
   );
@@ -442,12 +458,14 @@ function RewardLikeColumn({
   statValue,
   onStatChange,
   items,
+  emptyMessage,
 }: {
   title: string;
   statLabel: string;
   statValue: number;
   onStatChange: (value: number) => void;
   items: string[];
+  emptyMessage: string;
 }) {
   return (
     <div>
@@ -471,7 +489,7 @@ function RewardLikeColumn({
       <ul className="pt-4 flex flex-col gap-1 min-h-[96px]">
         {items.length === 0 && (
           <li className="font-body text-sm text-ink-navy/40 italic">
-            None recorded
+            {emptyMessage}
           </li>
         )}
         {items.map((label, index) => (
@@ -499,32 +517,33 @@ function WarGearArmourBand({ character }: { character: Character }) {
 }
 
 function WarGearPanel({ character }: { character: Character }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <SectionHeader>War Gear</SectionHeader>
+      <SectionHeader>{t('sheet.section.war-gear')}</SectionHeader>
       <table className="w-full mt-3 text-left">
         <thead>
           <tr className="font-label text-[9px] tracking-wider uppercase text-ink-red/85">
-            <th className="font-normal pb-1">Weapon</th>
-            <th className="font-normal pb-1 text-center">Damage</th>
-            <th className="font-normal pb-1 text-center">Injury</th>
-            <th className="font-normal pb-1 text-center">Load</th>
-            <th className="font-normal pb-1">Notes</th>
+            <th className="font-normal pb-1">{t('sheet.weapon.column.weapon')}</th>
+            <th className="font-normal pb-1 text-center">{t('sheet.weapon.column.damage')}</th>
+            <th className="font-normal pb-1 text-center">{t('sheet.weapon.column.injury')}</th>
+            <th className="font-normal pb-1 text-center">{t('sheet.weapon.column.load')}</th>
+            <th className="font-normal pb-1">{t('sheet.weapon.column.notes')}</th>
           </tr>
         </thead>
         <tbody>
           {character.war_gear.weapons.length === 0 && (
             <tr>
               <td colSpan={5} className="font-body text-sm text-ink-navy/40 italic py-2">
-                No weapons equipped
+                {t('sheet.empty.no-weapons')}
               </td>
             </tr>
           )}
           {character.war_gear.weapons.map((weapon, index) => (
             <tr key={`${weapon.type}-${index}`} className="border-b border-ink-red/30">
               <td className="font-hand text-lg text-ink-navy py-0.5">{weapon.type}</td>
-              <td className="font-hand text-lg text-ink-navy text-center">—</td>
-              <td className="font-hand text-lg text-ink-navy text-center">—</td>
+              <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
+              <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
               <td className="font-hand text-lg text-ink-navy text-center">{weapon.load}</td>
               <td className="font-hand text-lg text-ink-navy" />
             </tr>
@@ -536,26 +555,27 @@ function WarGearPanel({ character }: { character: Character }) {
 }
 
 function ArmourPanel({ character }: { character: Character }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <SectionHeader>Armour</SectionHeader>
+      <SectionHeader>{t('sheet.section.armour')}</SectionHeader>
       <div className="mt-3 flex flex-col gap-2">
         <ArmourRow
-          label="Armour"
+          label={t('sheet.armour.label.armour')}
           type={character.war_gear.armour?.type ?? ''}
-          secondaryLabel="Protection"
+          secondaryLabel={t('sheet.armour.label.protection')}
           secondaryValue=""
           load={character.war_gear.armour?.load}
         />
         <ArmourRow
-          label="Helm"
-          type={character.war_gear.helm ? 'Helm' : ''}
+          label={t('sheet.armour.label.helm')}
+          type={character.war_gear.helm ? t('sheet.armour.helm-name') : ''}
           load={character.war_gear.helm?.load}
         />
         <ArmourRow
-          label="Shield"
+          label={t('sheet.armour.label.shield')}
           type={character.war_gear.shield?.type ?? ''}
-          secondaryLabel="Parry"
+          secondaryLabel={t('sheet.armour.label.parry')}
           secondaryValue={
             character.war_gear.shield ? `+${character.war_gear.shield.parry_bonus}` : ''
           }
@@ -600,10 +620,11 @@ function RightSidebar({
 }
 
 function PortraitFrame() {
+  const { t } = useTranslation();
   return (
     <div className="aspect-square w-full bg-parchment-deep border-2 border-ink-red flex items-center justify-center">
       <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red/40">
-        Portrait
+        {t('sheet.label.portrait')}
       </span>
     </div>
   );
@@ -618,17 +639,10 @@ function ExperienceTriplet({
   fellowshipScore: number;
   update: (patch: Partial<Character>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-3 gap-2">
-      <SidebarStat
-        label={
-          <>
-            Adventure
-            <br />
-            Points
-          </>
-        }
-      >
+      <SidebarStat label={twoLine(t, 'sheet.label.adventure-points')}>
         <input
           type="number"
           value={character.experience.adventure_points}
@@ -640,19 +654,11 @@ function ExperienceTriplet({
               },
             })
           }
-          aria-label="Adventure points"
+          aria-label={t('sheet.aria.adventure-points')}
           className="w-9 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
         />
       </SidebarStat>
-      <SidebarStat
-        label={
-          <>
-            Skill
-            <br />
-            Points
-          </>
-        }
-      >
+      <SidebarStat label={twoLine(t, 'sheet.label.skill-points')}>
         <input
           type="number"
           value={character.experience.skill_points}
@@ -664,23 +670,23 @@ function ExperienceTriplet({
               },
             })
           }
-          aria-label="Skill points"
+          aria-label={t('sheet.aria.skill-points')}
           className="w-9 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
         />
       </SidebarStat>
-      <SidebarStat
-        label={
-          <>
-            Fellowship
-            <br />
-            Score
-          </>
-        }
-      >
+      <SidebarStat label={twoLine(t, 'sheet.label.fellowship-score')}>
         {fellowshipScore}
       </SidebarStat>
     </div>
   );
+}
+
+/**
+ * Render a label that the original English version split across two lines.
+ * In pt-BR we keep the natural phrase and let CSS wrap when needed.
+ */
+function twoLine(t: TFunction, key: string): ReactNode {
+  return t(key);
 }
 
 function SidebarStat({
@@ -709,14 +715,13 @@ function EnduranceLoadCluster({
   totalLoad: number;
   update: (patch: Partial<Character>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-end justify-center gap-4">
         <div className="flex flex-col items-center gap-2">
           <DiamondLabel className="text-center leading-3">
-            Current
-            <br />
-            Endurance
+            {t('sheet.label.current-endurance')}
           </DiamondLabel>
           <Diamond size="md">
             <input
@@ -725,23 +730,23 @@ function EnduranceLoadCluster({
               onChange={(event) =>
                 update({ current_endurance: Number(event.target.value) || 0 })
               }
-              aria-label="Current endurance"
+              aria-label={t('sheet.aria.current-endurance')}
               className="w-10 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
             />
           </Diamond>
         </div>
         <div className="flex flex-col items-center gap-2 mb-1">
-          <DiamondLabel>Load</DiamondLabel>
+          <DiamondLabel>{t('sheet.label.load')}</DiamondLabel>
           <Diamond size="sm">{totalLoad}</Diamond>
         </div>
       </div>
       <div className="flex items-baseline gap-2 mt-1 justify-center">
-        <DiamondLabel>Fatigue</DiamondLabel>
+        <DiamondLabel>{t('sheet.label.fatigue')}</DiamondLabel>
         <input
           type="number"
           value={character.fatigue}
           onChange={(event) => update({ fatigue: Number(event.target.value) || 0 })}
-          aria-label="Fatigue"
+          aria-label={t('sheet.aria.fatigue')}
           className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none font-hand text-base text-center text-ink-navy"
         />
       </div>
@@ -756,14 +761,13 @@ function HopeShadowCluster({
   character: Character;
   update: (patch: Partial<Character>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-end justify-center gap-4">
         <div className="flex flex-col items-center gap-2">
           <DiamondLabel className="text-center leading-3">
-            Current
-            <br />
-            Hope
+            {t('sheet.label.current-hope')}
           </DiamondLabel>
           <Diamond size="md">
             <input
@@ -772,33 +776,33 @@ function HopeShadowCluster({
               onChange={(event) =>
                 update({ current_hope: Number(event.target.value) || 0 })
               }
-              aria-label="Current hope"
+              aria-label={t('sheet.aria.current-hope')}
               className="w-10 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
             />
           </Diamond>
         </div>
         <div className="flex flex-col items-center gap-2 mb-1">
-          <DiamondLabel>Shadow</DiamondLabel>
+          <DiamondLabel>{t('sheet.label.shadow')}</DiamondLabel>
           <Diamond size="sm">
             <input
               type="number"
               value={character.shadow}
               onChange={(event) => update({ shadow: Number(event.target.value) || 0 })}
-              aria-label="Shadow"
+              aria-label={t('sheet.aria.shadow')}
               className="w-7 bg-transparent border-0 outline-none text-center font-hand text-sm text-ink-navy"
             />
           </Diamond>
         </div>
       </div>
       <div className="flex items-baseline gap-2 mt-1 justify-center">
-        <DiamondLabel>Shadow Scars</DiamondLabel>
+        <DiamondLabel>{t('sheet.label.shadow-scars')}</DiamondLabel>
         <input
           type="number"
           value={character.shadow_scars}
           onChange={(event) =>
             update({ shadow_scars: Number(event.target.value) || 0 })
           }
-          aria-label="Shadow scars"
+          aria-label={t('sheet.aria.shadow-scars')}
           className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none font-hand text-base text-center text-ink-navy"
         />
       </div>
@@ -813,19 +817,20 @@ function ConditionsBlock({
   character: Character;
   update: (patch: Partial<Character>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <SectionHeader>Conditions</SectionHeader>
+      <SectionHeader>{t('sheet.section.conditions')}</SectionHeader>
       <div className="pt-4 flex flex-col gap-2">
-        <ConditionCheck checked={character.conditions.weary} label="Weary" readOnly />
+        <ConditionCheck checked={character.conditions.weary} label={t('sheet.condition.weary')} readOnly />
         <ConditionCheck
           checked={character.conditions.miserable}
-          label="Miserable"
+          label={t('sheet.condition.miserable')}
           readOnly
         />
         <ConditionCheck
           checked={character.conditions.wounded}
-          label="Wounded"
+          label={t('sheet.condition.wounded')}
           onChange={() =>
             update({
               conditions: {
@@ -847,9 +852,10 @@ function TravellingGearBlock({
   character: Character;
   update: (patch: Partial<Character>) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <SectionHeader>Travelling Gear</SectionHeader>
+      <SectionHeader>{t('sheet.section.travelling-gear')}</SectionHeader>
       <textarea
         value={character.travelling_gear.join('\n')}
         onChange={(event) =>
@@ -861,8 +867,8 @@ function TravellingGearBlock({
           })
         }
         rows={4}
-        placeholder="One item per line"
-        aria-label="Travelling gear"
+        placeholder={t('sheet.placeholder.travelling-gear')}
+        aria-label={t('sheet.aria.travelling-gear')}
         className="w-full mt-2 bg-transparent border-0 outline-none font-hand text-base text-ink-navy resize-none placeholder:text-ink-navy/30"
       />
     </div>
@@ -935,6 +941,7 @@ type SelectFieldProps = {
 };
 
 function SelectField({ label, value, options, onChange, displayFallback }: SelectFieldProps) {
+  const { t } = useTranslation();
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => onChange(event.target.value);
   const matched = options.some((option) => option.value === value);
   const effectiveValue = matched ? value : '';
@@ -949,7 +956,7 @@ function SelectField({ label, value, options, onChange, displayFallback }: Selec
           onChange={handleChange}
           className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-lg text-ink-navy pb-0.5 appearance-none cursor-pointer pr-6 focus:border-ink-red transition-colors"
         >
-          {!matched && <option value="">{displayFallback || '—'}</option>}
+          {!matched && <option value="">{displayFallback || t('common.dash')}</option>}
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -976,6 +983,7 @@ type ArmourRowProps = {
 };
 
 function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: ArmourRowProps) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-3 border-b border-ink-red/30 pb-0.5">
       <div className="flex flex-col min-w-0">
@@ -996,7 +1004,7 @@ function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: Armour
       </div>
       <div className="flex flex-col items-center min-w-[44px]">
         <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
-          Load
+          {t('sheet.label.load')}
         </span>
         <span className="font-hand text-lg text-ink-navy min-h-[1.5rem]">
           {load !== undefined ? load : ''}

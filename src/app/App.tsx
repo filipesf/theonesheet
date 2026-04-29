@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createBelbaWorkedExample, toExportFile } from '../domain/schema';
 import { LibraryPage } from '../features/library/LibraryPage';
 import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
@@ -7,6 +8,7 @@ import { TopNav } from './TopNav';
 import { buildHash, navigate, useRoute } from './router';
 
 export default function App() {
+  const { t } = useTranslation();
   const route = useRoute();
   const library = useCharacterLibrary();
 
@@ -37,22 +39,22 @@ export default function App() {
   function handleExport() {
     const id = route.name === 'sheet' ? route.id : library.activeCharacterId;
     if (!id) {
-      alert('Open a character first to export it.');
+      alert(t('common.alert.export-need-character'));
       return;
     }
     const payload = library.exportCharacter(id);
     if (!payload) {
-      alert('Could not export this character.');
+      alert(t('common.alert.export-failed'));
       return;
     }
     navigator.clipboard.writeText(payload).then(
-      () => alert('Character JSON copied to clipboard.'),
-      () => alert('Clipboard copy failed. Please try again.'),
+      () => alert(t('common.alert.copied')),
+      () => alert(t('common.alert.copy-failed')),
     );
   }
 
   function handleImport() {
-    const input = prompt('Paste character export JSON');
+    const input = prompt(t('common.prompt.import'));
     if (!input) return;
     const result = library.importCharacter(input);
     if (!result.ok) {
@@ -85,13 +87,13 @@ export default function App() {
           }}
           onRename={(id) => {
             const current = library.characters.find((item) => item.id === id);
-            const name = prompt('Rename character', current?.name ?? '');
+            const name = prompt(t('common.prompt.rename'), current?.name ?? '');
             if (name && name.trim()) {
               library.renameCharacter(id, name.trim());
             }
           }}
           onDelete={(id) => {
-            if (confirm('Delete character? This cannot be undone.')) {
+            if (confirm(t('common.confirm.delete'))) {
               library.deleteCharacter(id);
             }
           }}
@@ -118,23 +120,24 @@ function SheetRoute({
     character: NonNullable<ReturnType<typeof useCharacterLibrary>['activeCharacter']>,
   ) => void;
 }) {
+  const { t } = useTranslation();
   if (!character) {
     return (
       <main className="mx-auto max-w-[1200px] px-6 py-16 text-center">
         <p className="font-label text-[11px] tracking-[0.25em] uppercase text-ink-red mb-3">
-          ◆ Lost page
+          {t('common.lost-page.eyebrow')}
         </p>
         <h1 className="font-display text-3xl text-ink-navy mb-3">
-          This hero is not in your library
+          {t('common.lost-page.title')}
         </h1>
         <p className="font-body text-base text-ink-navy/70 mb-6">
-          Return to the library to choose another, or forge a new sheet.
+          {t('common.lost-page.body')}
         </p>
         <a
           href={buildHash({ name: 'library' })}
           className="inline-block font-label text-[11px] tracking-[0.2em] uppercase bg-ink-red text-parchment-soft px-5 py-2.5 cursor-pointer hover:bg-ink-red-soft transition-colors"
         >
-          Back to Heroes
+          {t('common.lost-page.back-to-library')}
         </a>
       </main>
     );

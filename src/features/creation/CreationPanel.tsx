@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { getCreationValidationSummary } from './validation';
 import type { Character } from '../../domain/types';
 
@@ -7,25 +8,30 @@ type Props = {
 };
 
 export function CreationPanel({ character, onApplyBelbaPreset }: Props) {
+  const { t } = useTranslation();
   const summary = getCreationValidationSummary(character);
 
   return (
     <section className="editor-panel">
-      <h3>Creation Workflow</h3>
-      <p>Progressive helper for PRD creation phases 1-8 inside the single page.</p>
+      <h3>{t('creation.heading')}</h3>
+      <p>{t('creation.intro')}</p>
       <button type="button" onClick={onApplyBelbaPreset}>
-        Apply Belba worked example baseline
+        {t('creation.apply-belba')}
       </button>
 
       <div className="creation-status-grid">
         <article>
-          <h4>Blocking before finalise</h4>
-          {summary.blocking.length === 0 ? <p>None</p> : summary.blocking.map((item) => <p key={item}>{item}</p>)}
+          <h4>{t('creation.blocking-title')}</h4>
+          {summary.blocking.length === 0 ? (
+            <p>{t('creation.none')}</p>
+          ) : (
+            summary.blocking.map((item) => <p key={item}>{item}</p>)
+          )}
         </article>
         <article>
-          <h4>Draft warnings</h4>
+          <h4>{t('creation.warnings-title')}</h4>
           {summary.draftWarnings.length === 0 ? (
-            <p>None</p>
+            <p>{t('creation.none')}</p>
           ) : (
             summary.draftWarnings.map((item) => <p key={item}>{item}</p>)
           )}
@@ -33,7 +39,8 @@ export function CreationPanel({ character, onApplyBelbaPreset }: Props) {
       </div>
 
       <p>
-        Finalisation status: <strong>{summary.canFinalise ? 'Ready' : 'Blocked'}</strong>
+        {t('creation.finalise-status')}
+        <strong>{summary.canFinalise ? t('creation.ready') : t('creation.blocked')}</strong>
       </p>
     </section>
   );

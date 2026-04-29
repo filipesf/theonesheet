@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { i18n } from '../../app/i18n';
 import { normaliseCharacter } from '../../domain/normalise';
 import { createEmptyCharacter } from '../../domain/schema';
 import type { Character } from '../../domain/types';
@@ -40,7 +41,7 @@ export function useCharacterLibrary() {
     const character = normaliseCharacter(createEmptyCharacter());
     setState((current) => {
       const existingNames = current.characters.map((item) => item.name);
-      const name = nextName('Untitled Hero', existingNames);
+      const name = nextName(i18n.t('card.untitled-hero'), existingNames);
       const record: CharacterRecord = { id: character.id, name, character: { ...character, name } };
       return {
         activeCharacterId: record.id,
@@ -57,7 +58,7 @@ export function useCharacterLibrary() {
     setState((current) => {
       const existingNames = current.characters.map((item) => item.name);
       const duplicate = normaliseCharacter({ ...source.character, id: newId });
-      const name = nextName(`${source.name} Copy`, existingNames);
+      const name = nextName(`${source.name} ${i18n.t('card.copy-suffix')}`, existingNames);
       const record: CharacterRecord = { id: duplicate.id, name, character: { ...duplicate, name } };
       return {
         activeCharacterId: record.id,
@@ -103,7 +104,7 @@ export function useCharacterLibrary() {
     setState((current) => {
       const existingNames = current.characters.map((item) => item.name);
       const imported = { ...result.character, id: importedId };
-      const name = nextName(imported.name || 'Imported Hero', existingNames);
+      const name = nextName(imported.name || i18n.t('card.imported-hero'), existingNames);
       const record: CharacterRecord = {
         id: imported.id,
         name,

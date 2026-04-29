@@ -1,0 +1,208 @@
+{
+  "app": {
+    "title": "The One Sheet",
+    "brand-tagline": "Sua ficha de O Um Anel"
+  },
+  "nav": {
+    "brand-aria": "The One Sheet — voltar à biblioteca",
+    "heroes": "Heróis",
+    "sheet": "Ficha",
+    "tools": "Ferramentas ▾",
+    "export-active": "Exportar personagem ativo",
+    "import-json": "Importar JSON do personagem",
+    "new-hero": "Novo Herói"
+  },
+  "library": {
+    "heading-eyebrow": "◆ The One Sheet · Heróis",
+    "heading": "Sua Companhia",
+    "subheading-empty": "Nenhum herói ainda. Comece uma nova história, ou invoque Belba Bolger do exemplo trabalhado para estudar uma ficha pronta.",
+    "subheading-count_one": "{{count}} herói guardado em sua biblioteca local. Escolha um para abrir a ficha impressa, ou forje outro.",
+    "subheading-count_other": "{{count}} heróis guardados em sua biblioteca local. Escolha um para abrir a ficha impressa, ou forje outro.",
+    "forge-new-hero": "Forje um Novo Herói",
+    "load-belba": "Ou carregar Belba Bolger ·  exemplo trabalhado",
+    "empty-state-title": "Nenhum herói ainda",
+    "empty-state-body": "Toda saga começa com um nome. Forje seu primeiro herói e a ficha impressa abrirá pronta para ser preenchida."
+  },
+  "card": {
+    "untitled-hero": "Herói sem nome",
+    "imported-hero": "Herói importado",
+    "copy-suffix": "(Cópia)",
+    "attr": {
+      "str": "Frç",
+      "hrt": "Cor",
+      "wts": "Esp"
+    },
+    "endurance": "Vigor",
+    "hope": "Esperança",
+    "action": {
+      "view": "Ver",
+      "edit": "Editar",
+      "duplicate": "Copiar",
+      "rename": "Renomear",
+      "delete": "Excluir"
+    }
+  },
+  "sheet": {
+    "aria": {
+      "sheet-root": "Ficha de personagem de O Um Anel",
+      "character-name": "Nome do personagem",
+      "strength-rating": "Pontuação de Força",
+      "heart-rating": "Pontuação de Coração",
+      "wits-rating": "Pontuação de Espírito",
+      "treasure": "Tesouro",
+      "adventure-points": "Pontos de aventura",
+      "skill-points": "Pontos de perícia",
+      "current-endurance": "Vigor atual",
+      "current-hope": "Esperança atual",
+      "shadow": "Sombra",
+      "shadow-scars": "Cicatrizes da Sombra",
+      "fatigue": "Fadiga",
+      "travelling-gear": "Equipamento de viagem"
+    },
+    "label": {
+      "name": "Nome",
+      "heroic-culture": "Cultura Heroica",
+      "cultural-blessing": "Bênção Cultural",
+      "calling": "Vocação",
+      "age": "Idade",
+      "standard-of-living": "Padrão de Vida",
+      "treasure": "Tesouro",
+      "patron": "Patrono",
+      "shadow-path": "Caminho da Sombra",
+      "distinctive-features": "Traços Marcantes",
+      "flaws": "Defeitos",
+      "tn": "ND",
+      "rating": "Valor",
+      "load": "Carga",
+      "fatigue": "Fadiga",
+      "shadow": "Sombra",
+      "shadow-scars": "Cicatrizes da Sombra",
+      "current-endurance": "Vigor Atual",
+      "current-hope": "Esperança Atual",
+      "valour": "Valor",
+      "wisdom": "Sabedoria",
+      "fellowship-score": "Camaradagem",
+      "adventure-points": "Pontos de Aventura",
+      "skill-points": "Pontos de Perícia",
+      "portrait": "Retrato",
+      "derived": {
+        "endurance": "Vigor",
+        "hope": "Esperança",
+        "parry": "Aparar"
+      }
+    },
+    "section": {
+      "skills": "Perícias",
+      "combat-proficiencies": "Proficiências de Combate",
+      "rewards": "Recompensas",
+      "virtues": "Virtudes",
+      "war-gear": "Armas e Equipamento",
+      "armour": "Armadura",
+      "conditions": "Condições",
+      "travelling-gear": "Equipamento de Viagem"
+    },
+    "attribute": {
+      "strength": "Força",
+      "heart": "Coração",
+      "wits": "Espírito"
+    },
+    "combat-proficiency": {
+      "axes": "Machados",
+      "bows": "Arcos",
+      "spears": "Lanças",
+      "swords": "Espadas"
+    },
+    "condition": {
+      "weary": "Esgotado",
+      "miserable": "Miserável",
+      "wounded": "Ferido"
+    },
+    "placeholder": {
+      "name": "Digite o nome do seu herói…",
+      "distinctive-features": "Paciente, Rústico, Tradições",
+      "flaws": "—",
+      "travelling-gear": "Um item por linha"
+    },
+    "empty": {
+      "no-rewards": "Nenhuma registrada",
+      "no-virtues": "Nenhuma registrada",
+      "no-weapons": "Nenhuma arma equipada"
+    },
+    "weapon": {
+      "column": {
+        "weapon": "Arma",
+        "damage": "Dano",
+        "injury": "Ferimento",
+        "load": "Carga",
+        "notes": "Notas"
+      }
+    },
+    "armour": {
+      "label": {
+        "armour": "Armadura",
+        "helm": "Elmo",
+        "shield": "Escudo",
+        "protection": "Proteção",
+        "parry": "Aparar"
+      },
+      "helm-name": "Elmo"
+    },
+    "heroic-culture": {
+      "dwarves-of-durins-folk": "Anão do Povo de Durin",
+      "bardings": "Bardingo",
+      "elves-of-lindon": "Elfo de Lindon",
+      "hobbits-of-the-shire": "Hobbit do Condado",
+      "men-of-bree": "Homem de Bree",
+      "rangers-of-the-north": "Guardião do Norte"
+    },
+    "calling": {
+      "captain": "Capitão",
+      "champion": "Campeão",
+      "messenger": "Mensageiro",
+      "scholar": "Sábio",
+      "treasure-hunter": "Caçador de Tesouros",
+      "warden": "Guarda"
+    },
+    "standard-of-living": {
+      "poor": "Pobre",
+      "frugal": "Frugal",
+      "common": "Comum",
+      "prosperous": "Próspero",
+      "rich": "Rico",
+      "very-rich": "Muito Rico"
+    }
+  },
+  "creation": {
+    "heading": "Fluxo de Criação",
+    "intro": "Auxiliar progressivo para as fases 1-8 de criação do PRD, na mesma página.",
+    "apply-belba": "Aplicar exemplo trabalhado de Belba",
+    "blocking-title": "Bloqueios antes de finalizar",
+    "warnings-title": "Avisos de rascunho",
+    "none": "Nenhum",
+    "finalise-status": "Status de finalização: ",
+    "ready": "Pronto",
+    "blocked": "Bloqueado"
+  },
+  "common": {
+    "dash": "—",
+    "alert": {
+      "export-need-character": "Abra um personagem antes de exportar.",
+      "export-failed": "Não foi possível exportar este personagem.",
+      "copied": "JSON do personagem copiado para a área de transferência.",
+      "copy-failed": "Falha ao copiar para a área de transferência. Tente novamente."
+    },
+    "prompt": {
+      "import": "Cole o JSON exportado do personagem",
+      "rename": "Renomear personagem"
+    },
+    "confirm": {
+      "delete": "Excluir personagem? Esta ação não pode ser desfeita."
+    },
+    "lost-page": {
+      "eyebrow": "◆ Página perdida",
+      "title": "Este herói não está na sua biblioteca",
+      "body": "Volte à biblioteca para escolher outro, ou forje uma nova ficha.",
+      "back-to-library": "Voltar aos Heróis"
+    }
+  }
+}

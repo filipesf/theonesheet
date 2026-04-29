@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { buildHash, navigate, type Route } from './router';
 
 type TopNavProps = {
@@ -10,34 +11,35 @@ type TopNavProps = {
 };
 
 export function TopNav({ route, onExport, onImport, onCreate, hasActiveCharacter }: TopNavProps) {
+  const { t } = useTranslation();
   return (
     <header className="no-print sticky top-0 z-40 bg-[#1a1410] text-parchment-soft border-b border-ink-red/40">
       <div className="mx-auto max-w-[1600px] flex items-center gap-6 px-4 sm:px-6 h-14">
         <a
           href={buildHash({ name: 'library' })}
           className="flex items-center gap-3 group"
-          aria-label="The One Sheet — go to library"
+          aria-label={t('nav.brand-aria')}
         >
           <BrandMark />
           <span className="font-display text-sm sm:text-base tracking-[0.28em] uppercase text-parchment-soft group-hover:text-ink-red-soft transition-colors">
-            The One Sheet
+            {t('app.title')}
           </span>
         </a>
 
         <nav className="hidden sm:flex items-center gap-1 ml-2">
           <NavLink active={route.name === 'library'} href={buildHash({ name: 'library' })}>
-            Heroes
+            {t('nav.heroes')}
           </NavLink>
           {hasActiveCharacter && (
             <NavLink active={route.name === 'sheet'} href={route.name === 'sheet' ? buildHash(route) : '#/library'}>
-              Sheet
+              {t('nav.sheet')}
             </NavLink>
           )}
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
           <ToolsMenu onExport={onExport} onImport={onImport} />
-          <PrimaryAction onClick={onCreate}>New Hero</PrimaryAction>
+          <PrimaryAction onClick={onCreate}>{t('nav.new-hero')}</PrimaryAction>
         </div>
       </div>
     </header>
@@ -104,6 +106,7 @@ function PrimaryAction({
 }
 
 function ToolsMenu({ onExport, onImport }: { onExport: () => void; onImport: () => void }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -127,7 +130,7 @@ function ToolsMenu({ onExport, onImport }: { onExport: () => void; onImport: () 
         aria-expanded={open}
         className="font-label text-[11px] tracking-[0.2em] uppercase text-parchment-soft/80 hover:text-parchment-soft px-3 py-2 cursor-pointer transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-ink-red-soft rounded-sm"
       >
-        Tools ▾
+        {t('nav.tools')}
       </button>
       {open && (
         <div
@@ -140,7 +143,7 @@ function ToolsMenu({ onExport, onImport }: { onExport: () => void; onImport: () 
               setOpen(false);
             }}
           >
-            Export active character
+            {t('nav.export-active')}
           </MenuItem>
           <MenuItem
             onClick={() => {
@@ -148,7 +151,7 @@ function ToolsMenu({ onExport, onImport }: { onExport: () => void; onImport: () 
               setOpen(false);
             }}
           >
-            Import character JSON
+            {t('nav.import-json')}
           </MenuItem>
         </div>
       )}

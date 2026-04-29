@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { CharacterRecord } from '../../persistence/local-storage';
 
 type CharacterCardProps = {
@@ -23,8 +24,9 @@ export function CharacterCard({
   onRename,
   onDelete,
 }: CharacterCardProps) {
+  const { t } = useTranslation();
   const character = record.character;
-  const displayName = character.name?.trim() || record.name || 'Untitled Hero';
+  const displayName = character.name?.trim() || record.name || t('card.untitled-hero');
 
   return (
     <article
@@ -48,14 +50,14 @@ export function CharacterCard({
           </h2>
 
           <dl className="mt-4 grid grid-cols-3 gap-2">
-            <AttributePill label="Str" value={character.attributes.strength} />
-            <AttributePill label="Hrt" value={character.attributes.heart} />
-            <AttributePill label="Wts" value={character.attributes.wits} />
+            <AttributePill label={t('card.attr.str')} value={character.attributes.strength} />
+            <AttributePill label={t('card.attr.hrt')} value={character.attributes.heart} />
+            <AttributePill label={t('card.attr.wts')} value={character.attributes.wits} />
           </dl>
 
           <div className="mt-4 flex items-baseline justify-between gap-2 text-sm">
             <span className="font-label text-[10px] tracking-wider uppercase text-ink-red/80">
-              Endurance
+              {t('card.endurance')}
             </span>
             <span className="font-hand text-base text-ink-navy">
               {character.current_endurance}
@@ -63,7 +65,7 @@ export function CharacterCard({
               {character.max_endurance}
             </span>
             <span className="font-label text-[10px] tracking-wider uppercase text-ink-red/80 ml-3">
-              Hope
+              {t('card.hope')}
             </span>
             <span className="font-hand text-base text-ink-navy">
               {character.current_hope}
@@ -74,17 +76,17 @@ export function CharacterCard({
         </button>
 
         <div className="grid grid-cols-4 border-t border-ink-red/30 mt-1">
-          <CardAction onClick={onView}>View</CardAction>
-          <CardAction onClick={onEdit}>Edit</CardAction>
-          <CardAction onClick={onDuplicate}>Copy</CardAction>
-          <CardAction onClick={onRename}>Rename</CardAction>
+          <CardAction onClick={onView}>{t('card.action.view')}</CardAction>
+          <CardAction onClick={onEdit}>{t('card.action.edit')}</CardAction>
+          <CardAction onClick={onDuplicate}>{t('card.action.duplicate')}</CardAction>
+          <CardAction onClick={onRename}>{t('card.action.rename')}</CardAction>
         </div>
         <button
           type="button"
           onClick={onDelete}
           className="border-t border-ink-red/30 px-3 py-2 font-label text-[10px] tracking-[0.22em] uppercase text-ink-red/80 hover:bg-ink-red/10 hover:text-ink-red cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red/15"
         >
-          Delete
+          {t('card.action.delete')}
         </button>
       </div>
     </article>

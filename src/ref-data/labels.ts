@@ -1,31 +1,21 @@
 import type { Calling, HeroicCulture, StandardOfLiving } from '../domain/types';
 
-export const HEROIC_CULTURE_LABELS: Record<HeroicCulture, string> = {
-  DWARVES_OF_DURINS_FOLK: "Dwarf of Durin's Folk",
-  BARDINGS: 'Barding',
-  ELVES_OF_LINDON: 'Elf of Lindon',
-  HOBBITS_OF_THE_SHIRE: 'Hobbit of the Shire',
-  MEN_OF_BREE: 'Man of Bree',
-  RANGERS_OF_THE_NORTH: 'Ranger of the North',
-};
+/**
+ * `ref-data/` is a pure leaf — no UI strings, only stable identifiers and TOR
+ * canonical content. Display labels for enums live in the i18n bundle and are
+ * resolved by feature code via these helper key builders.
+ */
 
-export const CALLING_LABELS: Record<Calling, string> = {
-  CAPTAIN: 'Captain',
-  CHAMPION: 'Champion',
-  MESSENGER: 'Messenger',
-  SCHOLAR: 'Scholar',
-  TREASURE_HUNTER: 'Treasure Hunter',
-  WARDEN: 'Warden',
-};
+const enumToKey = (value: string): string => value.toLowerCase().replace(/_/g, '-');
 
-export const STANDARD_OF_LIVING_LABELS: Record<StandardOfLiving, string> = {
-  POOR: 'Poor',
-  FRUGAL: 'Frugal',
-  COMMON: 'Common',
-  PROSPEROUS: 'Prosperous',
-  RICH: 'Rich',
-  VERY_RICH: 'Very Rich',
-};
+export const heroicCultureKey = (culture: HeroicCulture): string =>
+  `sheet.heroic-culture.${enumToKey(culture)}`;
+
+export const callingKey = (calling: Calling): string =>
+  `sheet.calling.${enumToKey(calling)}`;
+
+export const standardOfLivingKey = (standard: StandardOfLiving): string =>
+  `sheet.standard-of-living.${enumToKey(standard)}`;
 
 export type Patron = { id: string; name: string };
 
@@ -46,7 +36,6 @@ export function resolvePatronName(id: string | null | undefined): string {
   if (!id) return '';
   const match = PATRONS_BY_ID.get(id);
   if (match) return match.name;
-  // Fallback: never expose UUIDs to users.
   if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
     return '';
   }
