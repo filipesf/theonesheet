@@ -1,50 +1,54 @@
-import { useMemo } from 'react';
-import { normaliseCharacter } from '../domain/normalise';
-import { createEmptyCharacter } from '../domain/schema';
+import { useState } from 'react';
+import { CharacterLibrary } from '../features/library/CharacterLibrary';
+import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
+import { SheetTabs, type SheetSection } from '../features/sheet/SheetTabs';
+import { CharacterEditor } from '../features/sheet/editor/CharacterEditor';
 
 export default function App() {
-  const character = useMemo(() => normaliseCharacter(createEmptyCharacter()), []);
+  const [section, setSection] = useState<SheetSection>('identity');
+  const library = useCharacterLibrary();
 
   return (
     <main className="app-shell">
       <header>
         <h1>The One Sheet</h1>
-        <p>v0 foundation is ready.</p>
+        <p>Single-page local character manager</p>
       </header>
-      <section className="stat-grid" aria-label="Derived stats preview">
-        <div>
-          <strong>TN STR</strong>
-          <span>{character.attributes.tn_strength}</span>
-        </div>
-        <div>
-          <strong>TN HRT</strong>
-          <span>{character.attributes.tn_heart}</span>
-        </div>
-        <div>
-          <strong>TN WTS</strong>
-          <span>{character.attributes.tn_wits}</span>
-        </div>
-        <div>
-          <strong>Max Endurance</strong>
-          <span>{character.max_endurance}</span>
-        </div>
-        <div>
-          <strong>Max Hope</strong>
-          <span>{character.max_hope}</span>
-        </div>
-        <div>
-          <strong>Base Parry</strong>
-          <span>{character.base_parry}</span>
-        </div>
-        <div>
-          <strong>Effective Parry</strong>
-          <span>{character.effective_parry}</span>
-        </div>
-        <div>
-          <strong>Load</strong>
-          <span>{character.load}</span>
-        </div>
-      </section>
+
+      <div className="layout-grid">
+        <CharacterLibrary
+          characters={library.characters}
+          activeCharacterId={library.activeCharacterId}
+          onCreate={library.createCharacter}
+          onSelect={library.switchCharacter}
+          onDuplicate={library.duplicateCharacter}
+          onRename={(id) => {
+            const current = library.characters.find((item) => item.id === id);
+            const name = prompt('Rename character', current?.name ?? '');
+            if (name && name.trim()) {
+              library.renameCharacter(id, name.trim());
+            }
+          }}
+          onDelete={(id) => {
+            if (confirm('Delete character?')) {
+              library.deleteCharacter(id);
+            }
+          }}
+        />
+
+        <section>
+          <SheetTabs active={section} onSelect={setSection} />
+          {library.activeCharacter ? (
+            <CharacterEditor
+              section={section}
+              character={library.activeCharacter}
+              onChange={library.updateCharacter}
+            />
+          ) : (
+            <p>Create your first character from the library.</p>
+          )}
+        </section>
+      </div>
     </main>
   );
 }
