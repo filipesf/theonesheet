@@ -41,7 +41,7 @@ export function CharacterEditor({ character, section, onChange }: Props) {
           {section === 'attributes' && <AttributeColumnGroup character={character} onUpdate={update} />}
           {section === 'conditions' && <ConditionsPanel character={character} onUpdate={update} />}
           {section === 'gear' && <GearPanel character={character} onUpdate={update} />}
-          {section === 'rewards' && <RewardsVirtuesPanel />}
+          {section === 'rewards' && <RewardsVirtuesPanel character={character} onUpdate={update} />}
           {section === 'notes' && <NotesPanel character={character} onUpdate={update} />}
           {section === 'skills' && <SkillsAndProficienciesPanel character={character} onUpdate={update} />}
         </div>
@@ -52,7 +52,7 @@ export function CharacterEditor({ character, section, onChange }: Props) {
           <SkillsAndProficienciesPanel character={character} onUpdate={update} />
           <ConditionsPanel character={character} onUpdate={update} />
           <GearPanel character={character} onUpdate={update} />
-          <RewardsVirtuesPanel />
+          <RewardsVirtuesPanel character={character} onUpdate={update} />
           <NotesPanel character={character} onUpdate={update} />
         </div>
       )}

@@ -216,6 +216,18 @@ h3 {
   gap: 0.5rem;
 }
 
+.sheet-list-grid {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.65rem 0;
+}
+
+.sheet-list-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 90px auto;
+  gap: 0.4rem;
+}
+
 .sheet-section-frame {
   border: 1px solid var(--sheet-line);
   border-radius: var(--sheet-radius);
