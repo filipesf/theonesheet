@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createBelbaWorkedExample } from '../domain/schema';
 import { CreationPanel } from '../features/creation/CreationPanel';
 import { CharacterLibrary } from '../features/library/CharacterLibrary';
+import { ImportExportPanel } from '../features/library/import-export/ImportExportPanel';
 import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
 import { SheetTabs, type SheetSection } from '../features/sheet/SheetTabs';
 import { CharacterEditor } from '../features/sheet/editor/CharacterEditor';
@@ -39,6 +40,11 @@ export default function App() {
         />
 
         <section>
+          <ImportExportPanel
+            activeCharacterId={library.activeCharacterId}
+            onExport={library.exportCharacter}
+            onImport={library.importCharacter}
+          />
           <SheetTabs active={section} onSelect={setSection} />
           {library.activeCharacter && section === 'creation' ? (
             <CreationPanel

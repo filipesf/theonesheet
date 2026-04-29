@@ -301,9 +301,9 @@ Make local-first data portable so `v0` characters can migrate into future hosted
 ### Success Criteria
 
 #### Automated Verification
-- [ ] Export/import round-trip tests pass: `pnpm test`
-- [ ] Invalid import payloads are rejected in tests: `pnpm test`
-- [ ] Build succeeds with import/export functionality: `pnpm build`
+- [x] Export/import round-trip tests pass: `pnpm test`
+- [x] Invalid import payloads are rejected in tests: `pnpm test`
+- [x] Build succeeds with import/export functionality: `pnpm build`
 
 #### Manual Verification
 - [ ] A user can export a character to JSON and re-import it successfully.

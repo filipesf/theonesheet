@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { normaliseCharacter } from '../../domain/normalise';
 import { createEmptyCharacter } from '../../domain/schema';
 import type { Character } from '../../domain/types';
+import { serialiseCharacter } from '../../persistence/export';
+import { importCharacterFromJson } from '../../persistence/import';
 import { loadCharacters, saveCharacters, type CharacterRecord } from '../../persistence/local-storage';
 
 type LibraryState = {
@@ -82,6 +84,39 @@ export function useCharacterLibrary() {
     });
   }, []);
 
+  const exportCharacter = useCallback((id: string): string | null => {
+    const item = state.characters.find((record) => record.id === id);
+    if (!item) {
+      return null;
+    }
+    return serialiseCharacter(item.character);
+  }, [state.characters]);
+
+  const importCharacter = useCallback((content: string) => {
+    const result = importCharacterFromJson(content);
+    if (!result.ok) {
+      return result;
+    }
+
+    setState((current) => {
+      const existingNames = current.characters.map((item) => item.name);
+      const imported = { ...result.character, id: crypto.randomUUID() };
+      const name = nextName(imported.name || 'Imported Hero', existingNames);
+      const record: CharacterRecord = {
+        id: imported.id,
+        name,
+        character: { ...imported, name },
+      };
+
+      return {
+        activeCharacterId: record.id,
+        characters: [...current.characters, record],
+      };
+    });
+
+    return { ok: true as const };
+  }, []);
+
   const switchCharacter = useCallback((id: string) => {
     setState((current) => ({ ...current, activeCharacterId: id }));
   }, []);
@@ -107,5 +142,7 @@ export function useCharacterLibrary() {
     deleteCharacter,
     switchCharacter,
     updateCharacter,
+    exportCharacter,
+    importCharacter,
   };
 }
