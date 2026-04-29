@@ -28,7 +28,8 @@ export function CharacterEditor({ character, section, onChange }: Props) {
   return (
     <section className="editor-panel sheet-editor-panel">
       {issues.length > 0 && (
-        <div className="inline-errors">
+        <div className="inline-errors validation-panel" role="alert" aria-live="polite">
+          <p className="validation-title">Validation issues ({issues.length})</p>
           {issues.map((issue) => (
             <p key={`${issue.field}-${issue.message}`}>{issue.field}: {issue.message}</p>
           ))}

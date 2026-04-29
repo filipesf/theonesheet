@@ -336,6 +336,15 @@ button:focus-visible {
   margin-bottom: 0.75rem;
 }
 
+.validation-panel {
+  border-left-width: 4px;
+}
+
+.validation-title {
+  margin: 0 0 0.3rem;
+  font-weight: 700;
+}
+
 .creation-status-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -383,6 +392,14 @@ button:focus-visible {
   }
 
   .sheet-skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sheet-skill-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sheet-list-row {
     grid-template-columns: 1fr;
   }
 }
