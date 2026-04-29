@@ -44,16 +44,10 @@
       "Bash(cat eslint.config.js)"
     ],
     "deny": [
-      "Bash(git push:*)",
-      "Bash(git commit:*)",
-      "Bash(git reset --hard:*)",
-      "Bash(git checkout --:*)",
-      "Bash(git restore --:*)",
-      "Bash(git clean -f:*)",
-      "Bash(git branch -D:*)",
-      "Bash(rm -rf:*)",
-      "Bash(rm -r:*)",
-      "Edit(pnpm-lock.yaml)"
+      "Bash(curl *)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
     ]
   }
 }
