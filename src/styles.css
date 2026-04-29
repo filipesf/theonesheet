@@ -1,0 +1,31 @@
+:root {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.4;
+  color: #1f2933;
+  background: linear-gradient(150deg, #f6f4ed 0%, #e9edf3 100%);
+}
+
+body {
+  margin: 0;
+}
+
+.app-shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.stat-grid > div {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #b8c4cf;
+  border-radius: 8px;
+  background: #ffffffcc;
+  padding: 0.75rem;
+}

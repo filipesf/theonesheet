@@ -150,10 +150,10 @@ export function normaliseCharacter(input: Character): Character {
 ### Success Criteria
 
 #### Automated Verification
-- [ ] App installs and starts locally: `pnpm install && pnpm dev`
-- [ ] Domain tests pass: `pnpm test`
-- [ ] Type checking passes: `pnpm tsc --noEmit`
-- [ ] Linting passes once configured: `pnpm lint`
+- [x] App installs and starts locally: `pnpm install && pnpm dev`
+- [x] Domain tests pass: `pnpm test`
+- [x] Type checking passes: `pnpm tsc --noEmit`
+- [x] Linting passes once configured: `pnpm lint`
 
 #### Manual Verification
 - [ ] A developer can create a valid in-memory character object from PRD data.
@@ -207,9 +207,9 @@ export function saveCharacters(characters: CharacterRecord[]): void {
 ### Success Criteria
 
 #### Automated Verification
-- [ ] UI component tests pass: `pnpm test`
-- [ ] Local persistence tests pass for create/update/delete flows: `pnpm test`
-- [ ] Build succeeds: `pnpm build`
+- [x] UI component tests pass: `pnpm test`
+- [x] Local persistence tests pass for create/update/delete flows: `pnpm test`
+- [x] Build succeeds: `pnpm build`
 
 #### Manual Verification
 - [ ] A user can create multiple characters in one browser.
