@@ -418,3 +418,49 @@ button:focus-visible {
   background: #ffffffcc;
   padding: 0.75rem;
 }
+
+@media print {
+  :root {
+    background: #fff;
+    color: #000;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .library-drawer,
+  .sheet-utility-controls,
+  .library-toggle,
+  .actions button,
+  button {
+    display: none !important;
+  }
+
+  .sheet-app-shell {
+    display: block;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .sheet-stage,
+  .sheet-workspace,
+  .editor-panel,
+  .sheet-section-frame {
+    border-color: #222 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  input,
+  textarea {
+    border-color: #444;
+    background: #fff;
+  }
+
+  .sheet-region-grid,
+  .sheet-skills-grid,
+  .sheet-proficiencies-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
