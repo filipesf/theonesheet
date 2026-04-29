@@ -1,4 +1,3 @@
-import { CULTURES } from '../ref-data/cultures';
 import { createEmptyCombatProficiencies } from '../ref-data/proficiencies';
 import { createEmptySkills } from '../ref-data/skills';
 import { normaliseCharacter } from './normalise';
@@ -9,24 +8,22 @@ function randomId(): string {
 }
 
 export function createEmptyCharacter(culture: HeroicCulture = 'HOBBITS_OF_THE_SHIRE'): Character {
-  const cultureData = CULTURES[culture];
-
   return {
     id: randomId(),
-    name: 'New Hero',
-    age: 20,
+    name: '',
+    age: 0,
     heroic_culture: culture,
-    cultural_blessing: cultureData.blessing,
-    calling: 'TREASURE_HUNTER',
-    shadow_path: 'Dragon-Sickness',
-    standard_of_living: cultureData.standardOfLiving,
+    cultural_blessing: '',
+    calling: 'CAPTAIN',
+    shadow_path: '',
+    standard_of_living: 'COMMON',
     attributes: {
-      strength: 4,
-      heart: 4,
-      wits: 4,
-      tn_strength: 16,
-      tn_heart: 16,
-      tn_wits: 16,
+      strength: 0,
+      heart: 0,
+      wits: 0,
+      tn_strength: 20,
+      tn_heart: 20,
+      tn_wits: 20,
     },
     skills: createEmptySkills(),
     combat_proficiencies: createEmptyCombatProficiencies(),
@@ -48,8 +45,8 @@ export function createEmptyCharacter(culture: HeroicCulture = 'HOBBITS_OF_THE_SH
       miserable: false,
       wounded: false,
     },
-    valour: 1,
-    wisdom: 1,
+    valour: 0,
+    wisdom: 0,
     rewards: [],
     virtues: [],
     war_gear: {
@@ -67,7 +64,7 @@ export function createEmptyCharacter(culture: HeroicCulture = 'HOBBITS_OF_THE_SH
       total_skill_points_spent: 0,
       total_adventure_points_spent: 0,
     },
-    company_id: randomId(),
+    company_id: '',
     fellowship_focus_id: null,
     heir: null,
     notes: '',
@@ -90,6 +87,7 @@ export function createBelbaWorkedExample(): Character {
   character.age = 28;
   character.calling = 'TREASURE_HUNTER';
   character.shadow_path = 'Dragon-Sickness';
+  character.company_id = 'gandalf';
   character.attributes.strength = 4;
   character.attributes.heart = 5;
   character.attributes.wits = 5;
