@@ -25,12 +25,18 @@ Create a single git commit for the currently staged-or-pending changes.
    - No co-author trailer. No "🤖 Generated" footer. No emojis unless the user asked for them.
    - If a body is genuinely useful (e.g., a non-obvious why), keep it short and wrap at 72 columns.
 
-4. Show the proposed message to the user and **wait for explicit approval** before committing.
+4. Show the proposed message to the user and **wait for explicit approval** before committing — *unless* one of these pre-approval signals is present, in which case proceed straight to step 5:
+   - The user invoked `/commit` with an argument that pre-authorises the commit (e.g. `/commit já pode fazer o push`, `/commit commit direto`, `/commit considere o commit pré-aprovado`).
+   - The user has said in the same turn or a recent turn that the commit (and/or push) is "pré-aprovado", "já está aprovado", "pode commitar e fazer o push direto", or equivalent.
+   - Auto mode is active **and** the user has previously signalled pre-approval at least once in the session for the same kind of work — treat it as a standing authorisation until the user revokes it. If the session has no such precedent, still pause for confirmation the first time.
 
-5. After approval:
+   When skipping the pause, briefly state the chosen title in your reply *before* running `git commit`, so the user can interrupt if it is wrong.
+
+5. After approval (or under a pre-approval signal):
    - Stage the specific files that should be in this commit (`git add <files>`). Do not use `git add -A` or `git add .` — that risks pulling in unrelated changes.
    - Run `git commit -S -m "<title>"` (or with `$(cat <<'EOF' ... EOF)` heredoc for multi-line messages).
    - Run `git status` to confirm a clean tree.
+   - If the user's pre-approval also covered the push (e.g. "commit e push já está aprovado"), run `git push` after the commit and report the push result alongside the commit hash. Otherwise leave the push for `/push`.
 
 6. Report the new commit hash and one-line message back to the user.
 
@@ -41,4 +47,4 @@ Create a single git commit for the currently staged-or-pending changes.
 - **Never `--no-verify`.** If a hook fails, fix the underlying issue and try again.
 - **Never force-push** from this command. Pushing is a separate command (`/push`).
 - **Never commit during pre-commit hook failure.** A failed hook means the commit did not happen — fix and re-stage, do not amend.
-- **Never auto-commit.** This command always pauses for explicit approval.
+- **Never auto-commit without a pre-approval signal.** The default is to pause for explicit approval. The only way to skip the pause is one of the signals listed in step 4 (a pre-approval argument, an explicit "pré-aprovado" / "já está aprovado" message, or a standing authorisation under Auto mode). Silence is not approval; ambiguity is not approval.
