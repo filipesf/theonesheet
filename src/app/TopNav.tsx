@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { ThemeName } from './theme/applyTheme';
 import { buildHash, navigate, type Route } from './router';
 
 type TopNavProps = {
@@ -9,6 +10,8 @@ type TopNavProps = {
   onImport: () => void;
   hasActiveCharacter: boolean;
   activeCharacterId: string | null;
+  theme: ThemeName;
+  onToggleTheme: () => void;
 };
 
 export function TopNav({
@@ -18,6 +21,8 @@ export function TopNav({
   onImport,
   hasActiveCharacter,
   activeCharacterId,
+  theme,
+  onToggleTheme,
 }: TopNavProps) {
   const { t } = useTranslation();
   const onSheetRoute = route.name === 'characterEditor' || route.name === 'characterPrinted';
@@ -55,6 +60,7 @@ export function TopNav({
             onImport={onImport}
             hasActiveCharacter={hasActiveCharacter}
           />
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           <NavLink
             active={route.name === 'settings'}
             href={buildHash({ name: 'settings' })}
@@ -217,6 +223,29 @@ function MenuItem({
       className="block w-full text-left px-3 py-2.5 font-label text-eyebrow tracking-label uppercase text-parchment-soft/85 hover:bg-ink-red/20 hover:text-parchment-soft cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red focus-visible:text-parchment-soft disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-parchment-soft/85"
     >
       {children}
+    </button>
+  );
+}
+
+function ThemeToggle({ theme, onToggle }: { theme: ThemeName; onToggle: () => void }) {
+  const { t } = useTranslation();
+  const labelKey =
+    theme === 'parchment' ? 'nav.theme.toggle-to-dark' : 'nav.theme.toggle-to-parchment';
+  const label = t(labelKey);
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={label}
+      title={label}
+      className="relative h-9 w-9 flex items-center justify-center cursor-pointer text-parchment-soft/70 hover:text-parchment-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red-soft rounded-sm transition-colors"
+    >
+      <span aria-hidden="true" className="relative inline-block h-4 w-4">
+        <span className="absolute inset-0 rotate-45 border-2 border-current" />
+        {theme === 'tor-dark' && (
+          <span className="absolute inset-1 rotate-45 bg-current" />
+        )}
+      </span>
     </button>
   );
 }

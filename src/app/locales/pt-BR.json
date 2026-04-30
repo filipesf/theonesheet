@@ -43,7 +43,11 @@
     "export-active": "Exportar herói ativo",
     "export-no-active-hint": "Abra um herói para exportá-lo.",
     "import-json": "Importar herói…",
-    "new-hero": "Novo Herói"
+    "new-hero": "Novo Herói",
+    "theme": {
+      "toggle-to-dark": "Alternar para Sombras de Mordor",
+      "toggle-to-parchment": "Alternar para Pergaminho"
+    }
   },
   "library": {
     "heading-eyebrow": "◆ The One Sheet · Heróis",
@@ -53,8 +57,10 @@
     "subheading-count_other": "{{count}} heróis guardados em sua biblioteca local. Escolha um para abrir a ficha, ou forje outro.",
     "forge-new-hero": "Forje um Novo Herói",
     "load-belba": "Carregar Belba Bolger · personagem de exemplo",
-    "empty-state-title": "Nenhum herói ainda",
-    "empty-state-body": "Toda saga começa com um nome. Forje seu primeiro herói e a ficha abrirá pronta para ser preenchida."
+    "empty-state-eyebrow": "◆ Página em branco",
+    "empty-state-title": "A primeira ficha está por escrever",
+    "empty-state-body": "Toda saga começa com um nome. Forje seu primeiro herói, ou abra a ficha pronta de Belba Bolger para estudar uma página completa.",
+    "empty-state-secondary-cta": "Estudar Belba Bolger"
   },
   "card": {
     "untitled-hero": "Herói sem nome",
@@ -157,12 +163,12 @@
       "name": "Digite o nome do seu herói…",
       "distinctive-features": "Paciente, Vigilante, Eloquente",
       "flaws": "—",
-      "travelling-gear": "Um item por linha"
+      "travelling-gear": "Um item por linha · corda, mantimentos, lembrança de casa"
     },
     "empty": {
-      "no-rewards": "Nenhuma registrada",
-      "no-virtues": "Nenhuma registrada",
-      "no-weapons": "Nenhuma arma equipada"
+      "no-rewards": "Nenhuma recompensa anotada ainda.",
+      "no-virtues": "Nenhuma virtude anotada ainda.",
+      "no-weapons": "Sem armas listadas — registre as que seu herói carrega."
     },
     "weapon": {
       "column": {
@@ -259,7 +265,7 @@
       "cancel": "Voltar à biblioteca",
       "experience": "Experiência prévia",
       "invalid-toast": "Há campos a corrigir. Revise os passos com erro antes de finalizar.",
-      "created-toast": "Herói criado.",
+      "created-toast": "Pronto. Herói registrado em sua biblioteca.",
       "step-status-current": "Passo atual",
       "step-status-completed": "Concluído",
       "step-status-upcoming": "Pendente"
@@ -317,7 +323,7 @@
       },
       "review": {
         "title": "Revisão",
-        "body": "Confira os dados antes de finalizar. Os valores derivados (Vigor, Esperança, Aparar) são recalculados automaticamente.",
+        "body": "Hora de assinar a ficha. Confira os dados — Vigor, Esperança e Aparar são recalculados ao finalizar.",
         "invalid": "Alguns campos ainda precisam de atenção. Volte aos passos com erro e tente novamente.",
         "blocking-title": "Bloqueios",
         "warnings-title": "Avisos",

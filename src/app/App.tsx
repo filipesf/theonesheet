@@ -11,6 +11,7 @@ import { DiceTrayLauncher } from '../features/dice/DiceTrayLauncher';
 import { useDiceHotkey } from '../features/dice/useDiceHotkey';
 import { setDiceTrayCharacter } from '../features/dice/useDiceTray';
 import { SettingsPage } from '../features/settings/SettingsPage';
+import { useSettings } from '../features/settings/useSettings';
 import { EditorShell } from './EditorShell';
 import { PrintedShell } from './PrintedShell';
 import { TopNav } from './TopNav';
@@ -30,6 +31,7 @@ export default function App() {
   const { t } = useTranslation();
   const route = useRoute();
   const library = useCharacterLibrary();
+  const { settings, setTheme } = useSettings();
   useDiceHotkey();
 
   useEffect(() => {
@@ -116,6 +118,10 @@ export default function App() {
         onImport={() => setImportOpen(true)}
         hasActiveCharacter={Boolean(library.activeCharacterId)}
         activeCharacterId={library.activeCharacterId}
+        theme={settings.theme}
+        onToggleTheme={() =>
+          setTheme(settings.theme === 'parchment' ? 'tor-dark' : 'parchment')
+        }
       />
 
       {route.name === 'library' && (
@@ -160,6 +166,8 @@ export default function App() {
           onImport={() => setImportOpen(true)}
           onExport={handleExport}
           hasActiveCharacter={Boolean(library.activeCharacterId)}
+          theme={settings.theme}
+          onChangeTheme={setTheme}
         />
       )}
 

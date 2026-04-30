@@ -52,7 +52,9 @@ export function LibraryPage(props: LibraryPageProps) {
         </div>
       </header>
 
-      {count === 0 ? <EmptyState onCreate={props.onCreate} /> : (
+      {count === 0 ? (
+        <EmptyState onCreate={props.onCreate} onApplyBelba={props.onApplyBelba} />
+      ) : (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {props.characters.map((record) => (
             <li key={record.id}>
@@ -75,27 +77,55 @@ export function LibraryPage(props: LibraryPageProps) {
   );
 }
 
-function EmptyState({ onCreate }: { onCreate: () => void }) {
+function EmptyState({
+  onCreate,
+  onApplyBelba,
+}: {
+  onCreate: () => void;
+  onApplyBelba: () => void;
+}) {
   const { t } = useTranslation();
   return (
-    <div className="border border-dashed border-ink-red/40 bg-parchment-soft/40 px-8 py-16 text-center">
-      <div
-        aria-hidden="true"
-        className="mx-auto mb-6 inline-block h-10 w-10 rotate-45 border-2 border-ink-red"
-      />
-      <h2 className="font-display text-2xl tracking-display text-ink-navy mb-2">
+    <div className="border border-ink-red/40 bg-parchment-soft/40 px-8 py-16 text-center">
+      <DiamondCluster />
+      <p className="font-label text-eyebrow tracking-eyebrow uppercase text-ink-red/80 mb-3">
+        {t('library.empty-state-eyebrow')}
+      </p>
+      <h2 className="font-display text-3xl tracking-display text-ink-navy mb-3">
         {t('library.empty-state-title')}
       </h2>
-      <p className="font-body text-base text-ink-navy/70 max-w-md mx-auto mb-6">
+      <p className="font-body text-base text-ink-navy/75 max-w-md mx-auto mb-7">
         {t('library.empty-state-body')}
       </p>
-      <button
-        type="button"
-        onClick={onCreate}
-        className="font-label text-eyebrow tracking-label uppercase bg-ink-red text-parchment-soft px-5 py-2.5 cursor-pointer hover:bg-ink-red-soft active:bg-ink-red/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
-      >
-        {t('library.forge-new-hero')}
-      </button>
+      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+        <button
+          type="button"
+          onClick={onCreate}
+          className="font-label text-eyebrow tracking-label uppercase bg-ink-red text-parchment-soft px-5 py-2.5 cursor-pointer hover:bg-ink-red-soft active:bg-ink-red/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
+        >
+          {t('library.forge-new-hero')}
+        </button>
+        <button
+          type="button"
+          onClick={onApplyBelba}
+          className="font-label text-microlabel tracking-label uppercase text-ink-red/80 hover:text-ink-red cursor-pointer underline-offset-4 hover:underline transition-colors focus:outline-none focus-visible:underline py-2 px-1"
+        >
+          {t('library.empty-state-secondary-cta')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function DiamondCluster() {
+  return (
+    <div
+      aria-hidden="true"
+      className="mx-auto mb-7 flex items-center justify-center gap-3 text-ink-red"
+    >
+      <span className="inline-block h-5 w-5 rotate-45 border-2 border-current opacity-60" />
+      <span className="inline-block h-9 w-9 rotate-45 border-2 border-current" />
+      <span className="inline-block h-5 w-5 rotate-45 border-2 border-current opacity-60" />
     </div>
   );
 }

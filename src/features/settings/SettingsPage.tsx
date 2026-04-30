@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import type { ThemeName } from '../../app/theme/applyTheme';
 import { GhostButton, PrimaryButton } from '../../app/ui/dialog-buttons';
 import { SelectionCard } from '../../app/ui/SelectionCard';
-import { useSettings } from './useSettings';
 
 const APP_VERSION = '0.0.0';
 const ROADMAP_URL = 'https://github.com/filipesf/theonesheet/blob/main/docs/ROADMAP.md';
@@ -12,11 +11,18 @@ type Props = {
   onImport: () => void;
   onExport: () => void;
   hasActiveCharacter: boolean;
+  theme: ThemeName;
+  onChangeTheme: (theme: ThemeName) => void;
 };
 
-export function SettingsPage({ onImport, onExport, hasActiveCharacter }: Props) {
+export function SettingsPage({
+  onImport,
+  onExport,
+  hasActiveCharacter,
+  theme,
+  onChangeTheme,
+}: Props) {
   const { t } = useTranslation();
-  const { settings, setTheme } = useSettings();
 
   return (
     <main className="mx-auto max-w-[900px] px-4 sm:px-6 py-10 lg:py-14 flex flex-col gap-10">
@@ -33,17 +39,17 @@ export function SettingsPage({ onImport, onExport, hasActiveCharacter }: Props) 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <ThemeCard
             theme="parchment"
-            active={settings.theme === 'parchment'}
+            active={theme === 'parchment'}
             label={t('settings.appearance.theme-parchment')}
             description={t('settings.appearance.theme-parchment-description')}
-            onPick={() => setTheme('parchment')}
+            onPick={() => onChangeTheme('parchment')}
           />
           <ThemeCard
             theme="tor-dark"
-            active={settings.theme === 'tor-dark'}
+            active={theme === 'tor-dark'}
             label={t('settings.appearance.theme-tor-dark')}
             description={t('settings.appearance.theme-tor-dark-description')}
-            onPick={() => setTheme('tor-dark')}
+            onPick={() => onChangeTheme('tor-dark')}
           />
         </div>
       </Section>
