@@ -2,6 +2,7 @@ import type { TFunction } from 'i18next';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal } from '../../app/ui/Modal';
+import { sanitiseDigits } from '../../app/ui/numeric-input';
 import { GhostButton, PrimaryButton } from '../../app/ui/dialog-buttons';
 import { appendLog, clearLog, readLog } from './diceLogStorage';
 import {
@@ -116,12 +117,14 @@ export function DiceTray() {
               {t('dice.tray.success-dice')}
             </span>
             <input
-              type="number"
-              min={1}
-              max={MAX_DICE}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={successDice}
               onChange={(event) =>
-                setSuccessDice(Math.max(1, Math.min(MAX_DICE, Number(event.target.value) || 1)))
+                setSuccessDice(
+                  Math.max(1, Math.min(MAX_DICE, sanitiseDigits(event.target.value) || 1)),
+                )
               }
               className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-hand text-lg text-ink-navy transition-colors"
             />
@@ -131,9 +134,11 @@ export function DiceTray() {
               {t('dice.tray.tn')}
             </span>
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={tn}
-              onChange={(event) => setTn(event.target.value)}
+              onChange={(event) => setTn(event.target.value.replace(/\D/g, ''))}
               placeholder={t('common.dash')}
               className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-hand text-lg text-ink-navy transition-colors"
             />

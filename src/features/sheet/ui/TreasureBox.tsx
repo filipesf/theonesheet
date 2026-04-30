@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { sanitiseDigits } from '../../../app/ui/numeric-input';
 
 type TreasureBoxProps = {
   value: number;
@@ -13,9 +14,11 @@ export function TreasureBox({ value, onChange }: TreasureBoxProps) {
         {t('sheet.label.treasure')}
       </span>
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
         value={value}
-        onChange={(event) => onChange(Number(event.target.value) || 0)}
+        onChange={(event) => onChange(sanitiseDigits(event.target.value))}
         aria-label={t('sheet.aria.treasure')}
         className="w-12 h-8 bg-transparent border-2 border-ink-red outline-none focus-visible:bg-ink-red/10 text-center font-hand text-lg text-ink-navy"
       />

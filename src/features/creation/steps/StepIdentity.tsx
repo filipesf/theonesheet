@@ -35,10 +35,13 @@ export function StepIdentity() {
           {t('creation.step.identity.age-label')}
         </span>
         <input
-          type="number"
-          min={8}
-          max={400}
-          {...register('age', { valueAsNumber: true })}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          {...register('age', {
+            setValueAs: (raw: unknown) =>
+              typeof raw === 'string' && raw.trim() === '' ? undefined : Number(raw),
+          })}
           className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-2xl text-ink-navy py-1 focus:border-ink-red focus-visible:bg-ink-red/5 transition-colors"
         />
         {errors.age && (

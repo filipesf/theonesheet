@@ -1,5 +1,6 @@
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { sanitiseDigits } from '../../../app/ui/numeric-input';
 import { estimatePreviousExperienceSpent } from '../../../domain/creation';
 import type { Character } from '../../../domain/types';
 import { ExperienceMeter } from '../components/ExperienceMeter';
@@ -49,14 +50,14 @@ export function StepProficiencies() {
                 {t(`sheet.combat-proficiency.${PROFICIENCY_KEY[proficiency.name]}`)}
               </span>
               <input
-                type="number"
-                min={0}
-                max={6}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={proficiency.rating}
                 onChange={(event) =>
                   setValue(
                     `combat_proficiencies.${index}.rating`,
-                    Math.max(0, Math.min(6, Number(event.target.value) || 0)),
+                    Math.max(0, Math.min(6, sanitiseDigits(event.target.value))),
                     { shouldDirty: true, shouldValidate: true },
                   )
                 }

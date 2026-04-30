@@ -118,11 +118,6 @@ textarea::placeholder {
  * we missed. Removing it globally hides foco from keyboard users (WCAG 2.4.7).
  */
 
-/* Spin controls on number inputs are fine but reduce visual weight */
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
 @media print {
   html,
   body {

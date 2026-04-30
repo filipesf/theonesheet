@@ -1,6 +1,7 @@
 import type { ChangeEvent, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
+import { sanitiseDigits } from '../../app/ui/numeric-input';
 import { normaliseCharacter } from '../../domain/normalise';
 import {
   CALLINGS,
@@ -390,9 +391,11 @@ function AttributeCluster({
       <div style={{ gridArea: 'rating-diamond' }} className="justify-self-start">
         <Diamond size="md">
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={rating}
-            onChange={(event) => onChangeRating(Number(event.target.value) || 0)}
+            onChange={(event) => onChangeRating(sanitiseDigits(event.target.value))}
             aria-label={ratingAriaLabel}
             className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-2xl text-ink-navy"
           />
@@ -553,9 +556,11 @@ function RewardLikeColumn({
           <DiamondLabel>{statLabel}</DiamondLabel>
           <Diamond size="md">
             <input
-              type="number"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={statValue}
-              onChange={(event) => onStatChange(Number(event.target.value) || 0)}
+              onChange={(event) => onStatChange(sanitiseDigits(event.target.value))}
               aria-label={statLabel}
               className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
             />
@@ -731,13 +736,15 @@ function ExperienceTriplet({
     <div className="grid grid-cols-3 gap-[var(--diamond-gap-vertex-cosy)]">
       <SidebarStat label={t('sheet.label.adventure-points')}>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           value={character.experience.adventure_points}
           onChange={(event) =>
             update({
               experience: {
                 ...character.experience,
-                adventure_points: Number(event.target.value) || 0,
+                adventure_points: sanitiseDigits(event.target.value),
               },
             })
           }
@@ -747,13 +754,15 @@ function ExperienceTriplet({
       </SidebarStat>
       <SidebarStat label={t('sheet.label.skill-points')}>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           value={character.experience.skill_points}
           onChange={(event) =>
             update({
               experience: {
                 ...character.experience,
-                skill_points: Number(event.target.value) || 0,
+                skill_points: sanitiseDigits(event.target.value),
               },
             })
           }
@@ -802,10 +811,12 @@ function EnduranceLoadCluster({
       <div className="grid grid-cols-[1fr_auto] items-end gap-[var(--diamond-gap-vertex-cosy)] justify-items-center">
         <SidebarStat label={t('sheet.label.current-endurance')} size="md">
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={character.current_endurance}
             onChange={(event) =>
-              update({ current_endurance: Number(event.target.value) || 0 })
+              update({ current_endurance: sanitiseDigits(event.target.value) })
             }
             aria-label={t('sheet.aria.current-endurance')}
             className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
@@ -838,10 +849,12 @@ function HopeShadowCluster({
       <div className="grid grid-cols-[1fr_auto] items-end gap-[var(--diamond-gap-vertex-cosy)] justify-items-center">
         <SidebarStat label={t('sheet.label.current-hope')} size="md">
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={character.current_hope}
             onChange={(event) =>
-              update({ current_hope: Number(event.target.value) || 0 })
+              update({ current_hope: sanitiseDigits(event.target.value) })
             }
             aria-label={t('sheet.aria.current-hope')}
             className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
@@ -849,9 +862,11 @@ function HopeShadowCluster({
         </SidebarStat>
         <SidebarStat label={t('sheet.label.shadow')} size="sm">
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={character.shadow}
-            onChange={(event) => update({ shadow: Number(event.target.value) || 0 })}
+            onChange={(event) => update({ shadow: sanitiseDigits(event.target.value) })}
             aria-label={t('sheet.aria.shadow')}
             className="w-7 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-sm text-ink-navy"
           />
@@ -882,9 +897,11 @@ function MeasureRow({
     <div className="flex items-baseline gap-2 justify-center">
       <DiamondLabel>{label}</DiamondLabel>
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
         value={value}
-        onChange={(event) => onChange(Number(event.target.value) || 0)}
+        onChange={(event) => onChange(sanitiseDigits(event.target.value))}
         aria-label={ariaLabel}
         className="w-12 bg-transparent border-0 border-b border-ink-red/60 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-base text-center text-ink-navy transition-colors"
       />
@@ -1018,9 +1035,11 @@ function NumberField({ label, value, onChange }: NumberFieldProps) {
         {label}
       </span>
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
         value={value}
-        onChange={(event) => onChange(Number(event.target.value) || 0)}
+        onChange={(event) => onChange(sanitiseDigits(event.target.value))}
         className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-lg text-ink-navy pb-0.5 focus:border-ink-red transition-colors"
       />
     </label>

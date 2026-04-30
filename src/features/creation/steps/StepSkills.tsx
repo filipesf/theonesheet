@@ -1,5 +1,6 @@
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { sanitiseDigits } from '../../../app/ui/numeric-input';
 import { estimatePreviousExperienceSpent } from '../../../domain/creation';
 import type { Character } from '../../../domain/types';
 import { createEmptySkills } from '../../../ref-data/skills';
@@ -58,14 +59,14 @@ export function StepSkills() {
               />
               <span className="font-body text-base text-ink-navy truncate">{skillLabel(t, skill)}</span>
               <input
-                type="number"
-                min={0}
-                max={6}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 value={skill.rating}
                 onChange={(event) =>
                   setValue(
                     `skills.${index}.rating`,
-                    Math.max(0, Math.min(6, Number(event.target.value) || 0)),
+                    Math.max(0, Math.min(6, sanitiseDigits(event.target.value))),
                     { shouldDirty: true, shouldValidate: true },
                   )
                 }
