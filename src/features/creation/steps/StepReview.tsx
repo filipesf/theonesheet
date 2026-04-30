@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { validateCreation } from '../../../domain/creation';
+import { validateCreation, type CreationIssue } from '../../../domain/creation';
+import { callingKey, heroicCultureKey } from '../../../ref-data/labels';
 import { draftToCharacter } from '../draftToCharacter';
 import type { CreationDraft } from '../creationSchema';
 
@@ -41,8 +42,14 @@ export function StepReview() {
       {character && (
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 border border-ink-red/30 p-4 bg-parchment-soft/40">
           <Row label={t('sheet.label.name')} value={character.name} />
-          <Row label={t('sheet.label.heroic-culture')} value={character.heroic_culture} />
-          <Row label={t('sheet.label.calling')} value={character.calling} />
+          <Row
+            label={t('sheet.label.heroic-culture')}
+            value={t(heroicCultureKey(character.heroic_culture))}
+          />
+          <Row
+            label={t('sheet.label.calling')}
+            value={t(callingKey(character.calling))}
+          />
           <Row label={t('sheet.label.age')} value={String(character.age)} />
           <Row label={t('sheet.attribute.strength')} value={String(character.attributes.strength)} />
           <Row label={t('sheet.attribute.heart')} value={String(character.attributes.heart)} />
@@ -66,9 +73,7 @@ export function StepReview() {
           </h3>
           <ul className="list-disc pl-5 mt-1 font-body text-sm text-ink-red">
             {blockingIssues.map((issue) => (
-              <li key={`${issue.field}-${issue.message}`}>
-                {issue.field}: {issue.message}
-              </li>
+              <IssueItem key={`${issue.field}-${issue.code}`} issue={issue} />
             ))}
           </ul>
         </section>
@@ -81,9 +86,7 @@ export function StepReview() {
           </h3>
           <ul className="list-disc pl-5 mt-1 font-body text-sm text-ink-navy/70">
             {draftIssues.map((issue) => (
-              <li key={`${issue.field}-${issue.message}`}>
-                {issue.field}: {issue.message}
-              </li>
+              <IssueItem key={`${issue.field}-${issue.code}`} issue={issue} />
             ))}
           </ul>
         </section>
@@ -93,6 +96,17 @@ export function StepReview() {
         {t('creation.step.review.phase9-note')}
       </p>
     </div>
+  );
+}
+
+function IssueItem({ issue }: { issue: CreationIssue }) {
+  const { t } = useTranslation();
+  const fieldLabel = t(`creation.field.${issue.field}`, { defaultValue: issue.field });
+  const message = t(`creation.issue.${issue.code}`, issue.data ?? {});
+  return (
+    <li>
+      {fieldLabel}: {message}
+    </li>
   );
 }
 

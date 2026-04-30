@@ -13,6 +13,7 @@ export const attributesStep = z.object({
 });
 
 const skillEntry = z.object({
+  id: z.string().optional(),
   name: z.string(),
   rating: z.number().int().min(0).max(6),
   favoured: z.boolean(),
@@ -40,25 +41,31 @@ export const identityStep = z.object({
   age: z.number().int().min(8).max(400),
 });
 
+const weaponEntry = z.object({
+  id: z.string().min(1),
+  load: z.number().int().min(0),
+});
+
+const armourEntry = z.object({
+  id: z.string().min(1),
+  load: z.number().int().min(0),
+});
+
+const shieldEntry = z.object({
+  id: z.string().min(1),
+  load: z.number().int().min(0),
+  parry_bonus: z.number().int(),
+});
+
 export const callingStep = z.object({
   calling: z.enum(CALLINGS),
   calling_feature: z.string().min(1),
   starting_reward: z.string().min(1),
   starting_virtue: z.string().min(1),
   standard_of_living: z.enum(STANDARD_OF_LIVING),
-  weapons: z
-    .array(z.object({ type: z.string().min(1), load: z.number().int().min(0) }))
-    .max(4),
-  armour: z
-    .object({ type: z.string().min(1), load: z.number().int().min(0) })
-    .nullable(),
-  shield: z
-    .object({
-      type: z.string().min(1),
-      load: z.number().int().min(0),
-      parry_bonus: z.number().int(),
-    })
-    .nullable(),
+  weapons: z.array(weaponEntry).max(4),
+  armour: armourEntry.nullable(),
+  shield: shieldEntry.nullable(),
 });
 
 export const creationSchema = cultureStep

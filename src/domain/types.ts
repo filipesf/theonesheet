@@ -1,3 +1,27 @@
+import type {
+  ArmourId,
+  BlessingId,
+  HelmId,
+  RewardId,
+  ShadowPath,
+  ShieldId,
+  SkillId,
+  VirtueId,
+  WeaponId,
+} from '../ref-data/types';
+
+export type {
+  ArmourId,
+  BlessingId,
+  HelmId,
+  RewardId,
+  ShadowPath,
+  ShieldId,
+  SkillId,
+  VirtueId,
+  WeaponId,
+} from '../ref-data/types';
+
 export const HEROIC_CULTURES = [
   'DWARVES_OF_DURINS_FOLK',
   'BARDINGS',
@@ -32,6 +56,7 @@ export type Attributes = {
 };
 
 export type Skill = {
+  id?: SkillId;
   name: string;
   category: 'STRENGTH' | 'HEART' | 'WITS';
   rating: number;
@@ -44,30 +69,36 @@ export type CombatProficiency = {
 };
 
 export type Reward = {
+  id?: RewardId;
   name: string;
   origin?: 'STARTING' | 'STANDARD' | 'CULTURAL';
 };
 
 export type Virtue = {
+  id?: VirtueId;
   name: string;
   origin: 'STARTING' | 'STANDARD' | 'CULTURAL';
 };
 
 export type Weapon = {
+  id?: WeaponId;
   type: string;
   load: number;
 };
 
 export type Armour = {
+  id?: ArmourId;
   type: string;
   load: number;
 };
 
 export type Helm = {
+  id?: HelmId;
   load: number;
 };
 
 export type Shield = {
+  id?: ShieldId;
   type: string;
   load: number;
   parry_bonus: number;
@@ -86,9 +117,9 @@ export type Character = {
   name: string;
   age: number;
   heroic_culture: HeroicCulture;
-  cultural_blessing: string;
+  cultural_blessing: BlessingId | string;
   calling: Calling;
-  shadow_path: string;
+  shadow_path: ShadowPath | string;
   standard_of_living: StandardOfLiving;
   attributes: Attributes;
   skills: Skill[];

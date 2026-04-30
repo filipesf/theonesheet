@@ -60,7 +60,7 @@ export function StepProficiencies() {
                     { shouldDirty: true, shouldValidate: true },
                   )
                 }
-                aria-label={proficiency.name}
+                aria-label={t(`sheet.combat-proficiency.${PROFICIENCY_KEY[proficiency.name]}`)}
                 className="bg-transparent border border-ink-red/40 px-2 py-1 text-center font-hand text-lg text-ink-navy"
               />
             </li>

@@ -8,10 +8,11 @@ import { draftToCharacter } from '../draftToCharacter';
 function makeDraft(): CreationDraft {
   // 10 PE budget: Stealth 3 (6) + Scan 1 (1) + Athletics 1 (1) + Swords 1 (2) = 10.
   const skills = createEmptySkills().map((s) => ({
+    id: s.id,
     name: s.name,
     rating:
-      s.name === 'Stealth' ? 3 : s.name === 'Scan' || s.name === 'Athletics' ? 1 : 0,
-    favoured: s.name === 'Stealth' || s.name === 'Scan',
+      s.id === 'stealth' ? 3 : s.id === 'scan' || s.id === 'athletics' ? 1 : 0,
+    favoured: s.id === 'stealth' || s.id === 'scan',
   }));
   const proficiencies = createEmptyCombatProficiencies().map((p) => ({
     name: p.name,
@@ -25,16 +26,16 @@ function makeDraft(): CreationDraft {
     wits: 5,
     skills,
     combat_proficiencies: proficiencies,
-    cultural_features: ['Curious', 'Hospitable'],
+    cultural_features: ['curious', 'hospitable'],
     name: 'Belba Bolger',
     age: 28,
     calling: 'TREASURE_HUNTER',
-    calling_feature: 'Inquisitive',
-    starting_reward: 'Hardiness',
-    starting_virtue: 'Mastery',
+    calling_feature: 'burglary',
+    starting_reward: 'hardiness',
+    starting_virtue: 'mastery',
     standard_of_living: 'COMMON',
-    weapons: [{ type: 'Sword', load: 2 }],
-    armour: { type: 'Leather Shirt', load: 3 },
+    weapons: [{ id: 'sword', load: 2 }],
+    armour: { id: 'leather-shirt', load: 3 },
     shield: null,
   };
 }
@@ -45,9 +46,13 @@ describe('draftToCharacter', () => {
     const character = draftToCharacter(draft);
     const blocking = validateCreation(character).filter((issue) => issue.blocking);
     expect(blocking).toEqual([]);
-    expect(character.distinctive_features).toEqual(['Curious', 'Hospitable', 'Inquisitive']);
-    expect(character.cultural_blessing).toBe('Hobbit-Sense');
-    expect(character.shadow_path).toBe('Dragon-Sickness');
+    expect(character.distinctive_features).toEqual(['curious', 'hospitable', 'burglary']);
+    expect(character.cultural_blessing).toBe('hobbit-sense');
+    expect(character.shadow_path).toBe('dragon-sickness');
+    expect(character.rewards[0]?.id).toBe('hardiness');
+    expect(character.virtues[0]?.id).toBe('mastery');
+    expect(character.war_gear.weapons[0]?.id).toBe('sword');
+    expect(character.war_gear.armour?.id).toBe('leather-shirt');
   });
 
   it('seeds current endurance/hope to their max values', () => {

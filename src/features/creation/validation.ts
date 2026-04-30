@@ -1,16 +1,16 @@
+import { validateCreation, type CreationIssue } from '../../domain/creation';
 import type { Character } from '../../domain/types';
-import { validateCreation } from '../../domain/creation';
 
-export function getCreationValidationSummary(character: Character): {
-  blocking: string[];
-  draftWarnings: string[];
+export type CreationValidationSummary = {
+  blocking: CreationIssue[];
+  draftWarnings: CreationIssue[];
   canFinalise: boolean;
-} {
+};
+
+export function getCreationValidationSummary(character: Character): CreationValidationSummary {
   const issues = validateCreation(character);
-  const blocking = issues.filter((issue) => issue.blocking).map((issue) => `${issue.field}: ${issue.message}`);
-  const draftWarnings = issues
-    .filter((issue) => !issue.blocking)
-    .map((issue) => `${issue.field}: ${issue.message}`);
+  const blocking = issues.filter((issue) => issue.blocking);
+  const draftWarnings = issues.filter((issue) => !issue.blocking);
 
   return {
     blocking,

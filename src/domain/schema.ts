@@ -1,6 +1,6 @@
 import { createEmptyCombatProficiencies } from '../ref-data/proficiencies';
 import { createEmptySkills } from '../ref-data/skills';
-import { normaliseCharacter } from './normalise';
+import { migrateV0ToV0 } from './migrations/v0';
 import type { Character, ExportedCharacterFile, HeroicCulture } from './types';
 
 function randomId(): string {
@@ -91,7 +91,7 @@ export function createBelbaWorkedExample(): Character {
   character.attributes.strength = 4;
   character.attributes.heart = 5;
   character.attributes.wits = 5;
-  character.distinctive_features = ['Keen-Eyed', 'Inquisitive', 'Burglary'];
+  character.distinctive_features = ['keen-eyed', 'inquisitive', 'burglary'];
   character.rewards = [{ name: 'Hardiness', origin: 'STARTING' }];
   character.virtues = [{ name: 'Mastery', origin: 'STARTING' }];
   character.current_endurance = 24;
@@ -105,18 +105,20 @@ export function createBelbaWorkedExample(): Character {
   character.experience.total_skill_points_spent = 10;
   character.experience.total_adventure_points_spent = 0;
 
-  const skillNamesToFavoured = new Set(['Stealth', 'Scan', 'Explore', 'Healing', 'Persuade']);
+  const favouredSkillIds = new Set(['stealth', 'scan', 'explore', 'healing', 'persuade']);
+  const ratedSkillIds = new Set(['athletics', 'travel', 'hunting', 'lore']);
   character.skills = character.skills.map((skill) => {
-    if (skill.name === 'Stealth') {
+    if (skill.id === 'stealth') {
       return { ...skill, rating: 4, favoured: true };
     }
-    if (skill.name === 'Scan') {
+    if (skill.id === 'scan') {
       return { ...skill, rating: 1, favoured: true };
     }
-    if (skill.name === 'Athletics' || skill.name === 'Travel' || skill.name === 'Hunting' || skill.name === 'Lore') {
-      return { ...skill, rating: 1, favoured: skillNamesToFavoured.has(skill.name) };
+    const id = skill.id;
+    if (id && ratedSkillIds.has(id)) {
+      return { ...skill, rating: 1, favoured: favouredSkillIds.has(id) };
     }
-    return { ...skill, favoured: skillNamesToFavoured.has(skill.name) };
+    return { ...skill, favoured: id ? favouredSkillIds.has(id) : false };
   });
 
   character.combat_proficiencies = character.combat_proficiencies.map((proficiency) => {
@@ -129,5 +131,5 @@ export function createBelbaWorkedExample(): Character {
     return proficiency;
   });
 
-  return normaliseCharacter(character);
+  return migrateV0ToV0(character);
 }

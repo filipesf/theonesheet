@@ -1,6 +1,6 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ATTRIBUTE_SETS } from '../content/attribute-sets';
+import { ATTRIBUTE_SETS } from '../../../ref-data/attribute-sets';
 import type { CreationDraft } from '../creationSchema';
 
 export function StepAttributes() {

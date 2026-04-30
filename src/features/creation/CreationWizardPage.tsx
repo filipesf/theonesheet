@@ -6,9 +6,8 @@ import { toast } from 'sonner';
 import { validateCreation } from '../../domain/creation';
 import { createEmptySkills } from '../../ref-data/skills';
 import { createEmptyCombatProficiencies } from '../../ref-data/proficiencies';
-import { CULTURES } from '../../ref-data/cultures';
 import { navigate } from '../../app/router';
-import type { Character } from '../../domain/types';
+import type { Calling, Character, HeroicCulture, StandardOfLiving } from '../../domain/types';
 import { WizardFooter } from './components/WizardFooter';
 import { WizardShell } from './components/WizardShell';
 import {
@@ -32,22 +31,26 @@ type Props = {
   onCreate: (character: Character) => string;
 };
 
+// Defaults are intentionally "blank" for the irreversible choices (culture,
+// attributes, calling, SoL): the wizard requires explicit user picks. The
+// `as unknown as` casts preserve the strict zod schema; `mode: 'onTouched'`
+// keeps the errors silent until interaction.
 const DEFAULT_VALUES: CreationDraft = {
-  heroic_culture: 'HOBBITS_OF_THE_SHIRE',
-  attribute_set_index: 0,
-  strength: 4,
-  heart: 6,
-  wits: 6,
-  skills: createEmptySkills().map((s) => ({ name: s.name, rating: s.rating, favoured: s.favoured })),
+  heroic_culture: undefined as unknown as HeroicCulture,
+  attribute_set_index: -1,
+  strength: 0,
+  heart: 0,
+  wits: 0,
+  skills: createEmptySkills().map((s) => ({ id: s.id, name: s.name, rating: s.rating, favoured: s.favoured })),
   combat_proficiencies: createEmptyCombatProficiencies().map((p) => ({ name: p.name, rating: p.rating })),
   cultural_features: [],
   name: '',
   age: 30,
-  calling: 'TREASURE_HUNTER',
+  calling: undefined as unknown as Calling,
   calling_feature: '',
   starting_reward: '',
   starting_virtue: '',
-  standard_of_living: CULTURES.HOBBITS_OF_THE_SHIRE.standardOfLiving,
+  standard_of_living: undefined as unknown as StandardOfLiving,
   weapons: [],
   armour: null,
   shield: null,
@@ -70,7 +73,10 @@ export function CreationWizardPage({ onCreate }: Props) {
     if (currentStep === 'review') return;
     const fields = STEP_FIELDS[currentStep];
     const ok = await methods.trigger(fields as readonly (keyof CreationDraft)[]);
-    if (!ok) return;
+    if (!ok) {
+      toast.error(t('creation.advance-blocked'));
+      return;
+    }
     setStepIndex((index) => Math.min(index + 1, STEP_ORDER.length - 1));
   }
 
@@ -103,7 +109,11 @@ export function CreationWizardPage({ onCreate }: Props) {
     const character = draftToCharacter(draft);
     const blocking = validateCreation(character).filter((i) => i.blocking);
     if (blocking.length > 0) {
-      blocking.forEach((issue) => toast.error(`${issue.field}: ${issue.message}`));
+      blocking.forEach((issue) => {
+        const fieldLabel = t(`creation.field.${issue.field}`, { defaultValue: issue.field });
+        const message = t(`creation.issue.${issue.code}`, issue.data ?? {});
+        toast.error(`${fieldLabel}: ${message}`);
+      });
       return;
     }
     const id = onCreate(character);
@@ -111,7 +121,9 @@ export function CreationWizardPage({ onCreate }: Props) {
     navigate({ name: 'characterEditor', id });
   }
 
-  const canAdvance = isLast ? methods.formState.isValid : true;
+  const stepErrors = STEP_FIELDS[currentStep as keyof typeof STEP_FIELDS] ?? [];
+  const stepHasError = stepErrors.some((field) => methods.formState.errors[field] !== undefined);
+  const canAdvance = isLast ? methods.formState.isValid : !stepHasError;
 
   return (
     <FormProvider {...methods}>

@@ -5,6 +5,5 @@ export const RULE_DATA_GAPS = {
   highRankSkillCosts: 'PRD_TheOneSheet.md:1399',
   highRankProficiencyCosts: 'PRD_TheOneSheet.md:1400',
   valourWisdomRankCosts: 'PRD_TheOneSheet.md:1401',
-  partialCulturalVirtuesText: 'PRD_TheOneSheet.md:1402',
-  enchantedRewardsList: 'PRD_TheOneSheet.md:1403',
+  culturalVirtueFullEffects: 'PRD_TheOneSheet.md:1402',
 } as const;

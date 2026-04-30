@@ -15,6 +15,6 @@ describe('creation validation summary', () => {
 
     expect(summary.canFinalise).toBe(false);
     expect(summary.blocking.length).toBeGreaterThan(0);
-    expect(summary.draftWarnings.some((item) => item.includes('partially spent'))).toBe(true);
+    expect(summary.draftWarnings.some((issue) => issue.code === 'previous-experience-underspent')).toBe(true);
   });
 });

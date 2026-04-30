@@ -1,8 +1,19 @@
 import type { Character } from './types';
 
+export type CreationIssueCode =
+  | 'name-required'
+  | 'age-positive'
+  | 'distinctive-features-min'
+  | 'rewards-one'
+  | 'virtues-one'
+  | 'previous-experience-overspent'
+  | 'previous-experience-underspent'
+  | 'derived-state-bounds';
+
 export type CreationIssue = {
   field: string;
-  message: string;
+  code: CreationIssueCode;
+  data?: Record<string, string | number>;
   blocking: boolean;
 };
 
@@ -52,33 +63,30 @@ export function validateCreation(character: Character): CreationIssue[] {
       : estimatePreviousExperienceSpent(character);
 
   if (!character.name.trim()) {
-    issues.push({ field: 'name', message: 'Name is required to finalise the hero.', blocking: true });
+    issues.push({ field: 'name', code: 'name-required', blocking: true });
   }
 
   if (character.age <= 0) {
-    issues.push({ field: 'age', message: 'Age should be greater than zero.', blocking: true });
+    issues.push({ field: 'age', code: 'age-positive', blocking: true });
   }
 
   if (character.distinctive_features.length < 3) {
-    issues.push({
-      field: 'distinctive_features',
-      message: 'At least 3 distinctive features are expected (2 culture + 1 calling).',
-      blocking: true,
-    });
+    issues.push({ field: 'distinctive_features', code: 'distinctive-features-min', blocking: true });
   }
 
   if (character.rewards.length !== 1) {
-    issues.push({ field: 'rewards', message: 'Pick exactly one starting reward.', blocking: true });
+    issues.push({ field: 'rewards', code: 'rewards-one', blocking: true });
   }
 
   if (character.virtues.length !== 1) {
-    issues.push({ field: 'virtues', message: 'Pick exactly one starting virtue.', blocking: true });
+    issues.push({ field: 'virtues', code: 'virtues-one', blocking: true });
   }
 
   if (spent > 10) {
     issues.push({
       field: 'previous_experience',
-      message: `Previous Experience overspent: ${spent}/10.`,
+      code: 'previous-experience-overspent',
+      data: { spent },
       blocking: true,
     });
   }
@@ -86,17 +94,14 @@ export function validateCreation(character: Character): CreationIssue[] {
   if (spent < 10) {
     issues.push({
       field: 'previous_experience',
-      message: `Previous Experience partially spent: ${spent}/10.`,
+      code: 'previous-experience-underspent',
+      data: { spent },
       blocking: false,
     });
   }
 
   if (character.current_endurance > character.max_endurance || character.current_hope > character.max_hope) {
-    issues.push({
-      field: 'derived_state',
-      message: 'Current endurance/hope should not exceed max values.',
-      blocking: true,
-    });
+    issues.push({ field: 'derived_state', code: 'derived-state-bounds', blocking: true });
   }
 
   return issues;

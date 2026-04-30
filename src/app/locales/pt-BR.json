@@ -330,10 +330,31 @@
         "warnings-title": "Avisos",
         "phase9-note": "A formação da Companhia (Fase 9) é colaborativa e fica para a v2."
       }
+    },
+    "advance-blocked": "Há campos pendentes neste passo. Revise antes de avançar.",
+    "field": {
+      "name": "Nome",
+      "age": "Idade",
+      "distinctive_features": "Traços marcantes",
+      "rewards": "Recompensas",
+      "virtues": "Virtudes",
+      "previous_experience": "Experiência prévia",
+      "derived_state": "Estado derivado"
+    },
+    "issue": {
+      "name-required": "Informe um nome antes de finalizar.",
+      "age-positive": "Idade deve ser maior que zero.",
+      "distinctive-features-min": "São necessários 3 traços marcantes (2 culturais + 1 da vocação).",
+      "rewards-one": "Escolha exatamente uma recompensa inicial.",
+      "virtues-one": "Escolha exatamente uma virtude inicial.",
+      "previous-experience-overspent": "Experiência prévia ultrapassada: {{spent}}/10.",
+      "previous-experience-underspent": "Experiência prévia parcial: {{spent}}/10.",
+      "derived-state-bounds": "Vigor/Esperança atual não pode exceder o máximo."
     }
   },
   "common": {
     "dash": "—",
+    "choose": "Selecione…",
     "lost-page": {
       "eyebrow": "◆ Página perdida",
       "title": "Este herói não está na sua biblioteca",
@@ -356,6 +377,242 @@
     },
     "rename": {
       "done": "Herói renomeado."
+    }
+  },
+  "ref": {
+    "callings": {
+      "captain": "Capitão",
+      "champion": "Campeão",
+      "messenger": "Mensageiro",
+      "scholar": "Erudito",
+      "treasure-hunter": "Caçador de Tesouros",
+      "warden": "Guardião"
+    },
+    "shadowPaths": {
+      "dragon-sickness": "Doença do Dragão",
+      "curse-of-vengeance": "Maldição da Vingança",
+      "lure-of-power": "Atração pelo Poder",
+      "lure-of-secrets": "Atração pelos Segredos",
+      "path-of-despair": "Caminho do Desespero",
+      "wandering-madness": "Loucura Errante"
+    },
+    "distinctiveFeatures": {
+      "callings": {
+        "burglary": "Furtividade",
+        "enemy-lore": "Conhecimento do Inimigo",
+        "leadership": "Liderança",
+        "rhymes-of-lore": "Versos de Saber",
+        "shadow-lore": "Conhecimento da Sombra",
+        "folk-lore": "Folclore"
+      },
+      "cultures": {
+        "dwarves-of-durins-folk": {
+          "bold": "Audacioso",
+          "grim": "Sombrio",
+          "keen-eyed": "Vista Aguçada",
+          "proud": "Orgulhoso",
+          "robust": "Robusto",
+          "stern": "Severo"
+        },
+        "bardings": {
+          "cunning": "Astuto",
+          "fair-spoken": "Eloquente",
+          "generous": "Generoso",
+          "lordly": "Senhoril",
+          "patient": "Paciente",
+          "tall": "Alto"
+        },
+        "elves-of-lindon": {
+          "curious": "Curioso",
+          "eloquent": "Eloquente",
+          "fair": "Belo",
+          "lordly": "Senhoril",
+          "mirthful": "Alegre",
+          "wise": "Sábio"
+        },
+        "hobbits-of-the-shire": {
+          "cheerful": "Animado",
+          "curious": "Curioso",
+          "hospitable": "Hospitaleiro",
+          "inquisitive": "Inquiridor",
+          "keen-eyed": "Vista Aguçada",
+          "merry": "Jovial"
+        },
+        "men-of-bree": {
+          "bluff": "Direto",
+          "cautious": "Cauteloso",
+          "honest": "Honesto",
+          "steadfast": "Firme",
+          "stout": "Resoluto",
+          "trusty": "Confiável"
+        },
+        "rangers-of-the-north": {
+          "fair-spoken": "Eloquente",
+          "grim": "Sombrio",
+          "just": "Justo",
+          "patient": "Paciente",
+          "vigilant": "Vigilante",
+          "wise": "Sábio"
+        }
+      }
+    },
+    "enemyLore": {
+      "evil-men": "Homens Maus",
+      "orcs": "Orcs",
+      "spiders": "Aranhas",
+      "trolls": "Trolls",
+      "wargs": "Wargs",
+      "undead": "Mortos-vivos"
+    },
+    "equipment": {
+      "weaponGroups": {
+        "sword": "Espada",
+        "axe": "Machado",
+        "spear": "Lança",
+        "bow": "Arco",
+        "brawling": "Briga",
+        "mattock": "Picareta"
+      },
+      "weapons": {
+        "unarmed": "Desarmado",
+        "dagger": "Adaga",
+        "cudgel": "Cacete",
+        "club": "Clava",
+        "short-sword": "Espada curta",
+        "sword": "Espada",
+        "long-sword": "Espada longa",
+        "short-spear": "Lança curta",
+        "spear": "Lança",
+        "great-spear": "Grande lança",
+        "axe": "Machado",
+        "long-hafted-axe": "Machado de cabo longo",
+        "great-axe": "Grande machado",
+        "mattock": "Picareta",
+        "bow": "Arco",
+        "great-bow": "Grande arco"
+      },
+      "armour": {
+        "leather-shirt": "Camisa de couro",
+        "leather-corslet": "Corcelete de couro",
+        "mail-shirt": "Camisa de malha",
+        "coat-of-mail": "Cota de malha"
+      },
+      "helms": {
+        "helm": "Elmo"
+      },
+      "shields": {
+        "buckler": "Escudo pequeno",
+        "shield": "Escudo",
+        "great-shield": "Grande escudo"
+      }
+    },
+    "virtues": {
+      "standard": {
+        "confidence": "Confiança",
+        "dour-handed": "Mão Pesada",
+        "hardiness": "Resistência",
+        "mastery": "Mestria",
+        "nimbleness": "Agilidade",
+        "prowess": "Proeza"
+      },
+      "cultural": {
+        "dwarves-of-durins-folk": {
+          "baruk-khazad": "Baruk Khazâd!",
+          "path-of-durin": "Caminho de Durin",
+          "stiff-necked": "Cabeça-Dura",
+          "that-which-was-lost": "Aquilo que se Perdeu",
+          "untameable-spirit": "Espírito Indomável",
+          "words-of-power": "Palavras de Poder"
+        },
+        "bardings": {
+          "bahkdir": "Bahkdir",
+          "birthright-of-lake-town": "Direito de Nascença de Cidade do Lago",
+          "cram": "Cram",
+          "determined-folk": "Povo Determinado",
+          "dragon-slayer": "Matador de Dragões",
+          "tongue-of-many-lands": "Língua de Muitas Terras"
+        },
+        "elves-of-lindon": {
+          "council-of-the-wise": "Conselho dos Sábios",
+          "elbereth-gilthoniel": "Elbereth Gilthoniel",
+          "elder-days": "Dias Antigos",
+          "elven-grace": "Graça Élfica",
+          "eyes-of-the-eagle": "Olhos da Águia",
+          "light-of-aman": "Luz de Aman"
+        },
+        "hobbits-of-the-shire": {
+          "brave-at-a-pinch": "Corajoso em Apuros",
+          "hobbit-sense": "Tino Hobbit",
+          "old-gaffers-tales": "Histórias do Velho Tio",
+          "small-but-tough": "Pequeno mas Resistente",
+          "three-is-company": "Três é Companhia",
+          "unobtrusive": "Discreto"
+        },
+        "men-of-bree": {
+          "bree-pony": "Pônei de Bree",
+          "crafty": "Astuto",
+          "determined": "Determinado",
+          "old-bones": "Ossos Velhos",
+          "stout-hearted": "Coração de Aço",
+          "strange-as-news-from-bree": "Estranho como Notícias de Bree"
+        },
+        "rangers-of-the-north": {
+          "bow-mastery": "Maestria com Arco",
+          "foresight-of-their-kindred": "Presciência dos Seus",
+          "heir-of-arnor": "Herdeiro de Arnor",
+          "hunter-of-the-unseen": "Caçador do Invisível",
+          "lore-of-eriador": "Saber de Eriador",
+          "wandering-days": "Dias de Errância"
+        }
+      }
+    },
+    "rewards": {
+      "standard": {
+        "close-fitting": "Justa",
+        "cunning-make": "Manufatura Astuta",
+        "fell": "Cruel",
+        "grievous": "Severa",
+        "keen": "Aguçada",
+        "reinforced": "Reforçado"
+      }
+    },
+    "patrons": {
+      "gandalf": "Gandalf, o Cinzento",
+      "bilbo": "Bilbo Bolseiro",
+      "balin": "Balin filho de Fundin",
+      "beorn": "Beorn, o Trocador de Pele",
+      "bard": "Bardo, o Arqueiro",
+      "dain": "Dáin Pé-de-Ferro",
+      "thranduil": "Rei Thranduil",
+      "radagast": "Radagast, o Castanho"
+    },
+    "blessings": {
+      "redoubtable": "Inabalável",
+      "stout-hearted": "Coração Resoluto",
+      "elven-skill": "Habilidade Élfica",
+      "hobbit-sense": "Tino Hobbit",
+      "bree-blood": "Sangue de Bree",
+      "kings-of-men": "Reis dos Homens"
+    },
+    "skills": {
+      "awe": "Reverência",
+      "athletics": "Atletismo",
+      "awareness": "Percepção",
+      "hunting": "Caça",
+      "song": "Canto",
+      "craft": "Ofício",
+      "enhearten": "Inspiração",
+      "travel": "Viagem",
+      "insight": "Discernimento",
+      "healing": "Cura",
+      "courtesy": "Cortesia",
+      "battle": "Batalha",
+      "persuade": "Persuasão",
+      "stealth": "Furtividade",
+      "scan": "Observar",
+      "explore": "Explorar",
+      "riddle": "Enigmas",
+      "lore": "Saber"
     }
   },
   "dialog": {

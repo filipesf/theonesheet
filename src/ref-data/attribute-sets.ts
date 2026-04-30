@@ -1,8 +1,9 @@
-// TOR-DATA-GAP: full attribute sets per culture (PRD §6.2).
-// v0 stub: every culture exposes the same six rows so the wizard can flow.
-// Wave 4 replaces these with the canonical TOR 2e tables.
+import type { HeroicCulture } from '../domain/types';
 
-import type { HeroicCulture } from '../../../domain/types';
+/**
+ * v0 stub: every culture exposes the same six rows so the wizard can flow.
+ * Per-culture canonical attribute sets (PRD §6.2) are deferred to a future wave.
+ */
 
 export type AttributeSet = {
   strength: number;

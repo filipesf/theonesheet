@@ -8,13 +8,16 @@ import {
   STANDARD_OF_LIVING,
 } from '../../domain/types';
 import type { Character, Skill } from '../../domain/types';
+import { BLESSING_BY_CULTURE, legacyNameToBlessingId } from '../../ref-data/blessings';
+import { SHADOW_PATHS, legacyNameToShadowPath } from '../../ref-data/callings';
 import {
-  PATRONS,
-  callingKey,
-  heroicCultureKey,
-  resolvePatronName,
-  standardOfLivingKey,
-} from '../../ref-data/labels';
+  findCultureForFeature,
+  isCallingDistinctiveFeatureId,
+  isKnownDistinctiveFeatureId,
+  legacyNameToDistinctiveFeatureId,
+} from '../../ref-data/distinctive-features';
+import { callingKey, heroicCultureKey, standardOfLivingKey } from '../../ref-data/labels';
+import { PATRONS, patronFallbackName } from '../../ref-data/patrons';
 import { ConditionCheck } from './ui/ConditionCheck';
 import { Diamond, DiamondLabel } from './ui/Diamond';
 import { FavouredCheck } from './ui/FavouredCheck';
@@ -53,6 +56,47 @@ const CATEGORY_DERIVED: Record<
 
 function joinList(values: readonly string[]): string {
   return values.join(', ');
+}
+
+function renderDistinctiveFeatureLabel(
+  t: TFunction,
+  raw: string,
+  characterCulture: Character['heroic_culture'],
+): string {
+  if (isCallingDistinctiveFeatureId(raw)) {
+    return t(`ref.distinctiveFeatures.callings.${raw}`);
+  }
+  if (isKnownDistinctiveFeatureId(raw)) {
+    const culture = findCultureForFeature(raw) ?? characterCulture;
+    const cultureKey = culture.toLowerCase().replace(/_/g, '-');
+    return t(`ref.distinctiveFeatures.cultures.${cultureKey}.${raw}`);
+  }
+  const legacyId = legacyNameToDistinctiveFeatureId(raw);
+  if (legacyId) {
+    return renderDistinctiveFeatureLabel(t, legacyId, characterCulture);
+  }
+  return raw;
+}
+
+const SHADOW_PATH_SET = new Set<string>(SHADOW_PATHS);
+
+function renderShadowPathLabel(t: TFunction, raw: string): string {
+  if (!raw) return '';
+  if (SHADOW_PATH_SET.has(raw)) return t(`ref.shadowPaths.${raw}`);
+  const mapped = legacyNameToShadowPath(raw);
+  if (mapped) return t(`ref.shadowPaths.${mapped}`);
+  return raw;
+}
+
+function resolveBlessingId(character: Character): string {
+  const stored = character.cultural_blessing;
+  if (stored && legacyNameToBlessingId(stored)) {
+    return legacyNameToBlessingId(stored) as string;
+  }
+  if (stored && Object.values(BLESSING_BY_CULTURE).includes(stored as never)) {
+    return stored;
+  }
+  return BLESSING_BY_CULTURE[character.heroic_culture];
 }
 
 function splitList(value: string): string[] {
@@ -181,10 +225,9 @@ function IdentityStrip({
           }))}
           onChange={(value) => onChange({ heroic_culture: value as Character['heroic_culture'] })}
         />
-        <TextField
+        <DerivedField
           label={t('sheet.label.cultural-blessing')}
-          value={character.cultural_blessing}
-          onChange={(value) => onChange({ cultural_blessing: value })}
+          value={t(`ref.blessings.${resolveBlessingId(character)}`)}
         />
         <SelectField
           label={t('sheet.label.calling')}
@@ -234,21 +277,24 @@ function IdentityStrip({
           value={patronValue}
           options={[
             { value: '', label: t('common.dash') },
-            ...PATRONS.map((p) => ({ value: p.id, label: p.name })),
+            ...PATRONS.map((p) => ({ value: p.id, label: t(`ref.patrons.${p.id}`) })),
           ]}
           onChange={(value) => onChange({ company_id: value })}
-          displayFallback={resolvePatronName(character.company_id)}
+          displayFallback={patronFallbackName(character.company_id)}
         />
-        <TextField
+        <DerivedField
           label={t('sheet.label.shadow-path')}
-          value={character.shadow_path}
-          onChange={(value) => onChange({ shadow_path: value })}
+          value={renderShadowPathLabel(t, character.shadow_path)}
         />
       </div>
       <div className="flex flex-col gap-3">
         <TextField
           label={t('sheet.label.distinctive-features')}
-          value={joinList(character.distinctive_features)}
+          value={joinList(
+            character.distinctive_features.map((raw) =>
+              renderDistinctiveFeatureLabel(t, raw, character.heroic_culture),
+            ),
+          )}
           onChange={(value) => onChange({ distinctive_features: splitList(value) })}
           placeholder={t('sheet.placeholder.distinctive-features')}
         />
@@ -368,28 +414,27 @@ function SkillsSection({
           <ul key={category} className="flex flex-col gap-1.5">
             {character.skills
               .filter((skill) => skill.category === category)
-              .map((skill) => (
-                <li
-                  key={skill.name}
-                  className="grid grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-3 border-b border-ink-red/30 py-1"
-                >
-                  <FavouredCheck
-                    checked={skill.favoured}
-                    onChange={() =>
-                      updateSkill(skill.name, { favoured: !skill.favoured })
-                    }
-                    label={skill.name}
-                  />
-                  <span className="font-body text-base text-ink-navy truncate">
-                    {skill.name}
-                  </span>
-                  <PipRow
-                    rating={skill.rating}
-                    onChange={(rating) => updateSkill(skill.name, { rating })}
-                    label={skill.name}
-                  />
-                </li>
-              ))}
+              .map((skill) => {
+                const label = skill.id ? t(`ref.skills.${skill.id}`) : skill.name;
+                return (
+                  <li
+                    key={skill.id ?? skill.name}
+                    className="grid grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-3 border-b border-ink-red/30 py-1"
+                  >
+                    <FavouredCheck
+                      checked={skill.favoured}
+                      onChange={() => updateSkill(skill.name, { favoured: !skill.favoured })}
+                      label={label}
+                    />
+                    <span className="font-body text-base text-ink-navy truncate">{label}</span>
+                    <PipRow
+                      rating={skill.rating}
+                      onChange={(rating) => updateSkill(skill.name, { rating })}
+                      label={label}
+                    />
+                  </li>
+                );
+              })}
           </ul>
         ))}
       </div>
@@ -425,7 +470,7 @@ function ProfRewardsVirtuesBand({
               <PipRow
                 rating={proficiency.rating}
                 onChange={(rating) => updateProficiency(proficiency.name, rating)}
-                label={proficiency.name}
+                label={t(`sheet.combat-proficiency.${COMBAT_PROFICIENCY_KEY[proficiency.name]}`)}
               />
             </li>
           ))}
@@ -539,15 +584,18 @@ function WarGearPanel({ character }: { character: Character }) {
               </td>
             </tr>
           )}
-          {character.war_gear.weapons.map((weapon, index) => (
-            <tr key={`${weapon.type}-${index}`} className="border-b border-ink-red/30">
-              <td className="font-hand text-lg text-ink-navy py-0.5">{weapon.type}</td>
-              <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
-              <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
-              <td className="font-hand text-lg text-ink-navy text-center">{weapon.load}</td>
-              <td className="font-hand text-lg text-ink-navy" />
-            </tr>
-          ))}
+          {character.war_gear.weapons.map((weapon, index) => {
+            const label = weapon.id ? t(`ref.equipment.weapons.${weapon.id}`) : weapon.type;
+            return (
+              <tr key={`${weapon.id ?? weapon.type}-${index}`} className="border-b border-ink-red/30">
+                <td className="font-hand text-lg text-ink-navy py-0.5">{label}</td>
+                <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
+                <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
+                <td className="font-hand text-lg text-ink-navy text-center">{weapon.load}</td>
+                <td className="font-hand text-lg text-ink-navy" />
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -562,7 +610,11 @@ function ArmourPanel({ character }: { character: Character }) {
       <div className="mt-3 flex flex-col gap-2">
         <ArmourRow
           label={t('sheet.armour.label.armour')}
-          type={character.war_gear.armour?.type ?? ''}
+          type={
+            character.war_gear.armour?.id
+              ? t(`ref.equipment.armour.${character.war_gear.armour.id}`)
+              : (character.war_gear.armour?.type ?? '')
+          }
           secondaryLabel={t('sheet.armour.label.protection')}
           secondaryValue=""
           load={character.war_gear.armour?.load}
@@ -574,7 +626,11 @@ function ArmourPanel({ character }: { character: Character }) {
         />
         <ArmourRow
           label={t('sheet.armour.label.shield')}
-          type={character.war_gear.shield?.type ?? ''}
+          type={
+            character.war_gear.shield?.id
+              ? t(`ref.equipment.shields.${character.war_gear.shield.id}`)
+              : (character.war_gear.shield?.type ?? '')
+          }
           secondaryLabel={t('sheet.armour.label.parry')}
           secondaryValue={
             character.war_gear.shield ? `+${character.war_gear.shield.parry_bonus}` : ''
@@ -907,6 +963,19 @@ function TextField({ label, value, onChange, placeholder }: TextFieldProps) {
         className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-lg text-ink-navy pb-0.5 placeholder:text-ink-navy/30 focus:border-ink-red transition-colors"
       />
     </label>
+  );
+}
+
+function DerivedField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col gap-1 min-w-0">
+      <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+        {label}
+      </span>
+      <output className="w-full bg-transparent border-0 border-b border-ink-red/30 font-hand text-lg text-ink-navy pb-0.5">
+        {value}
+      </output>
+    </div>
   );
 }
 

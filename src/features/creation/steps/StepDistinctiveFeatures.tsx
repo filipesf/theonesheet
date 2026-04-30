@@ -1,14 +1,24 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { CULTURE_FEATURES } from '../content/distinctive-features';
+import { CULTURAL_DISTINCTIVE_FEATURES } from '../../../ref-data/distinctive-features';
 import type { CreationDraft } from '../creationSchema';
+
+const CULTURE_KEY: Record<string, string> = {
+  DWARVES_OF_DURINS_FOLK: 'dwarves-of-durins-folk',
+  BARDINGS: 'bardings',
+  ELVES_OF_LINDON: 'elves-of-lindon',
+  HOBBITS_OF_THE_SHIRE: 'hobbits-of-the-shire',
+  MEN_OF_BREE: 'men-of-bree',
+  RANGERS_OF_THE_NORTH: 'rangers-of-the-north',
+};
 
 export function StepDistinctiveFeatures() {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<CreationDraft>();
   const culture = useWatch({ control, name: 'heroic_culture' });
   const picks = useWatch({ control, name: 'cultural_features' });
-  const pool = CULTURE_FEATURES[culture];
+  const pool = CULTURAL_DISTINCTIVE_FEATURES[culture];
+  const cultureKey = CULTURE_KEY[culture] ?? '';
 
   function toggle(feature: string) {
     const next = picks.includes(feature)
@@ -31,14 +41,14 @@ export function StepDistinctiveFeatures() {
         {t('creation.step.features.picked', { count: picks.length, total: 2 })}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-        {pool.map((feature) => {
-          const active = picks.includes(feature);
+        {pool.map((featureId) => {
+          const active = picks.includes(featureId);
           const disabled = !active && picks.length >= 2;
           return (
             <button
-              key={feature}
+              key={featureId}
               type="button"
-              onClick={() => toggle(feature)}
+              onClick={() => toggle(featureId)}
               aria-pressed={active}
               disabled={disabled}
               className={`text-left p-3 border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red disabled:cursor-not-allowed disabled:opacity-50 ${
@@ -46,7 +56,7 @@ export function StepDistinctiveFeatures() {
               }`}
             >
               <span className="font-display text-sm tracking-[0.12em] uppercase text-ink-navy">
-                {feature}
+                {t(`ref.distinctiveFeatures.cultures.${cultureKey}.${featureId}`)}
               </span>
             </button>
           );
