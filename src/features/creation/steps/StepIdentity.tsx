@@ -10,14 +10,14 @@ export function StepIdentity() {
   } = useFormContext<CreationDraft>();
   return (
     <div className="flex flex-col gap-4 max-w-md">
-      <h2 className="font-display text-2xl tracking-[0.06em] text-ink-navy">
+      <h2 className="font-display text-2xl tracking-display text-ink-navy">
         {t('creation.step.identity.title')}
       </h2>
       <p className="font-body text-base text-ink-navy/70">
         {t('creation.step.identity.body')}
       </p>
       <label className="flex flex-col gap-1">
-        <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
+        <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
           {t('creation.step.identity.name-label')}
         </span>
         <input
@@ -31,7 +31,7 @@ export function StepIdentity() {
         )}
       </label>
       <label className="flex flex-col gap-1 max-w-[120px]">
-        <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
+        <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
           {t('creation.step.identity.age-label')}
         </span>
         <input

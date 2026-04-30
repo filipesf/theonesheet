@@ -65,6 +65,17 @@ Sizes follow Tailwind defaults (`text-xs` and up). For sub-12 px use only the fo
 
 Going below 8 px is a smell. If a label needs to fit smaller, the layout is wrong, not the type.
 
+### Letter-spacing scale
+
+The manuscript aesthetic uses generous tracking on uppercase labels (well beyond Tailwind's `tracking-widest` = 0.1em). Use these tokens instead of ad-hoc `tracking-[Nem]`:
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `tracking-display` | 0.06em | Large display titles (`h1`/`h2` in `font-display`) |
+| `tracking-section` | 0.12em | Sub-section uppercase headings inside cards |
+| `tracking-label` | 0.2em | Most uppercase labels, button text, smaller eyebrows |
+| `tracking-eyebrow` | 0.28em | Primary eyebrows above sections, brand text |
+
 ## Elevation
 
 Shadows are tokens, not literal `shadow-[…]` strings. The five tokens cover the only legitimate places a shadow appears on this app:
@@ -102,6 +113,14 @@ The printed sheet (`/character/:id/sheet`) is the visual centerpiece and must re
 - Forms: `react-hook-form` + `zod`.
 
 When in doubt, lift the component into `src/app/ui/` (or wherever a shared primitive sits) only after the **third** duplication.
+
+### Shared primitives in `src/app/ui/`
+
+| Component | Use |
+| --- | --- |
+| `Modal` | Dialogs (rename, delete, import) and the dice tray. Handles focus trap, scroll-lock, Escape, ARIA. |
+| `PrimaryButton` / `GhostButton` / `DestructiveButton` | The three button styles consumed by dialogs and the wizard footer. |
+| `SelectionCard` | The "pick one of these" button (cultures, attribute sets, callings, distinctive features, themes). Props: `active`, `padding` (`'sm'`/`'md'`), plus the standard button attributes. Handles `aria-pressed`, focus ring, and disabled state. |
 
 ## Accessibility
 

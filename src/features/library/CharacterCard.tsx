@@ -40,7 +40,7 @@ export function CharacterCard({
           onClick={onView}
           className="text-left px-5 pt-5 pb-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-inset"
         >
-          <p className="font-label text-microlabel tracking-[0.25em] uppercase text-ink-red/80">
+          <p className="font-label text-microlabel tracking-label uppercase text-ink-red/80">
             {cultureLabel}
             {callingLabel ? <span className="mx-2 text-ink-red/40">·</span> : null}
             {callingLabel}
@@ -84,7 +84,7 @@ export function CharacterCard({
         <button
           type="button"
           onClick={onDelete}
-          className="border-t border-ink-red/30 px-3 py-3 font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/80 hover:bg-ink-red/10 hover:text-ink-red cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red focus-visible:text-parchment-soft"
+          className="border-t border-ink-red/30 px-3 py-3 font-label text-microlabel tracking-label uppercase text-ink-red/80 hover:bg-ink-red/10 hover:text-ink-red cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red focus-visible:text-parchment-soft"
         >
           {t('card.action.delete')}
         </button>
@@ -96,7 +96,7 @@ export function CharacterCard({
 function AttributePill({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="font-label text-microline tracking-[0.18em] uppercase text-ink-red/75">
+      <span className="font-label text-microline tracking-label uppercase text-ink-red/75">
         {label}
       </span>
       <span className="relative inline-flex h-10 w-10 items-center justify-center">
@@ -118,7 +118,7 @@ function CardAction({
     <button
       type="button"
       onClick={onClick}
-      className="px-2 py-3 font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/85 hover:bg-ink-red/10 hover:text-ink-red cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red focus-visible:text-parchment-soft border-r last:border-r-0 border-ink-red/20"
+      className="px-2 py-3 font-label text-microlabel tracking-label uppercase text-ink-red/85 hover:bg-ink-red/10 hover:text-ink-red cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red focus-visible:text-parchment-soft border-r last:border-r-0 border-ink-red/20"
     >
       {children}
     </button>

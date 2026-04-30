@@ -138,7 +138,7 @@ export function Modal({
           <header className="flex flex-col gap-1">
             <h2
               id={titleId}
-              className="font-display text-xl tracking-[0.18em] uppercase text-ink-red"
+              className="font-display text-xl tracking-label uppercase text-ink-red"
             >
               {title}
             </h2>

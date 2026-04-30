@@ -11,7 +11,7 @@ export function SectionTitle({ children, trailing, className = '' }: SectionTitl
     <header
       className={`relative border-t border-ink-red flex items-center justify-center -mt-2 ${className}`}
     >
-      <h2 className="bg-parchment px-3 font-display text-base sm:text-lg tracking-[0.2em] uppercase text-ink-red">
+      <h2 className="bg-parchment px-3 font-display text-base sm:text-lg tracking-label uppercase text-ink-red">
         {children}
       </h2>
       {trailing && (

@@ -26,7 +26,7 @@ export function StepReview() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="font-display text-2xl tracking-[0.06em] text-ink-navy">
+      <h2 className="font-display text-2xl tracking-display text-ink-navy">
         {t('creation.step.review.title')}
       </h2>
       <p className="font-body text-base text-ink-navy/70">
@@ -68,7 +68,7 @@ export function StepReview() {
 
       {blockingIssues.length > 0 && (
         <section>
-          <h3 className="font-display text-sm tracking-[0.18em] uppercase text-ink-red">
+          <h3 className="font-display text-sm tracking-label uppercase text-ink-red">
             {t('creation.step.review.blocking-title')}
           </h3>
           <ul className="list-disc pl-5 mt-1 font-body text-sm text-ink-red">
@@ -81,7 +81,7 @@ export function StepReview() {
 
       {draftIssues.length > 0 && (
         <section>
-          <h3 className="font-display text-sm tracking-[0.18em] uppercase text-ink-navy/70">
+          <h3 className="font-display text-sm tracking-label uppercase text-ink-navy/70">
             {t('creation.step.review.warnings-title')}
           </h3>
           <ul className="list-disc pl-5 mt-1 font-body text-sm text-ink-navy/70">
@@ -114,7 +114,7 @@ function Row({ label, value }: { label: string; value: string }) {
   const { t } = useTranslation();
   return (
     <div>
-      <dt className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/80">{label}</dt>
+      <dt className="font-label text-microlabel tracking-label uppercase text-ink-red/80">{label}</dt>
       <dd className="font-hand text-lg text-ink-navy">{value || t('common.dash')}</dd>
     </div>
   );

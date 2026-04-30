@@ -15,7 +15,7 @@ export function EditorShell({ character, onChange }: Props) {
       <div className="no-print mb-4 flex justify-end">
         <a
           href={buildHash({ name: 'characterPrinted', id: character.id })}
-          className="font-label text-eyebrow tracking-[0.2em] uppercase border border-ink-red/60 text-ink-red px-4 py-2.5 hover:bg-ink-red hover:text-parchment-soft transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
+          className="font-label text-eyebrow tracking-label uppercase border border-ink-red/60 text-ink-red px-4 py-2.5 hover:bg-ink-red hover:text-parchment-soft transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
         >
           {t('editor.print')}
         </a>

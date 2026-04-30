@@ -28,7 +28,7 @@ export function StepProficiencies() {
     <div className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-display text-2xl tracking-[0.06em] text-ink-navy">
+          <h2 className="font-display text-2xl tracking-display text-ink-navy">
             {t('creation.step.proficiencies.title')}
           </h2>
           <p className="font-body text-base text-ink-navy/70 mt-1">

@@ -101,7 +101,7 @@ export function DiceTray() {
     >
       <div data-dice="ui" className="flex flex-col gap-3">
         <label className="flex flex-col gap-1">
-          <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
+          <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
             {t('dice.tray.label')}
           </span>
           <input
@@ -112,7 +112,7 @@ export function DiceTray() {
         </label>
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1">
-            <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
+            <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
               {t('dice.tray.success-dice')}
             </span>
             <input
@@ -127,7 +127,7 @@ export function DiceTray() {
             />
           </label>
           <label className="flex flex-col gap-1">
-            <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
+            <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
               {t('dice.tray.tn')}
             </span>
             <input
@@ -157,13 +157,13 @@ export function DiceTray() {
         {recentLog.length > 0 && (
           <section className="border-t border-ink-red/30 pt-3 mt-1">
             <header className="flex items-center justify-between mb-2">
-              <h3 className="font-display text-sm tracking-[0.18em] uppercase text-ink-red">
+              <h3 className="font-display text-sm tracking-label uppercase text-ink-red">
                 {t('dice.log.heading')}
               </h3>
               <button
                 type="button"
                 onClick={handleClearLog}
-                className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/70 hover:text-ink-red underline-offset-4 hover:underline cursor-pointer focus:outline-none focus-visible:underline px-2 py-2"
+                className="font-label text-microlabel tracking-label uppercase text-ink-red/70 hover:text-ink-red underline-offset-4 hover:underline cursor-pointer focus:outline-none focus-visible:underline px-2 py-2"
               >
                 {t('dice.log.clear')}
               </button>
@@ -177,7 +177,7 @@ export function DiceTray() {
                   <span className="font-body text-sm text-ink-navy truncate">
                     {entry.request.label}
                   </span>
-                  <span className="font-label text-microlabel tracking-[0.18em] uppercase text-ink-navy/70 shrink-0">
+                  <span className="font-label text-microlabel tracking-label uppercase text-ink-navy/70 shrink-0">
                     {t(`dice.outcome.${entry.outcome}`)} · {entry.total}
                   </span>
                 </li>
@@ -217,10 +217,10 @@ function ResultCard({ result }: { result: RollResult }) {
   return (
     <article className="border border-ink-red/40 bg-parchment-soft/60 p-3 mt-2">
       <header className="flex items-center justify-between">
-        <span className="font-display text-sm tracking-[0.18em] uppercase text-ink-red">
+        <span className="font-display text-sm tracking-label uppercase text-ink-red">
           {result.request.label}
         </span>
-        <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-navy/70">
+        <span className="font-label text-microlabel tracking-label uppercase text-ink-navy/70">
           {t(`dice.outcome.${result.outcome}`)}
         </span>
       </header>
@@ -258,7 +258,7 @@ function FaceBadge({
         large ? 'h-12 w-12' : 'h-9 w-9'
       } bg-parchment`}
     >
-      <span className="font-label text-microline tracking-[0.18em] uppercase text-ink-red/70 leading-none">
+      <span className="font-label text-microline tracking-label uppercase text-ink-red/70 leading-none">
         {label}
       </span>
       <span className={`font-hand text-ink-navy ${large ? 'text-xl' : 'text-base'}`}>

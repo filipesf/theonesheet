@@ -1,5 +1,6 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { SelectionCard } from '../../../app/ui/SelectionCard';
 import { CALLINGS, STANDARD_OF_LIVING, type Calling, type StandardOfLiving } from '../../../domain/types';
 import { CALLINGS_DATA } from '../../../ref-data/callings';
 import { ARMOUR, SHIELDS, WEAPONS } from '../../../ref-data/equipment';
@@ -64,7 +65,7 @@ export function StepCalling() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="font-display text-2xl tracking-[0.06em] text-ink-navy">
+      <h2 className="font-display text-2xl tracking-display text-ink-navy">
         {t('creation.step.calling.title')}
       </h2>
       <p className="font-body text-base text-ink-navy/70">
@@ -74,25 +75,22 @@ export function StepCalling() {
       <Block title={t('creation.step.calling.choose-calling')}>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {CALLINGS.map((c: Calling) => (
-            <button
+            <SelectionCard
               key={c}
-              type="button"
+              active={calling === c}
+              padding="sm"
               onClick={() => {
                 setValue('calling', c, { shouldDirty: true, shouldValidate: true });
                 setValue('calling_feature', '', { shouldValidate: true });
               }}
-              aria-pressed={calling === c}
-              className={`p-3 border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
-                calling === c ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 hover:border-ink-red/70'
-              }`}
             >
-              <p className="font-display text-sm tracking-[0.12em] uppercase text-ink-navy">
+              <p className="font-display text-sm tracking-section uppercase text-ink-navy">
                 {t(callingKey(c))}
               </p>
               <p className="font-body text-xs text-ink-navy/60 mt-1">
                 {t(`ref.shadowPaths.${CALLINGS_DATA[c].shadowPath}`)}
               </p>
-            </button>
+            </SelectionCard>
           ))}
         </div>
       </Block>
@@ -100,21 +98,18 @@ export function StepCalling() {
       <Block title={t('creation.step.calling.calling-feature')}>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
           {callingFeatureOptions.map((option) => (
-            <button
+            <SelectionCard
               key={option.value}
-              type="button"
+              active={callingFeature === option.value}
+              padding="sm"
               onClick={() =>
                 setValue('calling_feature', option.value, { shouldDirty: true, shouldValidate: true })
               }
-              aria-pressed={callingFeature === option.value}
-              className={`p-3 text-left border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
-                callingFeature === option.value ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 hover:border-ink-red/70'
-              }`}
             >
-              <span className="font-display text-sm tracking-[0.1em] uppercase text-ink-navy">
+              <span className="font-display text-sm tracking-section uppercase text-ink-navy">
                 {option.label}
               </span>
-            </button>
+            </SelectionCard>
           ))}
         </div>
       </Block>
@@ -161,22 +156,19 @@ export function StepCalling() {
             if (!entry) return null;
             const active = weapons.some((w) => w.id === weaponId);
             return (
-              <button
+              <SelectionCard
                 key={weaponId}
-                type="button"
+                active={active}
+                padding="sm"
                 onClick={() => toggleWeapon(weaponId)}
-                aria-pressed={active}
-                className={`p-3 text-left border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
-                  active ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 hover:border-ink-red/70'
-                }`}
               >
-                <p className="font-display text-sm tracking-[0.1em] uppercase text-ink-navy">
+                <p className="font-display text-sm tracking-section uppercase text-ink-navy">
                   {t(`ref.equipment.weapons.${weaponId}`)}
                 </p>
                 <p className="font-body text-xs text-ink-navy/60">
                   {t('sheet.label.load')} {entry.load}
                 </p>
-              </button>
+              </SelectionCard>
             );
           })}
         </div>
@@ -225,7 +217,7 @@ export function StepCalling() {
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-2">
-      <h3 className="font-display text-base tracking-[0.18em] uppercase text-ink-red border-b border-ink-red/30 pb-1">
+      <h3 className="font-display text-base tracking-label uppercase text-ink-red border-b border-ink-red/30 pb-1">
         {title}
       </h3>
       {children}

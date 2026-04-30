@@ -189,7 +189,7 @@ function NameCartouche({
   const { t } = useTranslation();
   return (
     <header className="border-2 border-ink-red px-4 pt-2 pb-3 text-center">
-      <span className="font-label text-microlabel tracking-[0.25em] uppercase text-ink-red">
+      <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
         {t('sheet.label.name')}
       </span>
       <input
@@ -334,7 +334,7 @@ function AttributeClusters({
         const attributeKey = ATTRIBUTE_KEY[category];
         return (
           <div key={category} className="flex flex-col items-center gap-3">
-            <h3 className="font-display text-xl tracking-[0.22em] uppercase text-ink-red">
+            <h3 className="font-display text-xl tracking-label uppercase text-ink-red">
               {t(`sheet.attribute.${attributeKey}`)}
             </h3>
             <AttributeCluster
@@ -515,7 +515,7 @@ function RewardLikeColumn({
   return (
     <div>
       <header className="relative border-t border-ink-red flex items-center justify-between gap-3 -mt-2">
-        <span className="bg-parchment pl-1 pr-3 font-display text-sm tracking-[0.22em] uppercase text-ink-red">
+        <span className="bg-parchment pl-1 pr-3 font-display text-sm tracking-label uppercase text-ink-red">
           {title}
         </span>
         <div className="bg-parchment pl-2 flex items-center gap-2 -mt-3">
@@ -679,7 +679,7 @@ function PortraitFrame() {
   const { t } = useTranslation();
   return (
     <div className="aspect-square w-full bg-parchment-deep border-2 border-ink-red flex items-center justify-center">
-      <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/40">
+      <span className="font-label text-microlabel tracking-label uppercase text-ink-red/40">
         {t('sheet.label.portrait')}
       </span>
     </div>
@@ -754,7 +754,7 @@ function SidebarStat({
 }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <span className="font-label text-microline leading-3 tracking-[0.18em] uppercase text-ink-red text-center">
+      <span className="font-label text-microline leading-3 tracking-label uppercase text-ink-red text-center">
         {label}
       </span>
       <Diamond size="md">{children}</Diamond>
@@ -936,7 +936,7 @@ function TravellingGearBlock({
 function SectionHeader({ children }: { children: ReactNode }) {
   return (
     <header className="relative border-t border-ink-red flex items-center justify-center -mt-2">
-      <h3 className="bg-parchment px-3 font-display text-sm sm:text-base tracking-[0.25em] uppercase text-ink-red">
+      <h3 className="bg-parchment px-3 font-display text-sm sm:text-base tracking-label uppercase text-ink-red">
         {children}
       </h3>
     </header>
@@ -953,7 +953,7 @@ type TextFieldProps = {
 function TextField({ label, value, onChange, placeholder }: TextFieldProps) {
   return (
     <label className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
         {label}
       </span>
       <input
@@ -969,7 +969,7 @@ function TextField({ label, value, onChange, placeholder }: TextFieldProps) {
 function DerivedField({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
         {label}
       </span>
       <output className="w-full bg-transparent border-0 border-b border-ink-red/30 font-hand text-lg text-ink-navy pb-0.5">
@@ -988,7 +988,7 @@ type NumberFieldProps = {
 function NumberField({ label, value, onChange }: NumberFieldProps) {
   return (
     <label className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
         {label}
       </span>
       <input
@@ -1016,7 +1016,7 @@ function SelectField({ label, value, options, onChange, displayFallback }: Selec
   const effectiveValue = matched ? value : '';
   return (
     <label className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
         {label}
       </span>
       <div className="relative">
@@ -1056,7 +1056,7 @@ function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: Armour
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-3 border-b border-ink-red/30 pb-0.5">
       <div className="flex flex-col min-w-0">
-        <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
+        <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
           {label}
         </span>
         <span className="font-hand text-lg text-ink-navy truncate min-h-[1.5rem]">
@@ -1064,7 +1064,7 @@ function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: Armour
         </span>
       </div>
       <div className="flex flex-col items-center min-w-[64px]">
-        <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
+        <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
           {secondaryLabel ?? ''}
         </span>
         <span className="font-hand text-lg text-ink-navy min-h-[1.5rem]">
@@ -1072,7 +1072,7 @@ function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: Armour
         </span>
       </div>
       <div className="flex flex-col items-center min-w-[44px]">
-        <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
+        <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
           {t('sheet.label.load')}
         </span>
         <span className="font-hand text-lg text-ink-navy min-h-[1.5rem]">

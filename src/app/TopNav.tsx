@@ -33,7 +33,7 @@ export function TopNav({
           aria-label={t('nav.brand-aria')}
         >
           <BrandMark />
-          <span className="font-display text-sm sm:text-base tracking-[0.28em] uppercase text-parchment-soft group-hover:text-ink-red-soft transition-colors">
+          <span className="font-display text-sm sm:text-base tracking-eyebrow uppercase text-parchment-soft group-hover:text-ink-red-soft transition-colors">
             {t('app.title')}
           </span>
         </a>
@@ -92,7 +92,7 @@ function NavLink({
   return (
     <a
       href={href}
-      className={`relative px-3 py-2.5 font-label text-eyebrow tracking-[0.2em] uppercase transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red-soft rounded-sm ${
+      className={`relative px-3 py-2.5 font-label text-eyebrow tracking-label uppercase transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red-soft rounded-sm ${
         active
           ? 'text-parchment-soft'
           : 'text-parchment-soft/70 hover:text-parchment-soft'
@@ -120,7 +120,7 @@ function PrimaryAction({
     <button
       type="button"
       onClick={onClick}
-      className="font-label text-eyebrow tracking-[0.2em] uppercase bg-ink-red text-parchment-soft px-4 py-2.5 cursor-pointer hover:bg-ink-red-soft active:bg-ink-red/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red-soft focus-visible:ring-offset-2 focus-visible:ring-offset-shell"
+      className="font-label text-eyebrow tracking-label uppercase bg-ink-red text-parchment-soft px-4 py-2.5 cursor-pointer hover:bg-ink-red-soft active:bg-ink-red/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red-soft focus-visible:ring-offset-2 focus-visible:ring-offset-shell"
     >
       {children}
     </button>
@@ -170,7 +170,7 @@ function ToolsMenu({
         onClick={() => setOpen((value) => !value)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="font-label text-eyebrow tracking-[0.2em] uppercase text-parchment-soft/80 hover:text-parchment-soft px-3 py-2.5 cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red-soft rounded-sm"
+        className="font-label text-eyebrow tracking-label uppercase text-parchment-soft/80 hover:text-parchment-soft px-3 py-2.5 cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red-soft rounded-sm"
       >
         {t('nav.tools')}
       </button>
@@ -214,7 +214,7 @@ function MenuItem({
       disabled={disabled}
       title={hint}
       aria-describedby={undefined}
-      className="block w-full text-left px-3 py-2.5 font-label text-eyebrow tracking-[0.18em] uppercase text-parchment-soft/85 hover:bg-ink-red/20 hover:text-parchment-soft cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red focus-visible:text-parchment-soft disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-parchment-soft/85"
+      className="block w-full text-left px-3 py-2.5 font-label text-eyebrow tracking-label uppercase text-parchment-soft/85 hover:bg-ink-red/20 hover:text-parchment-soft cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red focus-visible:text-parchment-soft disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-parchment-soft/85"
     >
       {children}
     </button>

@@ -1,5 +1,6 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { SelectionCard } from '../../../app/ui/SelectionCard';
 import { ATTRIBUTE_SETS } from '../../../ref-data/attribute-sets';
 import type { CreationDraft } from '../creationSchema';
 
@@ -21,7 +22,7 @@ export function StepAttributes() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="font-display text-2xl tracking-[0.06em] text-ink-navy">
+      <h2 className="font-display text-2xl tracking-display text-ink-navy">
         {t('creation.step.attributes.title')}
       </h2>
       <p className="font-body text-base text-ink-navy/70">
@@ -31,16 +32,8 @@ export function StepAttributes() {
         {sets.map((set, index) => {
           const active = selected === index;
           return (
-            <button
-              key={index}
-              type="button"
-              onClick={() => pick(index)}
-              aria-pressed={active}
-              className={`text-left p-4 border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
-                active ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 bg-parchment-soft/40 hover:border-ink-red/70'
-              }`}
-            >
-              <p className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red mb-2">
+            <SelectionCard key={index} active={active} onClick={() => pick(index)}>
+              <p className="font-label text-microlabel tracking-label uppercase text-ink-red mb-2">
                 {t('creation.step.attributes.set-label', { index: index + 1 })}
               </p>
               <ul className="grid grid-cols-3 gap-2 text-center">
@@ -48,7 +41,7 @@ export function StepAttributes() {
                 <Pill label={t('sheet.attribute.heart')} value={set.heart} />
                 <Pill label={t('sheet.attribute.wits')} value={set.wits} />
               </ul>
-            </button>
+            </SelectionCard>
           );
         })}
       </div>
@@ -59,7 +52,7 @@ export function StepAttributes() {
 function Pill({ label, value }: { label: string; value: number }) {
   return (
     <li>
-      <p className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red/80">{label}</p>
+      <p className="font-label text-microcaption tracking-label uppercase text-ink-red/80">{label}</p>
       <p className="font-hand text-2xl text-ink-navy">{value}</p>
     </li>
   );

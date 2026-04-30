@@ -72,7 +72,7 @@ export function RenameCharacterDialog({ open, onOpenChange, currentName, onConfi
         className="flex flex-col gap-2"
       >
         <label className="flex flex-col gap-1">
-          <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
+          <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
             {t('dialog.rename.label')}
           </span>
           <input

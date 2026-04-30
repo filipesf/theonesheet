@@ -30,7 +30,7 @@ export function StepSkills() {
     <div className="flex flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-display text-2xl tracking-[0.06em] text-ink-navy">
+          <h2 className="font-display text-2xl tracking-display text-ink-navy">
             {t('creation.step.skills.title')}
           </h2>
           <p className="font-body text-base text-ink-navy/70 mt-1">
@@ -72,7 +72,7 @@ export function StepSkills() {
                 aria-label={t('creation.step.skills.rating-label', { name: skillLabel(t, skill) })}
                 className="bg-transparent border border-ink-red/40 px-2 py-1 text-center font-hand text-lg text-ink-navy"
               />
-              <span className="font-label text-microcaption tracking-[0.16em] uppercase text-ink-red/70 text-right">
+              <span className="font-label text-microcaption tracking-section uppercase text-ink-red/70 text-right">
                 {t(`creation.step.skills.category.${CATEGORY_BY_NAME[skill.name]?.toLowerCase() ?? 'strength'}`)}
               </span>
             </li>

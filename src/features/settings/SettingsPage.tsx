@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { ThemeName } from '../../app/theme/applyTheme';
 import { GhostButton, PrimaryButton } from '../../app/ui/dialog-buttons';
+import { SelectionCard } from '../../app/ui/SelectionCard';
 import { useSettings } from './useSettings';
 
 const APP_VERSION = '0.0.0';
@@ -20,10 +21,10 @@ export function SettingsPage({ onImport, onExport, hasActiveCharacter }: Props) 
   return (
     <main className="mx-auto max-w-[900px] px-4 sm:px-6 py-10 lg:py-14 flex flex-col gap-10">
       <header>
-        <p className="font-label text-eyebrow tracking-[0.3em] uppercase text-ink-red mb-2">
+        <p className="font-label text-eyebrow tracking-eyebrow uppercase text-ink-red mb-2">
           {t('settings.eyebrow')}
         </p>
-        <h1 className="font-display text-4xl tracking-[0.04em] text-ink-navy">
+        <h1 className="font-display text-4xl tracking-display text-ink-navy">
           {t('settings.title')}
         </h1>
       </header>
@@ -51,7 +52,7 @@ export function SettingsPage({ onImport, onExport, hasActiveCharacter }: Props) 
         <div className="flex flex-col gap-2">
           <p className="font-body text-base text-ink-navy">
             {t('settings.language.current-label')}
-            <span className="ml-2 font-label text-microcaption tracking-[0.18em] uppercase text-ink-red/70">
+            <span className="ml-2 font-label text-microcaption tracking-label uppercase text-ink-red/70">
               {t('settings.language.current-helper')}
             </span>
           </p>
@@ -121,7 +122,7 @@ function Section({
 }) {
   return (
     <section id={id} className="flex flex-col gap-3">
-      <h2 className="font-display text-xl tracking-[0.18em] uppercase text-ink-red border-b border-ink-red/30 pb-2">
+      <h2 className="font-display text-xl tracking-label uppercase text-ink-red border-b border-ink-red/30 pb-2">
         {title}
       </h2>
       <div>{children}</div>
@@ -150,16 +151,7 @@ function ThemeCard({
       ? ['bg-[#f5efe0]', 'bg-[#a33024]', 'bg-[#1f2c5c]']
       : ['bg-[#1a1612]', 'bg-[#c98a3b]', 'bg-[#e9dcc0]'];
   return (
-    <button
-      type="button"
-      onClick={onPick}
-      aria-pressed={active}
-      className={`text-left p-4 border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
-        active
-          ? 'border-ink-red bg-parchment-soft'
-          : 'border-ink-red/40 bg-parchment-soft/50 hover:border-ink-red/70'
-      }`}
-    >
+    <SelectionCard active={active} onClick={onPick}>
       <div className="flex items-center gap-2 mb-2">
         {swatch.map((cls, i) => (
           <span
@@ -169,10 +161,10 @@ function ThemeCard({
           />
         ))}
       </div>
-      <p className="font-display text-base tracking-[0.12em] uppercase text-ink-navy mb-1">
+      <p className="font-display text-base tracking-section uppercase text-ink-navy mb-1">
         {label}
       </p>
       <p className="font-body text-sm text-ink-navy/70">{description}</p>
-    </button>
+    </SelectionCard>
   );
 }

@@ -13,7 +13,7 @@ export function WizardShell({ currentStep, children }: Props) {
   return (
     <main className="mx-auto max-w-[1200px] px-4 sm:px-6 py-8 lg:py-12 grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-6 lg:gap-10">
       <aside className="lg:sticky lg:top-20 lg:self-start">
-        <p className="font-label text-eyebrow tracking-[0.3em] uppercase text-ink-red mb-3">
+        <p className="font-label text-eyebrow tracking-eyebrow uppercase text-ink-red mb-3">
           {t('creation.wizard.eyebrow')}
         </p>
         <ol className="flex flex-col gap-1.5">
@@ -39,11 +39,11 @@ export function WizardShell({ currentStep, children }: Props) {
               >
                 <span
                   aria-hidden="true"
-                  className="font-label text-microlabel tracking-[0.18em] uppercase w-5 inline-flex justify-center"
+                  className="font-label text-microlabel tracking-label uppercase w-5 inline-flex justify-center"
                 >
                   {done ? '✓' : String(index + 1).padStart(2, '0')}
                 </span>
-                <span className="font-display text-sm tracking-[0.12em] uppercase">
+                <span className="font-display text-sm tracking-section uppercase">
                   {t(`creation.step.${step}.title`)}
                 </span>
                 <span className="sr-only">{t(statusKey)}</span>

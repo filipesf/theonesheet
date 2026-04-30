@@ -1,5 +1,6 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { SelectionCard } from '../../../app/ui/SelectionCard';
 import { CULTURAL_DISTINCTIVE_FEATURES } from '../../../ref-data/distinctive-features';
 import type { CreationDraft } from '../creationSchema';
 
@@ -31,13 +32,13 @@ export function StepDistinctiveFeatures() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="font-display text-2xl tracking-[0.06em] text-ink-navy">
+      <h2 className="font-display text-2xl tracking-display text-ink-navy">
         {t('creation.step.features.title')}
       </h2>
       <p className="font-body text-base text-ink-navy/70">
         {t('creation.step.features.body')}
       </p>
-      <p className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
+      <p className="font-label text-microlabel tracking-label uppercase text-ink-red">
         {t('creation.step.features.picked', { count: picks.length, total: 2 })}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -45,20 +46,17 @@ export function StepDistinctiveFeatures() {
           const active = picks.includes(featureId);
           const disabled = !active && picks.length >= 2;
           return (
-            <button
+            <SelectionCard
               key={featureId}
-              type="button"
-              onClick={() => toggle(featureId)}
-              aria-pressed={active}
+              active={active}
               disabled={disabled}
-              className={`text-left p-3 border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment disabled:cursor-not-allowed disabled:opacity-50 ${
-                active ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 bg-parchment-soft/40 hover:border-ink-red/70'
-              }`}
+              padding="sm"
+              onClick={() => toggle(featureId)}
             >
-              <span className="font-display text-sm tracking-[0.12em] uppercase text-ink-navy">
+              <span className="font-display text-sm tracking-section uppercase text-ink-navy">
                 {t(`ref.distinctiveFeatures.cultures.${cultureKey}.${featureId}`)}
               </span>
-            </button>
+            </SelectionCard>
           );
         })}
       </div>

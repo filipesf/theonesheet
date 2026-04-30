@@ -13,6 +13,14 @@
   --text-microcaption: 0.5625rem;  /* 9px  — sheet field labels, kbd */
   --text-microline: 0.5rem;        /* 8px  — attribute-pill captions */
 
+  /* Letter-spacing scale beyond Tailwind's tracking-widest (0.1em).
+   * The manuscript aesthetic relies on stretched uppercase labels; these
+   * tokens replace ad-hoc tracking-[Nem]. */
+  --tracking-display: 0.06em;   /* h1/h2 large display titles */
+  --tracking-section: 0.12em;   /* sub-section uppercase labels */
+  --tracking-label: 0.2em;      /* uppercase labels, buttons, smaller eyebrows */
+  --tracking-eyebrow: 0.28em;   /* primary eyebrows above sections, brand */
+
   /* Default colour tokens — duplicated below in :root for runtime swap. */
   --color-parchment: #f5efe0;
   --color-parchment-deep: #ede4cf;
