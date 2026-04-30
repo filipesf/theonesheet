@@ -124,6 +124,23 @@ export function useCharacterLibrary() {
     setState((current) => ({ ...current, activeCharacterId: id }));
   }, []);
 
+  const createCharacterFromDraft = useCallback((character: Character): string => {
+    setState((current) => {
+      const existingNames = current.characters.map((item) => item.name);
+      const name = nextName(character.name || i18n.t('card.untitled-hero'), existingNames);
+      const record: CharacterRecord = {
+        id: character.id,
+        name,
+        character: { ...character, name },
+      };
+      return {
+        activeCharacterId: record.id,
+        characters: [...current.characters, record],
+      };
+    });
+    return character.id;
+  }, []);
+
   const updateCharacter = useCallback((character: Character) => {
     setState((current) => ({
       ...current,
@@ -140,6 +157,7 @@ export function useCharacterLibrary() {
     activeCharacterId: state.activeCharacterId,
     characters: state.characters,
     createCharacter,
+    createCharacterFromDraft,
     duplicateCharacter,
     renameCharacter,
     deleteCharacter,

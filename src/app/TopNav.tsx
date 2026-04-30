@@ -4,8 +4,6 @@ import { buildHash, navigate, type Route } from './router';
 
 type TopNavProps = {
   route: Route;
-  onExport: () => void;
-  onImport: () => void;
   onCreate: () => void;
   hasActiveCharacter: boolean;
   activeCharacterId: string | null;
@@ -13,8 +11,6 @@ type TopNavProps = {
 
 export function TopNav({
   route,
-  onExport,
-  onImport,
   onCreate,
   hasActiveCharacter,
   activeCharacterId,
@@ -50,7 +46,7 @@ export function TopNav({
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <ToolsMenu onExport={onExport} onImport={onImport} />
+          <ToolsMenu />
           <NavLink
             active={route.name === 'settings'}
             href={buildHash({ name: 'settings' })}
@@ -123,7 +119,7 @@ function PrimaryAction({
   );
 }
 
-function ToolsMenu({ onExport, onImport }: { onExport: () => void; onImport: () => void }) {
+function ToolsMenu() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -138,6 +134,10 @@ function ToolsMenu({ onExport, onImport }: { onExport: () => void; onImport: () 
     document.addEventListener('mousedown', handle);
     return () => document.removeEventListener('mousedown', handle);
   }, [open]);
+
+  // Tools is a navigation shortcut to the Settings → Personagens section so
+  // there is a single source of truth for import/export controls.
+  const settingsHref = buildHash({ name: 'settings' });
 
   return (
     <div ref={ref} className="relative">
@@ -155,44 +155,36 @@ function ToolsMenu({ onExport, onImport }: { onExport: () => void; onImport: () 
           role="menu"
           className="absolute right-0 top-full mt-1 min-w-[200px] bg-[#1a1410] border border-ink-red/40 shadow-lg py-1"
         >
-          <MenuItem
-            onClick={() => {
-              onExport();
-              setOpen(false);
-            }}
-          >
+          <MenuLink href={settingsHref} onSelect={() => setOpen(false)}>
             {t('nav.export-active')}
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              onImport();
-              setOpen(false);
-            }}
-          >
+          </MenuLink>
+          <MenuLink href={settingsHref} onSelect={() => setOpen(false)}>
             {t('nav.import-json')}
-          </MenuItem>
+          </MenuLink>
         </div>
       )}
     </div>
   );
 }
 
-function MenuItem({
-  onClick,
+function MenuLink({
+  href,
+  onSelect,
   children,
 }: {
-  onClick: () => void;
+  href: string;
+  onSelect: () => void;
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
+    <a
+      href={href}
       role="menuitem"
-      onClick={onClick}
+      onClick={onSelect}
       className="block w-full text-left px-3 py-2 font-label text-[11px] tracking-[0.18em] uppercase text-parchment-soft/85 hover:bg-ink-red/20 hover:text-parchment-soft cursor-pointer transition-colors focus:outline-none focus-visible:bg-ink-red/30"
     >
       {children}
-    </button>
+    </a>
   );
 }
 

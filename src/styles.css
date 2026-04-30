@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 @theme {
+  /* Fonts stay global — they don't theme. */
+  --font-display: "Cinzel", "Trajan Pro", serif;
+  --font-label: "Cinzel", "Trajan Pro", serif;
+  --font-hand: "Caveat", "Kalam", "Patrick Hand", cursive;
+  --font-body: "Cormorant Garamond", "EB Garamond", serif;
+
+  /* Default colour tokens — duplicated below in :root for runtime swap. */
   --color-parchment: #f5efe0;
   --color-parchment-deep: #ede4cf;
   --color-parchment-soft: #faf4e6;
@@ -8,11 +15,27 @@
   --color-ink-red-soft: #c9685a;
   --color-ink-navy: #1f2c5c;
   --color-ink-navy-soft: #3a4a82;
+}
 
-  --font-display: "Cinzel", "Trajan Pro", serif;
-  --font-label: "Cinzel", "Trajan Pro", serif;
-  --font-hand: "Caveat", "Kalam", "Patrick Hand", cursive;
-  --font-body: "Cormorant Garamond", "EB Garamond", serif;
+:root,
+:root[data-theme="parchment"] {
+  --color-parchment: #f5efe0;
+  --color-parchment-deep: #ede4cf;
+  --color-parchment-soft: #faf4e6;
+  --color-ink-red: #a33024;
+  --color-ink-red-soft: #c9685a;
+  --color-ink-navy: #1f2c5c;
+  --color-ink-navy-soft: #3a4a82;
+}
+
+:root[data-theme="tor-dark"] {
+  --color-parchment: #1a1612;
+  --color-parchment-deep: #231d17;
+  --color-parchment-soft: #2a231b;
+  --color-ink-navy: #e9dcc0;
+  --color-ink-navy-soft: #bca97f;
+  --color-ink-red: #c98a3b;
+  --color-ink-red-soft: #7a8a5a;
 }
 
 html,
@@ -62,8 +85,20 @@ input[type="number"] {
   body {
     background: #ffffff;
   }
-  .no-print {
+  .no-print,
+  [data-dice="ui"] {
     display: none !important;
+  }
+  /* Print always uses parchment regardless of stored preference. */
+  :root,
+  :root[data-theme="tor-dark"] {
+    --color-parchment: #ffffff;
+    --color-parchment-deep: #f5efe0;
+    --color-parchment-soft: #ffffff;
+    --color-ink-navy: #1f2c5c;
+    --color-ink-navy-soft: #3a4a82;
+    --color-ink-red: #a33024;
+    --color-ink-red-soft: #c9685a;
   }
 }
 

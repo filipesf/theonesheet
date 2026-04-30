@@ -20,6 +20,34 @@
   "editor": {
     "print": "Imprimir"
   },
+  "settings": {
+    "eyebrow": "◆ Preferências",
+    "title": "Configurações",
+    "appearance": {
+      "heading": "Aparência",
+      "theme-parchment": "Pergaminho",
+      "theme-parchment-description": "O visual claro e clássico do livro de regras.",
+      "theme-tor-dark": "Sombras de Mordor",
+      "theme-tor-dark-description": "Tons profundos de bronze e musgo para sessões à noite."
+    },
+    "language": {
+      "heading": "Idioma",
+      "current-label": "Português (Brasil)",
+      "note": "Inglês britânico chega na v1."
+    },
+    "characters": {
+      "heading": "Personagens",
+      "export-active": "Exportar herói ativo",
+      "export-no-active": "Abra um herói para exportá-lo.",
+      "import": "Importar herói…"
+    },
+    "about": {
+      "heading": "Sobre",
+      "version": "Versão {{version}}",
+      "roadmap-link": "Ver roadmap",
+      "repo-link": "Repositório no GitHub"
+    }
+  },
   "nav": {
     "brand-aria": "The One Sheet — voltar à biblioteca",
     "heroes": "Heróis",
@@ -190,16 +218,119 @@
       "very-rich": "Muito Rico"
     }
   },
+  "dice": {
+    "launcher": {
+      "label": "Rolar dados",
+      "aria": "Abrir bandeja de dados",
+      "title": "Abrir bandeja de dados (atalho: D)"
+    },
+    "tray": {
+      "title": "Bandeja de Dados",
+      "label": "Rolagem (rótulo)",
+      "success-dice": "Dados de Sucesso",
+      "tn": "ND",
+      "weary": "Esgotado (1–3 viram 0)",
+      "miserable": "Miserável (Olho = falha automática)",
+      "roll": "Rolar",
+      "rolling": "Rolando…",
+      "close": "Fechar",
+      "unnamed-roll": "Rolagem livre"
+    },
+    "log": {
+      "heading": "Últimas rolagens",
+      "clear": "Limpar histórico"
+    },
+    "feat": {
+      "face": "Façanha",
+      "gandalf": "Gandalf",
+      "eye": "Olho"
+    },
+    "result": {
+      "total": "Total {{total}}",
+      "tn": "ND {{tn}}",
+      "tengwar": "Tengwar ×{{count}}"
+    },
+    "outcome": {
+      "success": "Sucesso",
+      "failure": "Fracasso",
+      "magical": "Mágico",
+      "great": "Magnífico",
+      "extraordinary": "Extraordinário",
+      "no-tn": "Sem ND",
+      "auto-fail": "Falha automática"
+    }
+  },
   "creation": {
-    "heading": "Fluxo de Criação",
-    "intro": "Auxiliar progressivo para as fases 1-8 de criação do PRD, na mesma página.",
-    "apply-belba": "Aplicar exemplo trabalhado de Belba",
-    "blocking-title": "Bloqueios antes de finalizar",
-    "warnings-title": "Avisos de rascunho",
-    "none": "Nenhum",
-    "finalise-status": "Status de finalização: ",
-    "ready": "Pronto",
-    "blocked": "Bloqueado"
+    "wizard": {
+      "eyebrow": "◆ Forjando um herói",
+      "back": "Voltar",
+      "next": "Avançar",
+      "finalise": "Finalizar",
+      "cancel": "Voltar à biblioteca",
+      "experience": "Experiência prévia",
+      "invalid-toast": "Há campos pendentes. Revise os passos antes de finalizar.",
+      "created-toast": "Herói criado."
+    },
+    "step": {
+      "culture": {
+        "title": "Cultura Heroica",
+        "body": "Escolha a cultura de origem do seu herói. A bênção cultural é aplicada automaticamente.",
+        "blessing-label": "Bênção"
+      },
+      "attributes": {
+        "title": "Atributos",
+        "body": "Selecione um conjunto de atributos para o seu herói.",
+        "set-label": "Conjunto {{index}}"
+      },
+      "skills": {
+        "title": "Perícias",
+        "body": "Marque as perícias favoráveis e ajuste os valores. A meta é gastar 10 pontos de Experiência Prévia entre perícias e proficiências.",
+        "favoured-label": "{{name}} favorável",
+        "rating-label": "Valor de {{name}}",
+        "category": {
+          "strength": "Frç",
+          "heart": "Cor",
+          "wits": "Esp"
+        }
+      },
+      "proficiencies": {
+        "title": "Proficiências de Combate",
+        "body": "Distribua os pontos restantes entre as proficiências de combate."
+      },
+      "features": {
+        "title": "Características Distintivas",
+        "body": "Escolha duas características culturais. Uma terceira virá da sua vocação.",
+        "picked": "{{count}} de {{total}} escolhidas"
+      },
+      "identity": {
+        "title": "Identidade",
+        "body": "Dê nome e idade ao seu herói.",
+        "name-label": "Nome",
+        "name-required": "Informe um nome.",
+        "age-label": "Idade",
+        "age-range": "Idade fora da janela permitida (8–400)."
+      },
+      "calling": {
+        "title": "Vocação e Equipamento",
+        "body": "Escolha sua vocação, recompensa e virtude iniciais, padrão de vida e equipamento de partida.",
+        "choose-calling": "Vocação",
+        "calling-feature": "Característica da vocação",
+        "starting-reward": "Recompensa inicial",
+        "starting-virtue": "Virtude inicial",
+        "standard-of-living": "Padrão de Vida",
+        "weapons": "Armas ({{count}}/{{max}})",
+        "armour": "Armadura",
+        "shield": "Escudo"
+      },
+      "review": {
+        "title": "Revisão",
+        "body": "Confira os dados antes de finalizar. As condições derivadas (Vigor, Esperança, Aparar) são recalculadas automaticamente.",
+        "invalid": "Alguns campos ainda precisam de atenção. Volte aos passos com erros e tente novamente.",
+        "blocking-title": "Bloqueios",
+        "warnings-title": "Avisos",
+        "phase9-note": "A formação da Companhia (Fase 9) é colaborativa e fica para a v2."
+      }
+    }
   },
   "common": {
     "dash": "—",

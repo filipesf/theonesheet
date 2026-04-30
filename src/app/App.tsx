@@ -4,10 +4,15 @@ import { Toaster, toast } from 'sonner';
 import { createBelbaWorkedExample, toExportFile } from '../domain/schema';
 import { LibraryPage } from '../features/library/LibraryPage';
 import { useCharacterLibrary } from '../features/library/useCharacterLibrary';
-import { CharacterNewPlaceholder } from './CharacterNewPlaceholder';
+import { CreationWizardPage } from '../features/creation/CreationWizardPage';
+import { DiceStage } from '../features/dice/DiceStage';
+import { DiceTray } from '../features/dice/DiceTray';
+import { DiceTrayLauncher } from '../features/dice/DiceTrayLauncher';
+import { useDiceHotkey } from '../features/dice/useDiceHotkey';
+import { setDiceTrayCharacter } from '../features/dice/useDiceTray';
+import { SettingsPage } from '../features/settings/SettingsPage';
 import { EditorShell } from './EditorShell';
 import { PrintedShell } from './PrintedShell';
-import { SettingsPlaceholder } from './SettingsPlaceholder';
 import { TopNav } from './TopNav';
 import { DeleteCharacterDialog } from './ui/DeleteCharacterDialog';
 import { ImportCharacterDialog } from './ui/ImportCharacterDialog';
@@ -25,6 +30,11 @@ export default function App() {
   const { t } = useTranslation();
   const route = useRoute();
   const library = useCharacterLibrary();
+  useDiceHotkey();
+
+  useEffect(() => {
+    setDiceTrayCharacter(library.activeCharacterId);
+  }, [library.activeCharacterId]);
 
   const [renameTargetId, setRenameTargetId] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
@@ -72,11 +82,6 @@ export default function App() {
     navigate({ name: 'characterNew' });
   }
 
-  function handleQuickForge() {
-    const id = library.createCharacter();
-    navigate({ name: 'characterEditor', id });
-  }
-
   function handleApplyBelba() {
     const base = createBelbaWorkedExample();
     const result = library.importCharacter(JSON.stringify(toExportFile(base)));
@@ -107,8 +112,6 @@ export default function App() {
       <TopNav
         route={route}
         onCreate={handleCreate}
-        onExport={handleExport}
-        onImport={() => setImportOpen(true)}
         hasActiveCharacter={Boolean(library.activeCharacterId)}
         activeCharacterId={library.activeCharacterId}
       />
@@ -131,7 +134,7 @@ export default function App() {
       )}
 
       {route.name === 'characterNew' && (
-        <CharacterNewPlaceholder onQuickForge={handleQuickForge} />
+        <CreationWizardPage onCreate={library.createCharacterFromDraft} />
       )}
 
       {route.name === 'characterEditor' && (
@@ -150,7 +153,13 @@ export default function App() {
         )
       )}
 
-      {route.name === 'settings' && <SettingsPlaceholder />}
+      {route.name === 'settings' && (
+        <SettingsPage
+          onImport={() => setImportOpen(true)}
+          onExport={handleExport}
+          hasActiveCharacter={Boolean(library.activeCharacterId)}
+        />
+      )}
 
       <RenameCharacterDialog
         open={renameTarget !== null}
@@ -191,6 +200,10 @@ export default function App() {
           navigate({ name: 'characterEditor', id });
         }}
       />
+
+      <DiceStage />
+      <DiceTray />
+      <DiceTrayLauncher />
 
       <Toaster
         position="top-right"
