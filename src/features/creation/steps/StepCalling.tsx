@@ -41,7 +41,7 @@ export function StepCalling() {
     : callingData.enemyLoreOptions
       ? callingData.enemyLoreOptions.map((option) => ({
           value: option,
-          label: t(`ref.callings.champion.enemyLore.${option}`),
+          label: t(`ref.enemyLore.${option}`),
         }))
       : [
           {
@@ -82,7 +82,7 @@ export function StepCalling() {
                 setValue('calling_feature', '', { shouldValidate: true });
               }}
               aria-pressed={calling === c}
-              className={`p-3 border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
+              className={`p-3 border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
                 calling === c ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 hover:border-ink-red/70'
               }`}
             >
@@ -107,7 +107,7 @@ export function StepCalling() {
                 setValue('calling_feature', option.value, { shouldDirty: true, shouldValidate: true })
               }
               aria-pressed={callingFeature === option.value}
-              className={`p-3 text-left border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
+              className={`p-3 text-left border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
                 callingFeature === option.value ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 hover:border-ink-red/70'
               }`}
             >
@@ -166,7 +166,7 @@ export function StepCalling() {
                 type="button"
                 onClick={() => toggleWeapon(weaponId)}
                 aria-pressed={active}
-                className={`p-3 text-left border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
+                className={`p-3 text-left border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
                   active ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 hover:border-ink-red/70'
                 }`}
               >

@@ -36,7 +36,7 @@ export function StepAttributes() {
               type="button"
               onClick={() => pick(index)}
               aria-pressed={active}
-              className={`text-left p-4 border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
+              className={`text-left p-4 border-2 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
                 active ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 bg-parchment-soft/40 hover:border-ink-red/70'
               }`}
             >

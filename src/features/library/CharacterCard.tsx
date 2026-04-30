@@ -32,7 +32,7 @@ export function CharacterCard({
     <article
       className={`group relative bg-parchment-soft border-2 ${
         isActive ? 'border-ink-red' : 'border-ink-red/50'
-      } shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition-all`}
+      } shadow-card hover:-translate-y-0.5 hover:shadow-card-hover transition`}
     >
       <div className="border border-ink-red/40 m-1.5 flex flex-col">
         <button

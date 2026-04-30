@@ -1,21 +1,6 @@
 {
   "app": {
-    "title": "The One Sheet",
-    "brand-tagline": "Sua ficha de O Um Anel",
-    "placeholder": {
-      "back-to-library": "Voltar à biblioteca",
-      "character-new": {
-        "eyebrow": "◆ Em breve",
-        "title": "Assistente de criação a caminho",
-        "body": "O fluxo passo a passo de criação chega na próxima onda. Por enquanto, você pode forjar um herói em branco e preencher a ficha à mão.",
-        "quick-forge": "Forjar herói rapidamente"
-      },
-      "settings": {
-        "eyebrow": "◆ Em breve",
-        "title": "Configurações",
-        "body": "Tema, idioma e atalhos de import/export aparecerão aqui em breve."
-      }
-    }
+    "title": "The One Sheet"
   },
   "editor": {
     "print": "Imprimir"
@@ -63,13 +48,13 @@
   "library": {
     "heading-eyebrow": "◆ The One Sheet · Heróis",
     "heading": "Sua Companhia",
-    "subheading-empty": "Nenhum herói ainda. Comece uma nova história, ou invoque Belba Bolger do exemplo trabalhado para estudar uma ficha pronta.",
-    "subheading-count_one": "{{count}} herói guardado em sua biblioteca local. Escolha um para abrir a ficha impressa, ou forje outro.",
-    "subheading-count_other": "{{count}} heróis guardados em sua biblioteca local. Escolha um para abrir a ficha impressa, ou forje outro.",
+    "subheading-empty": "Nenhum herói ainda. Comece uma nova história, ou carregue Belba Bolger — uma personagem pronta para você estudar.",
+    "subheading-count_one": "{{count}} herói guardado em sua biblioteca local. Escolha um para abrir a ficha, ou forje outro.",
+    "subheading-count_other": "{{count}} heróis guardados em sua biblioteca local. Escolha um para abrir a ficha, ou forje outro.",
     "forge-new-hero": "Forje um Novo Herói",
-    "load-belba": "Ou carregar Belba Bolger ·  exemplo trabalhado",
+    "load-belba": "Carregar Belba Bolger · personagem de exemplo",
     "empty-state-title": "Nenhum herói ainda",
-    "empty-state-body": "Toda saga começa com um nome. Forje seu primeiro herói e a ficha impressa abrirá pronta para ser preenchida."
+    "empty-state-body": "Toda saga começa com um nome. Forje seu primeiro herói e a ficha abrirá pronta para ser preenchida."
   },
   "card": {
     "untitled-hero": "Herói sem nome",
@@ -92,8 +77,8 @@
   },
   "sheet": {
     "aria": {
-      "sheet-root": "Ficha de personagem de O Um Anel",
-      "character-name": "Nome do personagem",
+      "sheet-root": "Ficha do herói (O Um Anel)",
+      "character-name": "Nome do herói",
       "strength-rating": "Pontuação de Força",
       "heart-rating": "Pontuação de Coração",
       "wits-rating": "Pontuação de Espírito",
@@ -170,7 +155,7 @@
     },
     "placeholder": {
       "name": "Digite o nome do seu herói…",
-      "distinctive-features": "Paciente, Rústico, Tradições",
+      "distinctive-features": "Paciente, Vigilante, Eloquente",
       "flaws": "—",
       "travelling-gear": "Um item por linha"
     },
@@ -261,7 +246,7 @@
       "magical": "Mágico",
       "great": "Magnífico",
       "extraordinary": "Extraordinário",
-      "no-tn": "Sem ND",
+      "no-tn": "ND não definido",
       "auto-fail": "Falha automática"
     }
   },
@@ -273,7 +258,7 @@
       "finalise": "Finalizar",
       "cancel": "Voltar à biblioteca",
       "experience": "Experiência prévia",
-      "invalid-toast": "Há campos pendentes. Revise os passos antes de finalizar.",
+      "invalid-toast": "Há campos a corrigir. Revise os passos com erro antes de finalizar.",
       "created-toast": "Herói criado.",
       "step-status-current": "Passo atual",
       "step-status-completed": "Concluído",
@@ -332,14 +317,14 @@
       },
       "review": {
         "title": "Revisão",
-        "body": "Confira os dados antes de finalizar. As condições derivadas (Vigor, Esperança, Aparar) são recalculadas automaticamente.",
-        "invalid": "Alguns campos ainda precisam de atenção. Volte aos passos com erros e tente novamente.",
+        "body": "Confira os dados antes de finalizar. Os valores derivados (Vigor, Esperança, Aparar) são recalculados automaticamente.",
+        "invalid": "Alguns campos ainda precisam de atenção. Volte aos passos com erro e tente novamente.",
         "blocking-title": "Bloqueios",
         "warnings-title": "Avisos",
-        "phase9-note": "A formação da Companhia (Fase 9) é colaborativa e fica para a v2."
+        "phase9-note": "A formação da Companhia é uma etapa colaborativa entre os jogadores — fica para uma versão futura."
       }
     },
-    "advance-blocked": "Há campos pendentes neste passo. Revise antes de avançar.",
+    "advance-blocked": "Preencha os campos obrigatórios antes de avançar.",
     "field": {
       "name": "Nome",
       "age": "Idade",
@@ -357,7 +342,7 @@
       "virtues-one": "Escolha exatamente uma virtude inicial.",
       "previous-experience-overspent": "Experiência prévia ultrapassada: {{spent}}/10.",
       "previous-experience-underspent": "Experiência prévia parcial: {{spent}}/10.",
-      "derived-state-bounds": "Vigor/Esperança atual não pode exceder o máximo."
+      "derived-state-bounds": "Vigor ou Esperança atual está acima do máximo permitido."
     }
   },
   "common": {
@@ -375,7 +360,7 @@
       "no-active": "Abra um herói antes de exportar.",
       "failed": "Não foi possível exportar este herói.",
       "copied": "JSON do herói copiado para a área de transferência.",
-      "clipboard-failed": "Falha ao copiar para a área de transferência."
+      "clipboard-failed": "Não foi possível copiar para a área de transferência."
     },
     "delete": {
       "done": "Herói excluído."
@@ -388,14 +373,6 @@
     }
   },
   "ref": {
-    "callings": {
-      "captain": "Capitão",
-      "champion": "Campeão",
-      "messenger": "Mensageiro",
-      "scholar": "Erudito",
-      "treasure-hunter": "Caçador de Tesouros",
-      "warden": "Guardião"
-    },
     "shadowPaths": {
       "dragon-sickness": "Doença do Dragão",
       "curse-of-vengeance": "Maldição da Vingança",
@@ -636,8 +613,8 @@
     },
     "delete": {
       "title": "Excluir herói",
-      "body": "Tem certeza que deseja excluir {{name}}? Esta ação não pode ser desfeita.",
-      "submit": "Excluir"
+      "body": "Excluir {{name}}? Esta ação não pode ser desfeita.",
+      "submit": "Excluir herói"
     },
     "import": {
       "title": "Importar herói",

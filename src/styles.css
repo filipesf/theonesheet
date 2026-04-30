@@ -129,3 +129,18 @@ input[type="number"] {
 body[data-view="printed"] .no-print {
   display: none !important;
 }
+
+/* Universal cap on motion when the user opts into reduced motion. Each feature
+ * can still branch on the preference for richer behaviour (see the dice stage,
+ * which disables physics via `usePrefersReducedMotion`); this rule is the
+ * safety net that catches every transition and keyframe we might miss. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
