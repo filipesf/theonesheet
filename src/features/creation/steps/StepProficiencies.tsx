@@ -62,7 +62,7 @@ export function StepProficiencies() {
                   )
                 }
                 aria-label={t(`sheet.combat-proficiency.${PROFICIENCY_KEY[proficiency.name]}`)}
-                className="bg-transparent border border-ink-red/40 px-2 py-1 text-center font-hand text-lg text-ink-navy"
+                className="bg-transparent border border-ink-red/40 px-2 py-1 text-center font-body font-semibold tabular-nums text-lg text-ink-navy"
               />
             </li>
           );

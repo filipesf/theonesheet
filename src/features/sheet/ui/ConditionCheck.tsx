@@ -21,7 +21,7 @@ export function ConditionCheck({ checked, onChange, label, readOnly }: Condition
           checked ? 'bg-ink-red' : 'bg-transparent'
         } ${readOnly ? 'opacity-90' : ''}`}
       />
-      <span className="font-body text-base text-ink-navy">{label}</span>
+      <span className="font-body text-lg text-ink-navy">{label}</span>
     </button>
   );
 }

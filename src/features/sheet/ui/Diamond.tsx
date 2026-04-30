@@ -20,7 +20,7 @@ const VALUE_CLASS: Record<DiamondSize, string> = {
   xs: 'text-sm leading-none',
   sm: 'text-base leading-none',
   md: 'text-2xl leading-none',
-  lg: 'text-[clamp(2.25rem,4vw,2.75rem)] leading-none',
+  lg: 'text-diamond-lg leading-none',
 };
 
 export function Diamond({
@@ -41,7 +41,9 @@ export function Diamond({
         }`}
       />
       <span className="absolute inset-0 flex items-center justify-center">
-        <span className={`font-hand text-ink-navy ${VALUE_CLASS[size]}`}>
+        <span
+          className={`font-body font-semibold tabular-nums text-ink-navy ${VALUE_CLASS[size]}`}
+        >
           {children}
         </span>
       </span>

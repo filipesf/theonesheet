@@ -9,7 +9,7 @@ type FieldProps = {
 export function Field({ label, children, className = '' }: FieldProps) {
   return (
     <label className={`flex flex-col gap-0.5 min-w-0 ${className}`}>
-      <span className="font-label text-microcaption tracking-wider uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
         {label}
       </span>
       <span className="block border-b border-ink-red/60 pb-0.5 min-h-[1.6rem]">
@@ -25,7 +25,7 @@ export function HandInput({ className = '', ...rest }: HandInputProps) {
   return (
     <input
       {...rest}
-      className={`w-full bg-transparent border-0 outline-none font-hand text-lg leading-tight text-ink-navy placeholder:text-ink-navy/40 focus:ring-0 ${className}`}
+      className={`w-full bg-transparent border-0 outline-none font-body italic text-lg leading-tight text-ink-navy placeholder:text-ink-navy/40 placeholder:not-italic focus:ring-0 ${className}`}
     />
   );
 }

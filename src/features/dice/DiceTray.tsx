@@ -108,7 +108,7 @@ export function DiceTray() {
           <input
             value={label}
             onChange={(event) => setLabel(event.target.value)}
-            className="bg-transparent border-0 border-b border-ink-red/60 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-xl text-ink-navy py-1 transition-colors"
+            className="bg-transparent border-0 border-b border-ink-red/60 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-body italic text-xl text-ink-navy py-1 transition-colors"
           />
         </label>
         <div className="grid grid-cols-2 gap-3">
@@ -126,7 +126,7 @@ export function DiceTray() {
                   Math.max(1, Math.min(MAX_DICE, sanitiseDigits(event.target.value) || 1)),
                 )
               }
-              className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-hand text-lg text-ink-navy transition-colors"
+              className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-body font-semibold tabular-nums text-lg text-ink-navy transition-colors"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -140,7 +140,7 @@ export function DiceTray() {
               value={tn}
               onChange={(event) => setTn(event.target.value.replace(/\D/g, ''))}
               placeholder={t('common.dash')}
-              className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-hand text-lg text-ink-navy transition-colors"
+              className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-body font-semibold tabular-nums text-lg text-ink-navy transition-colors"
             />
           </label>
         </div>
@@ -162,7 +162,7 @@ export function DiceTray() {
         {recentLog.length > 0 && (
           <section className="border-t border-ink-red/30 pt-3 mt-1">
             <header className="flex items-center justify-between mb-2">
-              <h3 className="font-display text-sm tracking-label uppercase text-ink-red">
+              <h3 className="font-display text-base tracking-label uppercase text-ink-red">
                 {t('dice.log.heading')}
               </h3>
               <button
@@ -179,10 +179,10 @@ export function DiceTray() {
                   key={entry.id}
                   className="flex items-center justify-between gap-3 border border-ink-red/20 bg-parchment-soft/40 px-2 py-1"
                 >
-                  <span className="font-body text-sm text-ink-navy truncate">
+                  <span className="font-body text-base text-ink-navy truncate">
                     {entry.request.label}
                   </span>
-                  <span className="font-label text-microlabel tracking-label uppercase text-ink-navy/70 shrink-0">
+                  <span className="font-label text-microlabel tracking-label uppercase text-ink-navy/85 shrink-0">
                     {t(`dice.outcome.${entry.outcome}`)} · {entry.total}
                   </span>
                 </li>
@@ -212,7 +212,7 @@ function Toggle({
         onChange={(event) => onChange(event.target.checked)}
         className="accent-ink-red"
       />
-      <span className="font-body text-sm text-ink-navy">{label}</span>
+      <span className="font-body text-base text-ink-navy">{label}</span>
     </label>
   );
 }
@@ -222,10 +222,10 @@ function ResultCard({ result }: { result: RollResult }) {
   return (
     <article className="border border-ink-red/40 bg-parchment-soft/60 p-3 mt-2">
       <header className="flex items-center justify-between">
-        <span className="font-display text-sm tracking-label uppercase text-ink-red">
+        <span className="font-display text-base tracking-label uppercase text-ink-red">
           {result.request.label}
         </span>
-        <span className="font-label text-microlabel tracking-label uppercase text-ink-navy/70">
+        <span className="font-label text-microlabel tracking-label uppercase text-ink-navy/85">
           {t(`dice.outcome.${result.outcome}`)}
         </span>
       </header>
@@ -235,7 +235,7 @@ function ResultCard({ result }: { result: RollResult }) {
           <FaceBadge key={index} label="d6" value={String(face)} />
         ))}
       </div>
-      <p className="mt-2 font-body text-sm text-ink-navy/80">
+      <p className="mt-2 font-body text-base text-ink-navy/85">
         {t('dice.result.total', { total: result.total })}
         {result.request.tn !== null && (
           <> · {t('dice.result.tn', { tn: result.request.tn })}</>
@@ -266,7 +266,7 @@ function FaceBadge({
       <span className="font-label text-microline tracking-label uppercase text-ink-red/70 leading-none">
         {label}
       </span>
-      <span className={`font-hand text-ink-navy ${large ? 'text-xl' : 'text-base'}`}>
+      <span className={`font-body font-semibold tabular-nums text-ink-navy ${large ? 'text-xl' : 'text-base'}`}>
         {value}
       </span>
     </span>

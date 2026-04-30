@@ -115,7 +115,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="font-label text-microlabel tracking-label uppercase text-ink-red/80">{label}</dt>
-      <dd className="font-hand text-lg text-ink-navy">{value || t('common.dash')}</dd>
+      <dd className="font-body italic text-lg text-ink-navy">{value || t('common.dash')}</dd>
     </div>
   );
 }

@@ -31,7 +31,7 @@ Verify that recent changes still align with the project's architecture, design s
 
    **Design system**
    - Hard-coded colour values (`#abc`, `rgb(...)`, `hsl(...)`) instead of CSS tokens.
-   - Ad-hoc font stacks instead of `--font-display` / `--font-body` / `--font-label` / `--font-hand`.
+   - Ad-hoc font stacks instead of `--font-display` / `--font-body` / `--font-label`.
    - Custom Tailwind values like `gap-[7px]` (token bypass).
    - Print-only styles outside the `@media print` block in `src/styles.css`.
    - Missing `:focus-visible` on new interactive elements.

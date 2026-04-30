@@ -53,7 +53,7 @@ function Pill({ label, value }: { label: string; value: number }) {
   return (
     <li>
       <p className="font-label text-microcaption tracking-label uppercase text-ink-red/80">{label}</p>
-      <p className="font-hand text-2xl text-ink-navy">{value}</p>
+      <p className="font-body font-semibold tabular-nums text-2xl text-ink-navy">{value}</p>
     </li>
   );
 }

@@ -20,7 +20,7 @@ export function TreasureBox({ value, onChange }: TreasureBoxProps) {
         value={value}
         onChange={(event) => onChange(sanitiseDigits(event.target.value))}
         aria-label={t('sheet.aria.treasure')}
-        className="w-12 h-8 bg-transparent border-2 border-ink-red outline-none focus-visible:bg-ink-red/10 text-center font-hand text-lg text-ink-navy"
+        className="w-12 h-8 bg-transparent border-2 border-ink-red outline-none focus-visible:bg-ink-red/10 text-center font-body font-semibold tabular-nums text-lg text-ink-navy"
       />
     </label>
   );

@@ -1,17 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  /* Fonts stay global — they don't theme. */
-  --font-display: "Cinzel", "Trajan Pro", serif;
-  --font-label: "Cinzel", "Trajan Pro", serif;
-  --font-hand: "Caveat", "Kalam", "Patrick Hand", cursive;
-  --font-body: "Cormorant Garamond", "EB Garamond", serif;
+  /* Fonts stay global — they don't theme.
+   *
+   * Two-family system:
+   *   - Display/labels: Cormorant SC. Small-caps companion to the Cormorant
+   *     family. Uniform small-cap height gives short uppercase labels a
+   *     refined, set-in-type feel.
+   *   - Body / numerics / player content: Crimson Pro. Variable-weight book
+   *     serif close in temperament to Beaufort Pro. Italic carries any field
+   *     that used to be hand-written; cursives are intentionally absent.
+   */
+  --font-display: "Cormorant SC", "Cormorant Garamond", serif;
+  --font-label: "Cormorant SC", "Cormorant Garamond", serif;
+  --font-body: "Crimson Pro", "Crimson Text", "EB Garamond", serif;
 
-  /* Sub-12px typography scale. Use these instead of ad-hoc text-[Npx]. */
-  --text-eyebrow: 0.6875rem;       /* 11px — primary eyebrows, nav, buttons */
-  --text-microlabel: 0.625rem;     /* 10px — diamond labels, card actions */
-  --text-microcaption: 0.5625rem;  /* 9px  — sheet field labels, kbd */
-  --text-microline: 0.5rem;        /* 8px  — attribute-pill captions */
+  /* Sub-12px typography scale. Use these instead of ad-hoc text-[Npx].
+   * Sized for Cormorant SC, which renders thinner than Cinzel at small caps;
+   * the floor is 10 px, not 8 px. */
+  --text-eyebrow: 0.8125rem;       /* 13px — primary eyebrows, nav, buttons */
+  --text-microlabel: 0.75rem;      /* 12px — diamond labels, card actions */
+  --text-microcaption: 0.6875rem;  /* 11px — sheet field labels, kbd */
+  --text-microline: 0.625rem;      /* 10px — attribute-pill captions */
+
+  /* Diamond value size for the large attribute TN cluster. Token-ised so the
+   * Diamond component stops carrying an inline clamp() literal. */
+  --text-diamond-lg: clamp(2.25rem, 4vw, 2.75rem);
 
   /* Diamond geometry. The vertex of a 45deg-rotated square sits at half the
    * box width past the centre, so visual gap between two diamonds = CSS gap
@@ -81,6 +95,16 @@
   --color-shell: #0d0a07;
 }
 
+/* Cormorant SC at sub-12 px reads thin at the default weight (500 fallback);
+ * default the display + label utilities to 600 so labels carry presence. Any
+ * element that needs a different weight (font-bold for attribute headings,
+ * font-medium for muted captions) overrides this via the cascade. */
+@layer base {
+  :where(.font-display, .font-label) {
+    font-weight: 600;
+  }
+}
+
 html,
 body,
 #root {
@@ -95,17 +119,28 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Crimson Pro and Cormorant SC both honour kerning + standard ligatures and
+   * render more "set in type" with both engaged. Applying globally costs
+   * nothing on faces that ignore unsupported features. */
+  font-kerning: normal;
+  font-feature-settings: "kern", "liga";
 }
 
-button {
-  font: inherit;
-}
+/* Form-control resets live in @layer base so individual font-* utilities
+ * (.italic, .font-semibold, .tabular-nums, …) can override them. Without the
+ * layer wrapper the unlayered shorthand `font: inherit` wins over Tailwind's
+ * @layer utilities in the cascade and silently kills `italic` on inputs. */
+@layer base {
+  button {
+    font: inherit;
+  }
 
-input,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
 }
 
 input::placeholder,

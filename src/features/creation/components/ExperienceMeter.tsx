@@ -17,7 +17,7 @@ export function ExperienceMeter({ spent, budget }: Props) {
       <span className="font-label text-microlabel tracking-label uppercase text-ink-red">
         {t('creation.wizard.experience')}
       </span>
-      <span className="font-hand text-2xl text-ink-navy">
+      <span className="font-body font-semibold tabular-nums text-2xl text-ink-navy">
         {spent}
         <span className="text-ink-navy/40 mx-1">/</span>
         {budget}

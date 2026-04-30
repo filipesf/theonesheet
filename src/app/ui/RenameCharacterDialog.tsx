@@ -77,7 +77,7 @@ export function RenameCharacterDialog({ open, onOpenChange, currentName, onConfi
           </span>
           <input
             {...register('name')}
-            className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-xl text-ink-navy py-1 focus:border-ink-red transition-colors"
+            className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-body italic font-semibold text-xl text-ink-navy py-1 focus:border-ink-red transition-colors"
             autoComplete="off"
             spellCheck={false}
           />

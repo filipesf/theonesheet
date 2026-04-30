@@ -45,12 +45,29 @@ The token names stay the same so consumer code does not branch on theme.
 
 ## Typography
 
+Two families. Cursive faces are intentionally absent — hierarchy comes from weight, size, tracking, italic, and case.
+
 | Token | Stack | Use |
 | --- | --- | --- |
-| `--font-display` | `Cinzel, "Trajan Pro", serif` | Section headings on the printed sheet |
-| `--font-label` | `Cinzel, "Trajan Pro", serif` | Form labels, badge text |
-| `--font-hand` | `Caveat, Kalam, "Patrick Hand", cursive` | Player-written content (e.g. backstory, name) |
-| `--font-body` | `Cormorant Garamond, "EB Garamond", serif` | Body text, inputs |
+| `--font-display` | `"Cormorant SC", "Cormorant Garamond", serif` | Section headings, attribute names, primary eyebrows |
+| `--font-label` | `"Cormorant SC", "Cormorant Garamond", serif` | Form labels, badge text, table headers |
+| `--font-body` | `"Crimson Pro", "Crimson Text", "EB Garamond", serif` | Body text, inputs, numerics, player-entered content |
+
+The display face renders all letters at small-cap height; uppercase source text becomes uniform small caps (refined, manuscript-feel). Body face is variable-weight (400–700) and supports italic.
+
+### Weight ladder
+
+| Weight | Tailwind | Role |
+| --- | --- | --- |
+| 500 (Medium) | `font-medium` | Default for body and labels (no class needed) |
+| 600 (Semibold) | `font-semibold` | Section titles, all numeric values, emphasised inputs |
+| 700 (Bold) | `font-bold` | Attribute headings (STRENGTH/HEART/WITS) — the loudest level |
+
+Italic is reserved for **player-entered content** — name, blessings, distinctive features, rewards, virtues, gear, weapon and armour names. The italic glyphs of Crimson Pro are a separate cut (not slanted Roman), giving the "manuscript entry" feel that the cursive face used to provide. Combine with `placeholder:not-italic` so empty inputs render their hint upright.
+
+### Numerics
+
+All numeric content (diamond values, ratings, current endurance/hope, fatigue, treasure, weapon load, etc.) uses `tabular-nums` for column alignment. Pair with `font-semibold` so digits read as authoritative tokens against the surrounding prose.
 
 Sizes follow Tailwind defaults (`text-xs` and up). For sub-12 px use only the four eyebrow/microlabel tokens below — never `text-[Npx]`.
 
@@ -58,12 +75,12 @@ Sizes follow Tailwind defaults (`text-xs` and up). For sub-12 px use only the fo
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `text-eyebrow` | 11 px | Primary eyebrows above section headings, top-nav links, primary buttons |
-| `text-microlabel` | 10 px | Diamond labels, card actions, in-component labels |
-| `text-microcaption` | 9 px | Sheet field labels, table headers, `<kbd>` keycaps |
-| `text-microline` | 8 px | Attribute pills, dice face captions — the absolute floor |
+| `text-eyebrow` | 13 px | Primary eyebrows above section headings, top-nav links, primary buttons |
+| `text-microlabel` | 12 px | Diamond labels, card actions, in-component labels |
+| `text-microcaption` | 11 px | Sheet field labels, table headers, `<kbd>` keycaps |
+| `text-microline` | 10 px | Attribute pills, dice face captions — the absolute floor |
 
-Going below 8 px is a smell. If a label needs to fit smaller, the layout is wrong, not the type.
+Going below 10 px is a smell. Cormorant SC at small caps reads thin under 10 px regardless of weight; if a label needs to fit smaller, the layout is wrong, not the type. The display + label utilities default to `font-weight: 600` via a base rule in `styles.css` so small-cap labels carry presence without every callsite having to spell it out.
 
 ### Letter-spacing scale
 

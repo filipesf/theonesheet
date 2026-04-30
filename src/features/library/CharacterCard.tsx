@@ -45,7 +45,7 @@ export function CharacterCard({
             {callingLabel ? <span className="mx-2 text-ink-red/40">·</span> : null}
             {callingLabel}
           </p>
-          <h2 className="mt-1 font-hand text-3xl text-ink-navy leading-tight truncate">
+          <h2 className="mt-1 font-body italic font-semibold text-3xl text-ink-navy leading-tight truncate">
             {displayName}
           </h2>
 
@@ -56,18 +56,18 @@ export function CharacterCard({
           </dl>
 
           <div className="mt-4 flex items-baseline justify-between gap-2 text-sm">
-            <span className="font-label text-microlabel tracking-wider uppercase text-ink-red/80">
+            <span className="font-label text-microlabel tracking-label uppercase text-ink-red/80">
               {t('card.endurance')}
             </span>
-            <span className="font-hand text-base text-ink-navy">
+            <span className="font-body font-semibold tabular-nums text-base text-ink-navy">
               {character.current_endurance}
               <span className="text-ink-navy/40 mx-1">/</span>
               {character.max_endurance}
             </span>
-            <span className="font-label text-microlabel tracking-wider uppercase text-ink-red/80 ml-3">
+            <span className="font-label text-microlabel tracking-label uppercase text-ink-red/80 ml-3">
               {t('card.hope')}
             </span>
-            <span className="font-hand text-base text-ink-navy">
+            <span className="font-body font-semibold tabular-nums text-base text-ink-navy">
               {character.current_hope}
               <span className="text-ink-navy/40 mx-1">/</span>
               {character.max_hope}
@@ -101,7 +101,7 @@ function AttributePill({ label, value }: { label: string; value: number }) {
       </span>
       <span className="relative inline-flex h-10 w-10 items-center justify-center">
         <span className="absolute inset-0 rotate-45 border border-ink-red/60" aria-hidden="true" />
-        <span className="relative font-hand text-xl text-ink-navy">{value}</span>
+        <span className="relative font-body font-semibold tabular-nums text-xl text-ink-navy">{value}</span>
       </span>
     </div>
   );
