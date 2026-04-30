@@ -132,7 +132,7 @@ export function Modal({
         aria-labelledby={titleId}
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
-        className={`w-full max-w-lg bg-parchment-soft border-2 ${accentBorder} shadow-[0_8px_40px_-12px_rgba(31,44,92,0.55)] outline-none`}
+        className={`w-full max-w-lg bg-parchment-soft border-2 ${accentBorder} shadow-modal outline-none`}
       >
         <div className="border border-ink-red/40 m-1.5 px-5 py-5 flex flex-col gap-4">
           <header className="flex flex-col gap-1">

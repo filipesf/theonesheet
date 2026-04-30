@@ -24,6 +24,7 @@ Defined in `src/styles.css`:
 | `--color-ink-navy-soft` | `#3a4a82` | Secondary text |
 | `--color-ink-red` | `#a33024` | Accent, callouts, dangerous actions |
 | `--color-ink-red-soft` | `#c9685a` | Accent secondary |
+| `--color-shell` | `#1a1410` | Top-nav "leather strap" surface (dark in both themes) |
 
 ## Color tokens (tor-dark theme — to implement)
 
@@ -38,6 +39,7 @@ Proposed (revise once palette is finalised in code):
 | `--color-ink-navy-soft` | `#bca97f` | Secondary text |
 | `--color-ink-red` | `#c98a3b` | Bronze accent |
 | `--color-ink-red-soft` | `#7a8a5a` | Moss accent |
+| `--color-shell` | `#0d0a07` | Top-nav, pushed darker than body so the band still reads as a separate surface |
 
 The token names stay the same so consumer code does not branch on theme.
 
@@ -50,7 +52,32 @@ The token names stay the same so consumer code does not branch on theme.
 | `--font-hand` | `Caveat, Kalam, "Patrick Hand", cursive` | Player-written content (e.g. backstory, name) |
 | `--font-body` | `Cormorant Garamond, "EB Garamond", serif` | Body text, inputs |
 
-Sizes follow Tailwind defaults; do not introduce ad-hoc font sizes.
+Sizes follow Tailwind defaults (`text-xs` and up). For sub-12 px use only the four eyebrow/microlabel tokens below — never `text-[Npx]`.
+
+### Sub-12 px scale
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `text-eyebrow` | 11 px | Primary eyebrows above section headings, top-nav links, primary buttons |
+| `text-microlabel` | 10 px | Diamond labels, card actions, in-component labels |
+| `text-microcaption` | 9 px | Sheet field labels, table headers, `<kbd>` keycaps |
+| `text-microline` | 8 px | Attribute pills, dice face captions — the absolute floor |
+
+Going below 8 px is a smell. If a label needs to fit smaller, the layout is wrong, not the type.
+
+## Elevation
+
+Shadows are tokens, not literal `shadow-[…]` strings. The five tokens cover the only legitimate places a shadow appears on this app:
+
+| Token | Use |
+| --- | --- |
+| `shadow-card` | Hero card resting state in the library grid |
+| `shadow-card-hover` | Hero card on hover (paired with `-translate-y-0.5`) |
+| `shadow-sheet` | The printed character sheet on screen |
+| `shadow-modal` | Dialogs and modals |
+| `shadow-launcher` | Floating dice launcher |
+
+The RGBA values are still literal in `styles.css` because shadows do not yet need to swap with the theme. When `tor-dark` polish lands, swap the token values per-theme — the consumers do not need to change.
 
 ## Spacing and radius
 

@@ -111,10 +111,11 @@ function IssueItem({ issue }: { issue: CreationIssue }) {
 }
 
 function Row({ label, value }: { label: string; value: string }) {
+  const { t } = useTranslation();
   return (
     <div>
-      <dt className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red/80">{label}</dt>
-      <dd className="font-hand text-lg text-ink-navy">{value || '—'}</dd>
+      <dt className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/80">{label}</dt>
+      <dd className="font-hand text-lg text-ink-navy">{value || t('common.dash')}</dd>
     </div>
   );
 }

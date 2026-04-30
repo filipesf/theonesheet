@@ -53,7 +53,7 @@ type DiamondLabelProps = {
 export function DiamondLabel({ children, className = '' }: DiamondLabelProps) {
   return (
     <span
-      className={`font-label text-[10px] tracking-[0.18em] uppercase text-ink-red leading-none whitespace-nowrap ${className}`}
+      className={`font-label text-microlabel tracking-[0.18em] uppercase text-ink-red leading-none whitespace-nowrap ${className}`}
     >
       {children}
     </span>

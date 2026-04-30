@@ -141,7 +141,7 @@ export function PrintedCharacterSheet({ character, onChange }: Props) {
 
   return (
     <article
-      className="sheet relative w-full max-w-[1500px] mx-auto bg-parchment border-2 border-ink-red shadow-[0_2px_24px_-12px_rgba(31,44,92,0.4)]"
+      className="sheet relative w-full max-w-[1500px] mx-auto bg-parchment border-2 border-ink-red shadow-sheet"
       aria-label={t('sheet.aria.sheet-root')}
     >
       <div className="border border-ink-red p-5 sm:p-7">
@@ -189,7 +189,7 @@ function NameCartouche({
   const { t } = useTranslation();
   return (
     <header className="border-2 border-ink-red px-4 pt-2 pb-3 text-center">
-      <span className="font-label text-[10px] tracking-[0.25em] uppercase text-ink-red">
+      <span className="font-label text-microlabel tracking-[0.25em] uppercase text-ink-red">
         {t('sheet.label.name')}
       </span>
       <input
@@ -197,7 +197,7 @@ function NameCartouche({
         onChange={(event) => onChange(event.target.value)}
         placeholder={t('sheet.placeholder.name')}
         aria-label={t('sheet.aria.character-name')}
-        className="block w-full bg-transparent border-0 outline-none text-center font-hand text-3xl sm:text-4xl text-ink-navy placeholder:text-ink-navy/30"
+        className="block w-full bg-transparent border-0 outline-none focus-visible:bg-ink-red/5 text-center font-hand text-3xl sm:text-4xl text-ink-navy placeholder:text-ink-navy/30"
       />
     </header>
   );
@@ -267,7 +267,7 @@ function IdentityStrip({
                   onChange({ treasure: Number(event.target.value) || 0 })
                 }
                 aria-label={t('sheet.aria.treasure')}
-                className="w-10 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
+                className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
               />
             </Diamond>
           </div>
@@ -382,7 +382,7 @@ function AttributeCluster({
               value={rating}
               onChange={(event) => onChangeRating(Number(event.target.value) || 0)}
               aria-label={ratingAriaLabel}
-              className="w-10 bg-transparent border-0 outline-none text-center font-hand text-2xl text-ink-navy"
+              className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-2xl text-ink-navy"
             />
           </Diamond>
           <DiamondLabel>{t('sheet.label.rating')}</DiamondLabel>
@@ -526,7 +526,7 @@ function RewardLikeColumn({
               value={statValue}
               onChange={(event) => onStatChange(Number(event.target.value) || 0)}
               aria-label={statLabel}
-              className="w-10 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
+              className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
             />
           </Diamond>
         </div>
@@ -568,7 +568,7 @@ function WarGearPanel({ character }: { character: Character }) {
       <SectionHeader>{t('sheet.section.war-gear')}</SectionHeader>
       <table className="w-full mt-3 text-left">
         <thead>
-          <tr className="font-label text-[9px] tracking-wider uppercase text-ink-red/85">
+          <tr className="font-label text-microcaption tracking-wider uppercase text-ink-red/85">
             <th className="font-normal pb-1">{t('sheet.weapon.column.weapon')}</th>
             <th className="font-normal pb-1 text-center">{t('sheet.weapon.column.damage')}</th>
             <th className="font-normal pb-1 text-center">{t('sheet.weapon.column.injury')}</th>
@@ -679,7 +679,7 @@ function PortraitFrame() {
   const { t } = useTranslation();
   return (
     <div className="aspect-square w-full bg-parchment-deep border-2 border-ink-red flex items-center justify-center">
-      <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red/40">
+      <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/40">
         {t('sheet.label.portrait')}
       </span>
     </div>
@@ -711,7 +711,7 @@ function ExperienceTriplet({
             })
           }
           aria-label={t('sheet.aria.adventure-points')}
-          className="w-9 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
+          className="w-9 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
         />
       </SidebarStat>
       <SidebarStat label={twoLine(t, 'sheet.label.skill-points')}>
@@ -727,7 +727,7 @@ function ExperienceTriplet({
             })
           }
           aria-label={t('sheet.aria.skill-points')}
-          className="w-9 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
+          className="w-9 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
         />
       </SidebarStat>
       <SidebarStat label={twoLine(t, 'sheet.label.fellowship-score')}>
@@ -754,7 +754,7 @@ function SidebarStat({
 }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <span className="font-label text-[8.5px] leading-3 tracking-[0.18em] uppercase text-ink-red text-center">
+      <span className="font-label text-microline leading-3 tracking-[0.18em] uppercase text-ink-red text-center">
         {label}
       </span>
       <Diamond size="md">{children}</Diamond>
@@ -787,7 +787,7 @@ function EnduranceLoadCluster({
                 update({ current_endurance: Number(event.target.value) || 0 })
               }
               aria-label={t('sheet.aria.current-endurance')}
-              className="w-10 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
+              className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
             />
           </Diamond>
         </div>
@@ -803,7 +803,7 @@ function EnduranceLoadCluster({
           value={character.fatigue}
           onChange={(event) => update({ fatigue: Number(event.target.value) || 0 })}
           aria-label={t('sheet.aria.fatigue')}
-          className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none font-hand text-base text-center text-ink-navy"
+          className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-base text-center text-ink-navy transition-colors"
         />
       </div>
     </div>
@@ -833,7 +833,7 @@ function HopeShadowCluster({
                 update({ current_hope: Number(event.target.value) || 0 })
               }
               aria-label={t('sheet.aria.current-hope')}
-              className="w-10 bg-transparent border-0 outline-none text-center font-hand text-xl text-ink-navy"
+              className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
             />
           </Diamond>
         </div>
@@ -845,7 +845,7 @@ function HopeShadowCluster({
               value={character.shadow}
               onChange={(event) => update({ shadow: Number(event.target.value) || 0 })}
               aria-label={t('sheet.aria.shadow')}
-              className="w-7 bg-transparent border-0 outline-none text-center font-hand text-sm text-ink-navy"
+              className="w-7 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-sm text-ink-navy"
             />
           </Diamond>
         </div>
@@ -859,7 +859,7 @@ function HopeShadowCluster({
             update({ shadow_scars: Number(event.target.value) || 0 })
           }
           aria-label={t('sheet.aria.shadow-scars')}
-          className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none font-hand text-base text-center text-ink-navy"
+          className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-base text-center text-ink-navy transition-colors"
         />
       </div>
     </div>
@@ -925,7 +925,7 @@ function TravellingGearBlock({
         rows={4}
         placeholder={t('sheet.placeholder.travelling-gear')}
         aria-label={t('sheet.aria.travelling-gear')}
-        className="w-full mt-2 bg-transparent border-0 outline-none font-hand text-base text-ink-navy resize-none placeholder:text-ink-navy/30"
+        className="w-full mt-2 bg-transparent border-0 outline-none focus-visible:bg-ink-red/5 font-hand text-base text-ink-navy resize-none placeholder:text-ink-navy/30"
       />
     </div>
   );
@@ -953,14 +953,14 @@ type TextFieldProps = {
 function TextField({ label, value, onChange, placeholder }: TextFieldProps) {
   return (
     <label className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
         {label}
       </span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-lg text-ink-navy pb-0.5 placeholder:text-ink-navy/30 focus:border-ink-red transition-colors"
+        className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-lg text-ink-navy pb-0.5 placeholder:text-ink-navy/30 focus:border-ink-red focus-visible:bg-ink-red/5 transition-colors"
       />
     </label>
   );
@@ -969,7 +969,7 @@ function TextField({ label, value, onChange, placeholder }: TextFieldProps) {
 function DerivedField({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
         {label}
       </span>
       <output className="w-full bg-transparent border-0 border-b border-ink-red/30 font-hand text-lg text-ink-navy pb-0.5">
@@ -988,7 +988,7 @@ type NumberFieldProps = {
 function NumberField({ label, value, onChange }: NumberFieldProps) {
   return (
     <label className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
         {label}
       </span>
       <input
@@ -1016,14 +1016,14 @@ function SelectField({ label, value, options, onChange, displayFallback }: Selec
   const effectiveValue = matched ? value : '';
   return (
     <label className="flex flex-col gap-1 min-w-0">
-      <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
         {label}
       </span>
       <div className="relative">
         <select
           value={effectiveValue}
           onChange={handleChange}
-          className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-lg text-ink-navy pb-0.5 appearance-none cursor-pointer pr-6 focus:border-ink-red transition-colors"
+          className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-lg text-ink-navy pb-0.5 appearance-none cursor-pointer pr-6 focus:border-ink-red focus-visible:bg-ink-red/5 transition-colors"
         >
           {!matched && <option value="">{displayFallback || t('common.dash')}</option>}
           {options.map((option) => (
@@ -1056,7 +1056,7 @@ function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: Armour
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-3 border-b border-ink-red/30 pb-0.5">
       <div className="flex flex-col min-w-0">
-        <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+        <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
           {label}
         </span>
         <span className="font-hand text-lg text-ink-navy truncate min-h-[1.5rem]">
@@ -1064,7 +1064,7 @@ function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: Armour
         </span>
       </div>
       <div className="flex flex-col items-center min-w-[64px]">
-        <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+        <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
           {secondaryLabel ?? ''}
         </span>
         <span className="font-hand text-lg text-ink-navy min-h-[1.5rem]">
@@ -1072,7 +1072,7 @@ function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: Armour
         </span>
       </div>
       <div className="flex flex-col items-center min-w-[44px]">
-        <span className="font-label text-[9.5px] tracking-[0.18em] uppercase text-ink-red">
+        <span className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red">
           {t('sheet.label.load')}
         </span>
         <span className="font-hand text-lg text-ink-navy min-h-[1.5rem]">

@@ -101,18 +101,18 @@ export function DiceTray() {
     >
       <div data-dice="ui" className="flex flex-col gap-3">
         <label className="flex flex-col gap-1">
-          <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red">
+          <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
             {t('dice.tray.label')}
           </span>
           <input
             value={label}
             onChange={(event) => setLabel(event.target.value)}
-            className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-xl text-ink-navy py-1"
+            className="bg-transparent border-0 border-b border-ink-red/60 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-xl text-ink-navy py-1 transition-colors"
           />
         </label>
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1">
-            <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red">
+            <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
               {t('dice.tray.success-dice')}
             </span>
             <input
@@ -123,19 +123,19 @@ export function DiceTray() {
               onChange={(event) =>
                 setSuccessDice(Math.max(1, Math.min(MAX_DICE, Number(event.target.value) || 1)))
               }
-              className="bg-transparent border border-ink-red/40 px-2 py-1 font-hand text-lg text-ink-navy"
+              className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-hand text-lg text-ink-navy transition-colors"
             />
           </label>
           <label className="flex flex-col gap-1">
-            <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red">
+            <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
               {t('dice.tray.tn')}
             </span>
             <input
               type="number"
               value={tn}
               onChange={(event) => setTn(event.target.value)}
-              placeholder="—"
-              className="bg-transparent border border-ink-red/40 px-2 py-1 font-hand text-lg text-ink-navy"
+              placeholder={t('common.dash')}
+              className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-hand text-lg text-ink-navy transition-colors"
             />
           </label>
         </div>
@@ -163,7 +163,7 @@ export function DiceTray() {
               <button
                 type="button"
                 onClick={handleClearLog}
-                className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red/70 hover:text-ink-red underline-offset-4 hover:underline cursor-pointer"
+                className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/70 hover:text-ink-red underline-offset-4 hover:underline cursor-pointer focus:outline-none focus-visible:underline px-2 py-2"
               >
                 {t('dice.log.clear')}
               </button>
@@ -177,7 +177,7 @@ export function DiceTray() {
                   <span className="font-body text-sm text-ink-navy truncate">
                     {entry.request.label}
                   </span>
-                  <span className="font-label text-[10px] tracking-[0.18em] uppercase text-ink-navy/70 shrink-0">
+                  <span className="font-label text-microlabel tracking-[0.18em] uppercase text-ink-navy/70 shrink-0">
                     {t(`dice.outcome.${entry.outcome}`)} · {entry.total}
                   </span>
                 </li>
@@ -220,7 +220,7 @@ function ResultCard({ result }: { result: RollResult }) {
         <span className="font-display text-sm tracking-[0.18em] uppercase text-ink-red">
           {result.request.label}
         </span>
-        <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-navy/70">
+        <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-navy/70">
           {t(`dice.outcome.${result.outcome}`)}
         </span>
       </header>
@@ -258,7 +258,7 @@ function FaceBadge({
         large ? 'h-12 w-12' : 'h-9 w-9'
       } bg-parchment`}
     >
-      <span className="font-label text-[8px] tracking-[0.18em] uppercase text-ink-red/70 leading-none">
+      <span className="font-label text-microline tracking-[0.18em] uppercase text-ink-red/70 leading-none">
         {label}
       </span>
       <span className={`font-hand text-ink-navy ${large ? 'text-xl' : 'text-base'}`}>

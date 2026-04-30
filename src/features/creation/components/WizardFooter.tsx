@@ -26,7 +26,7 @@ export function WizardFooter({
       <button
         type="button"
         onClick={onCancel}
-        className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red/70 hover:text-ink-red underline-offset-4 hover:underline cursor-pointer focus:outline-none focus-visible:underline"
+        className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red/70 hover:text-ink-red underline-offset-4 hover:underline cursor-pointer focus:outline-none focus-visible:underline px-2 py-2.5"
       >
         {t('creation.wizard.cancel')}
       </button>

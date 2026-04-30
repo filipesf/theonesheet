@@ -112,6 +112,8 @@ export default function App() {
       <TopNav
         route={route}
         onCreate={handleCreate}
+        onExport={handleExport}
+        onImport={() => setImportOpen(true)}
         hasActiveCharacter={Boolean(library.activeCharacterId)}
         activeCharacterId={library.activeCharacterId}
       />
@@ -219,7 +221,7 @@ function MissingCharacter() {
   const { t } = useTranslation();
   return (
     <main className="mx-auto max-w-[1200px] px-6 py-16 text-center">
-      <p className="font-label text-[11px] tracking-[0.25em] uppercase text-ink-red mb-3">
+      <p className="font-label text-eyebrow tracking-[0.25em] uppercase text-ink-red mb-3">
         {t('common.lost-page.eyebrow')}
       </p>
       <h1 className="font-display text-3xl text-ink-navy mb-3">
@@ -230,7 +232,7 @@ function MissingCharacter() {
       </p>
       <a
         href={buildHash({ name: 'library' })}
-        className="inline-block font-label text-[11px] tracking-[0.2em] uppercase bg-ink-red text-parchment-soft px-5 py-2.5 cursor-pointer hover:bg-ink-red-soft transition-colors"
+        className="inline-block font-label text-eyebrow tracking-[0.2em] uppercase bg-ink-red text-parchment-soft px-5 py-3 cursor-pointer hover:bg-ink-red-soft transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment"
       >
         {t('common.lost-page.back-to-library')}
       </a>

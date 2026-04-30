@@ -3,7 +3,7 @@ import type { ComponentPropsWithRef, ReactNode } from 'react';
 type ButtonProps = ComponentPropsWithRef<'button'> & { children: ReactNode };
 
 const BASE =
-  'font-label text-[11px] tracking-[0.2em] uppercase px-4 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment-soft cursor-pointer disabled:cursor-not-allowed disabled:opacity-60';
+  'font-label text-eyebrow tracking-[0.2em] uppercase px-4 py-2.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-parchment-soft cursor-pointer disabled:cursor-not-allowed disabled:opacity-60';
 
 export function PrimaryButton({ children, className, ...rest }: ButtonProps) {
   return (

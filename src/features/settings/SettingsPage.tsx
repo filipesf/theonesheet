@@ -20,7 +20,7 @@ export function SettingsPage({ onImport, onExport, hasActiveCharacter }: Props) 
   return (
     <main className="mx-auto max-w-[900px] px-4 sm:px-6 py-10 lg:py-14 flex flex-col gap-10">
       <header>
-        <p className="font-label text-[11px] tracking-[0.3em] uppercase text-ink-red mb-2">
+        <p className="font-label text-eyebrow tracking-[0.3em] uppercase text-ink-red mb-2">
           {t('settings.eyebrow')}
         </p>
         <h1 className="font-display text-4xl tracking-[0.04em] text-ink-navy">
@@ -49,13 +49,12 @@ export function SettingsPage({ onImport, onExport, hasActiveCharacter }: Props) 
 
       <Section title={t('settings.language.heading')}>
         <div className="flex flex-col gap-2">
-          <select
-            disabled
-            value="pt-BR"
-            className="bg-parchment-soft border border-ink-red/40 px-3 py-2 font-body text-base text-ink-navy/80 max-w-[260px]"
-          >
-            <option value="pt-BR">{t('settings.language.current-label')}</option>
-          </select>
+          <p className="font-body text-base text-ink-navy">
+            {t('settings.language.current-label')}
+            <span className="ml-2 font-label text-microcaption tracking-[0.18em] uppercase text-ink-red/70">
+              {t('settings.language.current-helper')}
+            </span>
+          </p>
           <p className="font-body text-sm text-ink-navy/60">
             {t('settings.language.note')}
           </p>
@@ -143,6 +142,9 @@ function ThemeCard({
   description: string;
   onPick: () => void;
 }) {
+  // Hex literals are intentional here: each swatch must show the OTHER theme's
+  // palette regardless of the active theme, so tokens (which would swap) are
+  // wrong. Mirror the values from styles.css when palettes change.
   const swatch =
     theme === 'parchment'
       ? ['bg-[#f5efe0]', 'bg-[#a33024]', 'bg-[#1f2c5c]']

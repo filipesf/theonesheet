@@ -37,7 +37,7 @@ export function StepDistinctiveFeatures() {
       <p className="font-body text-base text-ink-navy/70">
         {t('creation.step.features.body')}
       </p>
-      <p className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red">
+      <p className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
         {t('creation.step.features.picked', { count: picks.length, total: 2 })}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -51,7 +51,7 @@ export function StepDistinctiveFeatures() {
               onClick={() => toggle(featureId)}
               aria-pressed={active}
               disabled={disabled}
-              className={`text-left p-3 border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`text-left p-3 border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment disabled:cursor-not-allowed disabled:opacity-50 ${
                 active ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 bg-parchment-soft/40 hover:border-ink-red/70'
               }`}
             >

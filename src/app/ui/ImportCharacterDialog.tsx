@@ -89,7 +89,7 @@ export function ImportCharacterDialog({ open, onOpenChange, onImport, onSuccess 
         className="flex flex-col gap-2"
       >
         <label className="flex flex-col gap-1">
-          <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red">
+          <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
             {t('dialog.import.label')}
           </span>
           <textarea
@@ -99,7 +99,7 @@ export function ImportCharacterDialog({ open, onOpenChange, onImport, onSuccess 
             rows={8}
             placeholder={t('dialog.import.placeholder')}
             spellCheck={false}
-            className="bg-parchment border border-ink-red/40 outline-none font-mono text-xs text-ink-navy p-2 resize-y focus:border-ink-red transition-colors"
+            className="bg-parchment border border-ink-red/40 outline-none font-mono text-xs text-ink-navy p-2 resize-y focus:border-ink-red focus-visible:ring-2 focus-visible:ring-ink-red/30 transition-colors"
           />
         </label>
         {errorMessage && (

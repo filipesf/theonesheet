@@ -33,6 +33,7 @@
     "language": {
       "heading": "Idioma",
       "current-label": "Português (Brasil)",
+      "current-helper": "Único idioma disponível nesta versão.",
       "note": "Inglês britânico chega na v1."
     },
     "characters": {
@@ -54,8 +55,9 @@
     "sheet": "Ficha",
     "settings": "Configurações",
     "tools": "Ferramentas ▾",
-    "export-active": "Exportar personagem ativo",
-    "import-json": "Importar JSON do personagem",
+    "export-active": "Exportar herói ativo",
+    "export-no-active-hint": "Abra um herói para exportá-lo.",
+    "import-json": "Importar herói…",
     "new-hero": "Novo Herói"
   },
   "library": {
@@ -103,7 +105,10 @@
       "shadow": "Sombra",
       "shadow-scars": "Cicatrizes da Sombra",
       "fatigue": "Fadiga",
-      "travelling-gear": "Equipamento de viagem"
+      "travelling-gear": "Equipamento de viagem",
+      "toggle-favoured": "Marcar {{name}} como favorável",
+      "skill-rating": "Valor de {{name}}",
+      "skill-rating-value": "Definir valor {{value}} para {{name}}"
     },
     "label": {
       "name": "Nome",
@@ -269,7 +274,10 @@
       "cancel": "Voltar à biblioteca",
       "experience": "Experiência prévia",
       "invalid-toast": "Há campos pendentes. Revise os passos antes de finalizar.",
-      "created-toast": "Herói criado."
+      "created-toast": "Herói criado.",
+      "step-status-current": "Passo atual",
+      "step-status-completed": "Concluído",
+      "step-status-upcoming": "Pendente"
     },
     "step": {
       "culture": {

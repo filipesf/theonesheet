@@ -7,6 +7,12 @@
   --font-hand: "Caveat", "Kalam", "Patrick Hand", cursive;
   --font-body: "Cormorant Garamond", "EB Garamond", serif;
 
+  /* Sub-12px typography scale. Use these instead of ad-hoc text-[Npx]. */
+  --text-eyebrow: 0.6875rem;       /* 11px — primary eyebrows, nav, buttons */
+  --text-microlabel: 0.625rem;     /* 10px — diamond labels, card actions */
+  --text-microcaption: 0.5625rem;  /* 9px  — sheet field labels, kbd */
+  --text-microline: 0.5rem;        /* 8px  — attribute-pill captions */
+
   /* Default colour tokens — duplicated below in :root for runtime swap. */
   --color-parchment: #f5efe0;
   --color-parchment-deep: #ede4cf;
@@ -15,6 +21,17 @@
   --color-ink-red-soft: #c9685a;
   --color-ink-navy: #1f2c5c;
   --color-ink-navy-soft: #3a4a82;
+  /* The "leather strap" top-nav surface. Always darker than body so it reads
+   * as a contrasting band even under tor-dark. */
+  --color-shell: #1a1410;
+
+  /* Elevation tokens. RGBA literals because shadows do not need to swap with
+   * the theme today; revisit when tor-dark visual polish lands. */
+  --shadow-card: 0 1px 0 rgba(163, 48, 36, 0.15), 0 8px 24px -12px rgba(31, 44, 92, 0.25);
+  --shadow-card-hover: 0 2px 0 rgba(163, 48, 36, 0.2), 0 12px 32px -12px rgba(31, 44, 92, 0.35);
+  --shadow-sheet: 0 2px 24px -12px rgba(31, 44, 92, 0.4);
+  --shadow-modal: 0 8px 40px -12px rgba(31, 44, 92, 0.55);
+  --shadow-launcher: 0 8px 24px -8px rgba(31, 44, 92, 0.5);
 }
 
 :root,
@@ -26,6 +43,7 @@
   --color-ink-red-soft: #c9685a;
   --color-ink-navy: #1f2c5c;
   --color-ink-navy-soft: #3a4a82;
+  --color-shell: #1a1410;
 }
 
 :root[data-theme="tor-dark"] {
@@ -36,6 +54,9 @@
   --color-ink-navy-soft: #bca97f;
   --color-ink-red: #c98a3b;
   --color-ink-red-soft: #7a8a5a;
+  /* Push shell darker than body in tor-dark so the band still reads as a
+   * separate surface against #1a1612. */
+  --color-shell: #0d0a07;
 }
 
 html,
@@ -70,10 +91,10 @@ textarea::placeholder {
   color: color-mix(in srgb, var(--color-ink-navy) 35%, transparent);
 }
 
-/* Subtle focus ring fallback (Tailwind v4 already covers focus-visible) */
-:where(button, [role="button"], a):focus-visible {
-  outline: none;
-}
+/* Focus indicators: rely on each component's own focus-visible:ring-* utility,
+ * with the browser's default outline as a guaranteed fallback for anything
+ * we missed. Removing it globally hides foco from keyboard users (WCAG 2.4.7).
+ */
 
 /* Spin controls on number inputs are fine but reduce visual weight */
 input[type="number"] {

@@ -72,7 +72,7 @@ export function StepSkills() {
                 aria-label={t('creation.step.skills.rating-label', { name: skillLabel(t, skill) })}
                 className="bg-transparent border border-ink-red/40 px-2 py-1 text-center font-hand text-lg text-ink-navy"
               />
-              <span className="font-label text-[9px] tracking-[0.16em] uppercase text-ink-red/70 text-right">
+              <span className="font-label text-microcaption tracking-[0.16em] uppercase text-ink-red/70 text-right">
                 {t(`creation.step.skills.category.${CATEGORY_BY_NAME[skill.name]?.toLowerCase() ?? 'strength'}`)}
               </span>
             </li>

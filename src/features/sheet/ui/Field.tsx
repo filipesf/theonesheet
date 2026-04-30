@@ -9,7 +9,7 @@ type FieldProps = {
 export function Field({ label, children, className = '' }: FieldProps) {
   return (
     <label className={`flex flex-col gap-0.5 min-w-0 ${className}`}>
-      <span className="font-label text-[9px] tracking-wider uppercase text-ink-red">
+      <span className="font-label text-microcaption tracking-wider uppercase text-ink-red">
         {label}
       </span>
       <span className="block border-b border-ink-red/60 pb-0.5 min-h-[1.6rem]">

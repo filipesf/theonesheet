@@ -17,12 +17,12 @@ export function StepIdentity() {
         {t('creation.step.identity.body')}
       </p>
       <label className="flex flex-col gap-1">
-        <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red">
+        <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
           {t('creation.step.identity.name-label')}
         </span>
         <input
           {...register('name')}
-          className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-2xl text-ink-navy py-1 focus:border-ink-red"
+          className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-2xl text-ink-navy py-1 focus:border-ink-red focus-visible:bg-ink-red/5 transition-colors"
         />
         {errors.name && (
           <span role="alert" className="font-body text-sm text-ink-red">
@@ -31,7 +31,7 @@ export function StepIdentity() {
         )}
       </label>
       <label className="flex flex-col gap-1 max-w-[120px]">
-        <span className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red">
+        <span className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red">
           {t('creation.step.identity.age-label')}
         </span>
         <input
@@ -39,7 +39,7 @@ export function StepIdentity() {
           min={8}
           max={400}
           {...register('age', { valueAsNumber: true })}
-          className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-2xl text-ink-navy py-1 focus:border-ink-red"
+          className="bg-transparent border-0 border-b border-ink-red/60 outline-none font-hand text-2xl text-ink-navy py-1 focus:border-ink-red focus-visible:bg-ink-red/5 transition-colors"
         />
         {errors.age && (
           <span role="alert" className="font-body text-sm text-ink-red">

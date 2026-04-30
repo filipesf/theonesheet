@@ -36,11 +36,11 @@ export function StepAttributes() {
               type="button"
               onClick={() => pick(index)}
               aria-pressed={active}
-              className={`text-left p-4 border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red ${
+              className={`text-left p-4 border-2 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-red focus-visible:ring-offset-2 focus-visible:ring-offset-parchment ${
                 active ? 'border-ink-red bg-parchment-soft' : 'border-ink-red/40 bg-parchment-soft/40 hover:border-ink-red/70'
               }`}
             >
-              <p className="font-label text-[10px] tracking-[0.22em] uppercase text-ink-red mb-2">
+              <p className="font-label text-microlabel tracking-[0.22em] uppercase text-ink-red mb-2">
                 {t('creation.step.attributes.set-label', { index: index + 1 })}
               </p>
               <ul className="grid grid-cols-3 gap-2 text-center">
@@ -59,7 +59,7 @@ export function StepAttributes() {
 function Pill({ label, value }: { label: string; value: number }) {
   return (
     <li>
-      <p className="font-label text-[9px] tracking-[0.18em] uppercase text-ink-red/80">{label}</p>
+      <p className="font-label text-microcaption tracking-[0.18em] uppercase text-ink-red/80">{label}</p>
       <p className="font-hand text-2xl text-ink-navy">{value}</p>
     </li>
   );
