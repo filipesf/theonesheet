@@ -36,7 +36,7 @@ export function PipRow({ rating, max = 6, onChange, label }: PipRowProps) {
     <div
       role="group"
       aria-label={t('sheet.aria.skill-rating', { name: label })}
-      className="flex items-center gap-1.5"
+      className="flex items-center gap-1.5 flex-shrink-0"
     >
       {Array.from({ length: max }, (_, index) => {
         const value = index + 1;

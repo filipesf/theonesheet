@@ -13,6 +13,20 @@
   --text-microcaption: 0.5625rem;  /* 9px  — sheet field labels, kbd */
   --text-microline: 0.5rem;        /* 8px  — attribute-pill captions */
 
+  /* Diamond geometry. The vertex of a 45deg-rotated square sits at half the
+   * box width past the centre, so visual gap between two diamonds = CSS gap
+   * minus (size · (√2 − 1) / 2). The vertex tokens express the *visual* gap
+   * directly (use as `gap` when placing labels or sibling diamonds around a
+   * rotated diamond). */
+  --size-diamond-xs: 28px;
+  --size-diamond-sm: 40px;
+  --size-diamond-md: 60px;
+  --size-diamond-lg: 104px;
+
+  --diamond-gap-vertex-tight: 8px;   /* labels right next to a diamond */
+  --diamond-gap-vertex-cosy: 16px;   /* sibling diamonds in a cluster */
+  --diamond-gap-vertex-airy: 24px;   /* sidebar grids, breathing room */
+
   /* Letter-spacing scale beyond Tailwind's tracking-widest (0.1em).
    * The manuscript aesthetic relies on stretched uppercase labels; these
    * tokens replace ad-hoc tracking-[Nem]. */

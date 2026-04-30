@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export type DiamondSize = 'xs' | 'sm' | 'md' | 'lg';
 
@@ -9,13 +9,18 @@ type DiamondProps = {
   filled?: boolean;
 };
 
-const SIZE_PX: Record<DiamondSize, number> = { xs: 28, sm: 40, md: 60, lg: 104 };
+const SIZE_VAR: Record<DiamondSize, string> = {
+  xs: 'var(--size-diamond-xs)',
+  sm: 'var(--size-diamond-sm)',
+  md: 'var(--size-diamond-md)',
+  lg: 'var(--size-diamond-lg)',
+};
 
 const VALUE_CLASS: Record<DiamondSize, string> = {
   xs: 'text-sm leading-none',
   sm: 'text-base leading-none',
   md: 'text-2xl leading-none',
-  lg: 'text-[2.6rem] leading-none',
+  lg: 'text-[clamp(2.25rem,4vw,2.75rem)] leading-none',
 };
 
 export function Diamond({
@@ -24,11 +29,10 @@ export function Diamond({
   className = '',
   filled,
 }: DiamondProps) {
-  const px = SIZE_PX[size];
   return (
     <span
       className={`relative inline-block align-middle ${className}`}
-      style={{ width: px, height: px }}
+      style={{ width: SIZE_VAR[size], height: SIZE_VAR[size] }}
     >
       <span
         aria-hidden="true"
@@ -48,12 +52,14 @@ export function Diamond({
 type DiamondLabelProps = {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 };
 
-export function DiamondLabel({ children, className = '' }: DiamondLabelProps) {
+export function DiamondLabel({ children, className = '', style }: DiamondLabelProps) {
   return (
     <span
       className={`font-label text-microlabel tracking-label uppercase text-ink-red leading-none whitespace-nowrap ${className}`}
+      style={style}
     >
       {children}
     </span>

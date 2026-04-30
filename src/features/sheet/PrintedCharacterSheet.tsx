@@ -19,9 +19,11 @@ import {
 import { callingKey, heroicCultureKey, standardOfLivingKey } from '../../ref-data/labels';
 import { PATRONS, patronFallbackName } from '../../ref-data/patrons';
 import { ConditionCheck } from './ui/ConditionCheck';
-import { Diamond, DiamondLabel } from './ui/Diamond';
+import { CornerOrnament } from './ui/CornerOrnament';
+import { Diamond, DiamondLabel, type DiamondSize } from './ui/Diamond';
 import { FavouredCheck } from './ui/FavouredCheck';
 import { PipRow } from './ui/Pip';
+import { TreasureBox } from './ui/TreasureBox';
 
 type Props = {
   character: Character;
@@ -144,6 +146,10 @@ export function PrintedCharacterSheet({ character, onChange }: Props) {
       className="sheet relative w-full max-w-[1500px] mx-auto bg-parchment border-2 border-ink-red shadow-sheet"
       aria-label={t('sheet.aria.sheet-root')}
     >
+      <CornerOrnament corner="tl" />
+      <CornerOrnament corner="tr" />
+      <CornerOrnament corner="bl" />
+      <CornerOrnament corner="br" />
       <div className="border border-ink-red p-5 sm:p-7">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_236px] gap-6 lg:gap-8">
           <div className="flex flex-col gap-6 min-w-0">
@@ -240,7 +246,7 @@ function IdentityStrip({
         />
       </div>
       <div className="flex flex-col gap-3">
-        <div className="grid grid-cols-[60px_minmax(0,1fr)_72px] gap-3 items-end">
+        <div className="grid grid-cols-[60px_minmax(0,1fr)_auto] gap-3 items-end">
           <NumberField
             label={t('sheet.label.age')}
             value={character.age}
@@ -257,20 +263,10 @@ function IdentityStrip({
               onChange({ standard_of_living: value as Character['standard_of_living'] })
             }
           />
-          <div className="flex flex-col items-center gap-1">
-            <DiamondLabel>{t('sheet.label.treasure')}</DiamondLabel>
-            <Diamond size="md">
-              <input
-                type="number"
-                value={character.treasure}
-                onChange={(event) =>
-                  onChange({ treasure: Number(event.target.value) || 0 })
-                }
-                aria-label={t('sheet.aria.treasure')}
-                className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
-              />
-            </Diamond>
-          </div>
+          <TreasureBox
+            value={character.treasure}
+            onChange={(value) => onChange({ treasure: value })}
+          />
         </div>
         <SelectField
           label={t('sheet.label.patron')}
@@ -320,7 +316,7 @@ function AttributeClusters({
 }) {
   const { t } = useTranslation();
   return (
-    <section className="grid grid-cols-3 gap-6 sm:gap-8">
+    <section className="grid grid-cols-3 gap-6 sm:gap-8 place-items-center">
       {(['STRENGTH', 'HEART', 'WITS'] as const).map((category) => {
         const meta = CATEGORY_DERIVED[category];
         const tn = character.attributes[meta.tnField];
@@ -334,7 +330,7 @@ function AttributeClusters({
         const attributeKey = ATTRIBUTE_KEY[category];
         return (
           <div key={category} className="flex flex-col items-center gap-3">
-            <h3 className="font-display text-xl tracking-label uppercase text-ink-red">
+            <h3 className="font-display text-2xl tracking-eyebrow uppercase text-ink-red">
               {t(`sheet.attribute.${attributeKey}`)}
             </h3>
             <AttributeCluster
@@ -369,29 +365,45 @@ function AttributeCluster({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="grid grid-cols-[auto_auto] gap-x-3 items-center">
-      <div className="flex flex-col items-center gap-1.5">
+    <div
+      className="grid items-center gap-y-1 gap-x-[var(--diamond-gap-vertex-cosy)]"
+      style={{
+        gridTemplateAreas: `
+          ".         rating-label    ."
+          "tn-label  centre          rating-diamond"
+          "tn-label  centre          derived-diamond"
+          ".         derived-label   ."
+        `,
+        gridTemplateColumns:
+          'minmax(2.5rem, auto) auto minmax(var(--size-diamond-md), auto)',
+      }}
+    >
+      <DiamondLabel className="text-right" style={{ gridArea: 'tn-label' }}>
+        {t('sheet.label.tn')}
+      </DiamondLabel>
+      <div style={{ gridArea: 'centre' }}>
         <Diamond size="lg">{tn}</Diamond>
-        <DiamondLabel>{t('sheet.label.tn')}</DiamondLabel>
       </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <Diamond size="md">
-            <input
-              type="number"
-              value={rating}
-              onChange={(event) => onChangeRating(Number(event.target.value) || 0)}
-              aria-label={ratingAriaLabel}
-              className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-2xl text-ink-navy"
-            />
-          </Diamond>
-          <DiamondLabel>{t('sheet.label.rating')}</DiamondLabel>
-        </div>
-        <div className="flex items-center gap-2">
-          <Diamond size="md">{derived}</Diamond>
-          <DiamondLabel>{derivedLabel}</DiamondLabel>
-        </div>
+      <DiamondLabel className="text-center" style={{ gridArea: 'rating-label' }}>
+        {t('sheet.label.rating')}
+      </DiamondLabel>
+      <div style={{ gridArea: 'rating-diamond' }} className="justify-self-start">
+        <Diamond size="md">
+          <input
+            type="number"
+            value={rating}
+            onChange={(event) => onChangeRating(Number(event.target.value) || 0)}
+            aria-label={ratingAriaLabel}
+            className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-2xl text-ink-navy"
+          />
+        </Diamond>
       </div>
+      <div style={{ gridArea: 'derived-diamond' }} className="justify-self-start">
+        <Diamond size="md">{derived}</Diamond>
+      </div>
+      <DiamondLabel className="text-center" style={{ gridArea: 'derived-label' }}>
+        {derivedLabel}
+      </DiamondLabel>
     </div>
   );
 }
@@ -406,39 +418,57 @@ function SkillsSection({
   updateSkill: (name: string, patch: Partial<Skill>) => void;
 }) {
   const { t } = useTranslation();
+  const byCategory = (category: Skill['category']) =>
+    character.skills.filter((skill) => skill.category === category);
   return (
     <section>
       <SectionHeader>{t('sheet.section.skills')}</SectionHeader>
-      <div className="grid grid-cols-3 gap-6 sm:gap-8 pt-4">
+      <div
+        className="grid grid-cols-3 gap-x-6 sm:gap-x-8 pt-4 divide-x divide-ink-red/30"
+        style={{ gridTemplateRows: 'repeat(6, minmax(0, 1fr))' }}
+      >
         {(['STRENGTH', 'HEART', 'WITS'] as const).map((category) => (
-          <ul key={category} className="flex flex-col gap-1.5">
-            {character.skills
-              .filter((skill) => skill.category === category)
-              .map((skill) => {
-                const label = skill.id ? t(`ref.skills.${skill.id}`) : skill.name;
-                return (
-                  <li
-                    key={skill.id ?? skill.name}
-                    className="grid grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-3 border-b border-ink-red/30 py-1"
-                  >
-                    <FavouredCheck
-                      checked={skill.favoured}
-                      onChange={() => updateSkill(skill.name, { favoured: !skill.favoured })}
-                      label={label}
-                    />
-                    <span className="font-body text-base text-ink-navy truncate">{label}</span>
-                    <PipRow
-                      rating={skill.rating}
-                      onChange={(rating) => updateSkill(skill.name, { rating })}
-                      label={label}
-                    />
-                  </li>
-                );
-              })}
+          <ul
+            key={category}
+            className="grid grid-rows-subgrid row-span-6 gap-y-1.5 px-3 first:pl-0 last:pr-0 divide-y divide-ink-red/20"
+          >
+            {byCategory(category).map((skill) => (
+              <SkillRow
+                key={skill.id ?? skill.name}
+                skill={skill}
+                updateSkill={updateSkill}
+              />
+            ))}
           </ul>
         ))}
       </div>
     </section>
+  );
+}
+
+function SkillRow({
+  skill,
+  updateSkill,
+}: {
+  skill: Skill;
+  updateSkill: (name: string, patch: Partial<Skill>) => void;
+}) {
+  const { t } = useTranslation();
+  const label = skill.id ? t(`ref.skills.${skill.id}`) : skill.name;
+  return (
+    <li className="grid grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-3 py-1">
+      <FavouredCheck
+        checked={skill.favoured}
+        onChange={() => updateSkill(skill.name, { favoured: !skill.favoured })}
+        label={label}
+      />
+      <span className="font-body text-base text-ink-navy truncate">{label}</span>
+      <PipRow
+        rating={skill.rating}
+        onChange={(rating) => updateSkill(skill.name, { rating })}
+        label={label}
+      />
+    </li>
   );
 }
 
@@ -458,11 +488,11 @@ function ProfRewardsVirtuesBand({
     <section className="grid grid-cols-3 gap-6 sm:gap-8">
       <div>
         <SectionHeader>{t('sheet.section.combat-proficiencies')}</SectionHeader>
-        <ul className="flex flex-col gap-1.5 pt-4">
+        <ul className="flex flex-col pt-4 divide-y divide-ink-red/20">
           {character.combat_proficiencies.map((proficiency) => (
             <li
               key={proficiency.name}
-              className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-ink-red/30 py-1"
+              className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-1"
             >
               <span className="font-body text-base text-ink-navy">
                 {t(`sheet.combat-proficiency.${COMBAT_PROFICIENCY_KEY[proficiency.name]}`)}
@@ -514,11 +544,12 @@ function RewardLikeColumn({
 }) {
   return (
     <div>
-      <header className="relative border-t border-ink-red flex items-center justify-between gap-3 -mt-2">
-        <span className="bg-parchment pl-1 pr-3 font-display text-sm tracking-label uppercase text-ink-red">
+      <header className="relative grid grid-cols-[auto_1fr_auto] items-center gap-3 border-t border-ink-red">
+        <span className="-mt-2.5 bg-parchment pr-3 font-display text-base tracking-label uppercase text-ink-red">
           {title}
         </span>
-        <div className="bg-parchment pl-2 flex items-center gap-2 -mt-3">
+        <span aria-hidden />
+        <div className="-mt-3 bg-parchment pl-2 flex items-center gap-2">
           <DiamondLabel>{statLabel}</DiamondLabel>
           <Diamond size="md">
             <input
@@ -531,7 +562,7 @@ function RewardLikeColumn({
           </Diamond>
         </div>
       </header>
-      <ul className="pt-4 flex flex-col gap-1 min-h-[96px]">
+      <ul className="pt-4 flex flex-col min-h-[96px] divide-y divide-ink-red/20">
         {items.length === 0 && (
           <li className="font-body text-sm text-ink-navy/40 italic">
             {emptyMessage}
@@ -540,7 +571,7 @@ function RewardLikeColumn({
         {items.map((label, index) => (
           <li
             key={`${label}-${index}`}
-            className="font-hand text-lg text-ink-navy border-b border-ink-red/30 pb-0.5"
+            className="font-hand text-lg text-ink-navy py-0.5"
           >
             {label}
           </li>
@@ -576,7 +607,7 @@ function WarGearPanel({ character }: { character: Character }) {
             <th className="font-normal pb-1">{t('sheet.weapon.column.notes')}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-ink-red/20">
           {character.war_gear.weapons.length === 0 && (
             <tr>
               <td colSpan={5} className="font-body text-sm text-ink-navy/40 italic py-2">
@@ -587,7 +618,7 @@ function WarGearPanel({ character }: { character: Character }) {
           {character.war_gear.weapons.map((weapon, index) => {
             const label = weapon.id ? t(`ref.equipment.weapons.${weapon.id}`) : weapon.type;
             return (
-              <tr key={`${weapon.id ?? weapon.type}-${index}`} className="border-b border-ink-red/30">
+              <tr key={`${weapon.id ?? weapon.type}-${index}`}>
                 <td className="font-hand text-lg text-ink-navy py-0.5">{label}</td>
                 <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
                 <td className="font-hand text-lg text-ink-navy text-center">{t('common.dash')}</td>
@@ -607,7 +638,7 @@ function ArmourPanel({ character }: { character: Character }) {
   return (
     <div>
       <SectionHeader>{t('sheet.section.armour')}</SectionHeader>
-      <div className="mt-3 flex flex-col gap-2">
+      <div className="mt-3 flex flex-col divide-y divide-ink-red/20">
         <ArmourRow
           label={t('sheet.armour.label.armour')}
           type={
@@ -697,8 +728,8 @@ function ExperienceTriplet({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="grid grid-cols-3 gap-2">
-      <SidebarStat label={twoLine(t, 'sheet.label.adventure-points')}>
+    <div className="grid grid-cols-3 gap-[var(--diamond-gap-vertex-cosy)]">
+      <SidebarStat label={t('sheet.label.adventure-points')}>
         <input
           type="number"
           value={character.experience.adventure_points}
@@ -714,7 +745,7 @@ function ExperienceTriplet({
           className="w-9 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
         />
       </SidebarStat>
-      <SidebarStat label={twoLine(t, 'sheet.label.skill-points')}>
+      <SidebarStat label={t('sheet.label.skill-points')}>
         <input
           type="number"
           value={character.experience.skill_points}
@@ -730,34 +761,28 @@ function ExperienceTriplet({
           className="w-9 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
         />
       </SidebarStat>
-      <SidebarStat label={twoLine(t, 'sheet.label.fellowship-score')}>
+      <SidebarStat label={t('sheet.label.fellowship-score')}>
         {fellowshipScore}
       </SidebarStat>
     </div>
   );
 }
 
-/**
- * Render a label that the original English version split across two lines.
- * In pt-BR we keep the natural phrase and let CSS wrap when needed.
- */
-function twoLine(t: TFunction, key: string): ReactNode {
-  return t(key);
-}
-
 function SidebarStat({
   label,
   children,
+  size = 'md',
 }: {
   label: ReactNode;
   children: ReactNode;
+  size?: DiamondSize;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2">
-      <span className="font-label text-microline leading-3 tracking-label uppercase text-ink-red text-center">
+    <div className="flex flex-col items-center gap-2 min-w-0">
+      <span className="font-label text-microline tracking-label uppercase text-ink-red text-center min-h-[2lh]">
         {label}
       </span>
-      <Diamond size="md">{children}</Diamond>
+      <Diamond size={size}>{children}</Diamond>
     </div>
   );
 }
@@ -773,39 +798,29 @@ function EnduranceLoadCluster({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-end justify-center gap-4">
-        <div className="flex flex-col items-center gap-2">
-          <DiamondLabel className="text-center leading-3">
-            {t('sheet.label.current-endurance')}
-          </DiamondLabel>
-          <Diamond size="md">
-            <input
-              type="number"
-              value={character.current_endurance}
-              onChange={(event) =>
-                update({ current_endurance: Number(event.target.value) || 0 })
-              }
-              aria-label={t('sheet.aria.current-endurance')}
-              className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
-            />
-          </Diamond>
-        </div>
-        <div className="flex flex-col items-center gap-2 mb-1">
-          <DiamondLabel>{t('sheet.label.load')}</DiamondLabel>
-          <Diamond size="sm">{totalLoad}</Diamond>
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-[1fr_auto] items-end gap-[var(--diamond-gap-vertex-cosy)] justify-items-center">
+        <SidebarStat label={t('sheet.label.current-endurance')} size="md">
+          <input
+            type="number"
+            value={character.current_endurance}
+            onChange={(event) =>
+              update({ current_endurance: Number(event.target.value) || 0 })
+            }
+            aria-label={t('sheet.aria.current-endurance')}
+            className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
+          />
+        </SidebarStat>
+        <SidebarStat label={t('sheet.label.load')} size="sm">
+          {totalLoad}
+        </SidebarStat>
       </div>
-      <div className="flex items-baseline gap-2 mt-1 justify-center">
-        <DiamondLabel>{t('sheet.label.fatigue')}</DiamondLabel>
-        <input
-          type="number"
-          value={character.fatigue}
-          onChange={(event) => update({ fatigue: Number(event.target.value) || 0 })}
-          aria-label={t('sheet.aria.fatigue')}
-          className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-base text-center text-ink-navy transition-colors"
-        />
-      </div>
+      <MeasureRow
+        label={t('sheet.label.fatigue')}
+        ariaLabel={t('sheet.aria.fatigue')}
+        value={character.fatigue}
+        onChange={(value) => update({ fatigue: value })}
+      />
     </div>
   );
 }
@@ -819,49 +834,60 @@ function HopeShadowCluster({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-end justify-center gap-4">
-        <div className="flex flex-col items-center gap-2">
-          <DiamondLabel className="text-center leading-3">
-            {t('sheet.label.current-hope')}
-          </DiamondLabel>
-          <Diamond size="md">
-            <input
-              type="number"
-              value={character.current_hope}
-              onChange={(event) =>
-                update({ current_hope: Number(event.target.value) || 0 })
-              }
-              aria-label={t('sheet.aria.current-hope')}
-              className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
-            />
-          </Diamond>
-        </div>
-        <div className="flex flex-col items-center gap-2 mb-1">
-          <DiamondLabel>{t('sheet.label.shadow')}</DiamondLabel>
-          <Diamond size="sm">
-            <input
-              type="number"
-              value={character.shadow}
-              onChange={(event) => update({ shadow: Number(event.target.value) || 0 })}
-              aria-label={t('sheet.aria.shadow')}
-              className="w-7 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-sm text-ink-navy"
-            />
-          </Diamond>
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-[1fr_auto] items-end gap-[var(--diamond-gap-vertex-cosy)] justify-items-center">
+        <SidebarStat label={t('sheet.label.current-hope')} size="md">
+          <input
+            type="number"
+            value={character.current_hope}
+            onChange={(event) =>
+              update({ current_hope: Number(event.target.value) || 0 })
+            }
+            aria-label={t('sheet.aria.current-hope')}
+            className="w-10 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-xl text-ink-navy"
+          />
+        </SidebarStat>
+        <SidebarStat label={t('sheet.label.shadow')} size="sm">
+          <input
+            type="number"
+            value={character.shadow}
+            onChange={(event) => update({ shadow: Number(event.target.value) || 0 })}
+            aria-label={t('sheet.aria.shadow')}
+            className="w-7 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-hand text-sm text-ink-navy"
+          />
+        </SidebarStat>
       </div>
-      <div className="flex items-baseline gap-2 mt-1 justify-center">
-        <DiamondLabel>{t('sheet.label.shadow-scars')}</DiamondLabel>
-        <input
-          type="number"
-          value={character.shadow_scars}
-          onChange={(event) =>
-            update({ shadow_scars: Number(event.target.value) || 0 })
-          }
-          aria-label={t('sheet.aria.shadow-scars')}
-          className="w-12 bg-transparent border-0 border-b border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-base text-center text-ink-navy transition-colors"
-        />
-      </div>
+      <MeasureRow
+        label={t('sheet.label.shadow-scars')}
+        ariaLabel={t('sheet.aria.shadow-scars')}
+        value={character.shadow_scars}
+        onChange={(value) => update({ shadow_scars: value })}
+      />
+    </div>
+  );
+}
+
+function MeasureRow({
+  label,
+  ariaLabel,
+  value,
+  onChange,
+}: {
+  label: ReactNode;
+  ariaLabel: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div className="flex items-baseline gap-2 justify-center">
+      <DiamondLabel>{label}</DiamondLabel>
+      <input
+        type="number"
+        value={value}
+        onChange={(event) => onChange(Number(event.target.value) || 0)}
+        aria-label={ariaLabel}
+        className="w-12 bg-transparent border-0 border-b border-ink-red/60 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-hand text-base text-center text-ink-navy transition-colors"
+      />
     </div>
   );
 }
@@ -936,7 +962,7 @@ function TravellingGearBlock({
 function SectionHeader({ children }: { children: ReactNode }) {
   return (
     <header className="relative border-t border-ink-red flex items-center justify-center -mt-2">
-      <h3 className="bg-parchment px-3 font-display text-sm sm:text-base tracking-label uppercase text-ink-red">
+      <h3 className="bg-parchment px-3 font-display text-base sm:text-lg tracking-label uppercase text-ink-red">
         {children}
       </h3>
     </header>
@@ -1032,12 +1058,22 @@ function SelectField({ label, value, options, onChange, displayFallback }: Selec
             </option>
           ))}
         </select>
-        <span
+        <svg
           aria-hidden="true"
-          className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-ink-red/70 text-xs"
+          viewBox="0 0 16 16"
+          width="12"
+          height="12"
+          className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-ink-red/70"
         >
-          ▾
-        </span>
+          <path
+            d="M3 6 L8 11 L13 6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </div>
     </label>
   );
@@ -1054,7 +1090,7 @@ type ArmourRowProps = {
 function ArmourRow({ label, type, secondaryLabel, secondaryValue, load }: ArmourRowProps) {
   const { t } = useTranslation();
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-3 border-b border-ink-red/30 pb-0.5">
+    <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-3 py-1">
       <div className="flex flex-col min-w-0">
         <span className="font-label text-microcaption tracking-label uppercase text-ink-red">
           {label}
