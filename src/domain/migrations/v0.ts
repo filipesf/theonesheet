@@ -98,13 +98,22 @@ function backfillCulturalBlessingChoice(character: Character): Character {
   return { ...character, cultural_blessing_choice: null };
 }
 
+function backfillWound(character: Character): Character {
+  if (typeof character.wound === 'string') return character;
+  return { ...character, wound: '' };
+}
+
 export function migrateV0ToV0(character: Character): Character {
   return normaliseCharacter(
-    backfillCulturalBlessingChoice(
-      backfillDistinctiveFeatureIds(
-        backfillBlessingId(
-          backfillSkillIds(
-            backfillRewardIds(backfillVirtueIds(backfillWarGearIds(backfillShadowPath(character)))),
+    backfillWound(
+      backfillCulturalBlessingChoice(
+        backfillDistinctiveFeatureIds(
+          backfillBlessingId(
+            backfillSkillIds(
+              backfillRewardIds(
+                backfillVirtueIds(backfillWarGearIds(backfillShadowPath(character))),
+              ),
+            ),
           ),
         ),
       ),

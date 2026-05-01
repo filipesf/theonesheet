@@ -76,7 +76,7 @@ describe('StepCalling · mastery skill picker', () => {
     );
 
     const section = masterySection();
-    const explore = within(section).getByRole('button', { name: /Explorar/i });
+    const explore = within(section).getByRole('button', { name: /Exploração/i });
     const healing = within(section).getByRole('button', { name: /Cura/i });
 
     expect(explore).toHaveAttribute('aria-pressed', 'false');
@@ -106,7 +106,7 @@ describe('StepCalling · mastery skill picker', () => {
     );
 
     const section = masterySection();
-    const explore = within(section).getByRole('button', { name: /Explorar/i });
+    const explore = within(section).getByRole('button', { name: /Exploração/i });
     await user.click(explore);
     expect(explore).toHaveAttribute('aria-pressed', 'true');
 

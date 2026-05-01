@@ -153,6 +153,7 @@ export type Character = {
     miserable: boolean;
     wounded: boolean;
   };
+  wound: string;
   valour: number;
   wisdom: number;
   rewards: Reward[];

@@ -69,7 +69,7 @@ describe('draftToCharacter', () => {
 
   // Regression for BUG-004: conditions used to be computed against the
   // pre-stamp current_endurance=0, then frozen — leaving newly-created
-  // heroes flagged Esgotado/Miserável on the editor.
+  // heroes flagged Exausto/Arrasado on the editor.
   it('clears weary/miserable on a freshly created hero with full endurance and hope', () => {
     const character = draftToCharacter(makeDraft());
     expect(character.conditions.weary).toBe(false);

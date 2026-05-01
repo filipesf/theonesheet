@@ -69,9 +69,9 @@
     "attr": {
       "str": "Frç",
       "hrt": "Cor",
-      "wts": "Esp"
+      "wts": "Ast"
     },
-    "endurance": "Vigor",
+    "endurance": "Resistência",
     "hope": "Esperança",
     "action": {
       "view": "Ver",
@@ -87,14 +87,14 @@
       "character-name": "Nome do herói",
       "strength-rating": "Pontuação de Força",
       "heart-rating": "Pontuação de Coração",
-      "wits-rating": "Pontuação de Espírito",
+      "wits-rating": "Pontuação de Astúcia",
       "treasure": "Tesouro",
       "adventure-points": "Pontos de aventura",
       "skill-points": "Pontos de perícia",
-      "current-endurance": "Vigor atual",
+      "current-endurance": "Resistência atual",
       "current-hope": "Esperança atual",
       "shadow": "Sombra",
-      "shadow-scars": "Cicatriz de Sombra",
+      "shadow-scars": "Cicatrizes de Sombra",
       "fatigue": "Fadiga",
       "travelling-gear": "Equipamento de viagem",
       "toggle-favoured": "Marcar {{name}} como favorável",
@@ -105,21 +105,21 @@
       "name": "Nome",
       "heroic-culture": "Cultura Heroica",
       "cultural-blessing": "Bênção Cultural",
-      "calling": "Vocação",
+      "calling": "Chamado",
       "age": "Idade",
       "standard-of-living": "Padrão de Vida",
       "treasure": "Tesouro",
       "patron": "Patrono",
-      "shadow-path": "Caminho da Sombra",
-      "distinctive-features": "Traços Marcantes",
+      "shadow-path": "Caminho das Sombras",
+      "distinctive-features": "Características Notáveis",
       "flaws": "Defeitos",
-      "tn": "ND",
+      "tn": "NA",
       "rating": "Valor",
       "load": "Carga",
       "fatigue": "Fadiga",
       "shadow": "Sombra",
-      "shadow-scars": "Cicatriz",
-      "current-endurance": "Vigor Atual",
+      "shadow-scars": "Cicatrizes de Sombra",
+      "current-endurance": "Resistência Atual",
       "current-hope": "Esperança Atual",
       "valour": "Valor",
       "wisdom": "Sabedoria",
@@ -128,9 +128,9 @@
       "skill-points": "Perícia",
       "portrait": "Retrato",
       "derived": {
-        "endurance": "Vigor",
+        "endurance": "Resistência",
         "hope": "Esperança",
-        "parry": "Aparar"
+        "parry": "Bloqueio"
       }
     },
     "section": {
@@ -138,7 +138,7 @@
       "combat-proficiencies": "Proficiências de Combate",
       "rewards": "Recompensas",
       "virtues": "Virtudes",
-      "war-gear": "Armas e Equipamento",
+      "war-gear": "Equipamento de Guerra",
       "armour": "Armadura",
       "conditions": "Condições",
       "travelling-gear": "Equipamento de Viagem"
@@ -146,7 +146,7 @@
     "attribute": {
       "strength": "Força",
       "heart": "Coração",
-      "wits": "Espírito"
+      "wits": "Astúcia"
     },
     "combat-proficiency": {
       "axes": "Machados",
@@ -155,9 +155,14 @@
       "swords": "Espadas"
     },
     "condition": {
-      "weary": "Esgotado",
-      "miserable": "Miserável",
+      "weary": "Exausto",
+      "miserable": "Arrasado",
       "wounded": "Ferido"
+    },
+    "wound": {
+      "label": "Ferimento",
+      "placeholder": "Costela quebrada · corte no braço · …",
+      "aria": "Descrição do ferimento"
     },
     "placeholder": {
       "name": "Digite o nome do seu herói…",
@@ -185,7 +190,7 @@
         "helm": "Elmo",
         "shield": "Escudo",
         "protection": "Proteção",
-        "parry": "Aparar"
+        "parry": "Bloqueio"
       },
       "helm-name": "Elmo"
     },
@@ -224,9 +229,9 @@
       "title": "Bandeja de Dados",
       "label": "Rolagem (rótulo)",
       "success-dice": "Dados de Sucesso",
-      "tn": "ND",
-      "weary": "Esgotado (1–3 viram 0)",
-      "miserable": "Miserável (Olho = falha automática)",
+      "tn": "NA",
+      "weary": "Exausto (1–3 viram 0)",
+      "miserable": "Arrasado (Olho = falha automática)",
       "roll": "Rolar",
       "rolling": "Rolando…",
       "close": "Fechar",
@@ -243,7 +248,7 @@
     },
     "result": {
       "total": "Total {{total}}",
-      "tn": "ND {{tn}}",
+      "tn": "NA {{tn}}",
       "tengwar": "Tengwar ×{{count}}"
     },
     "outcome": {
@@ -252,7 +257,7 @@
       "magical": "Mágico",
       "great": "Magnífico",
       "extraordinary": "Extraordinário",
-      "no-tn": "ND não definido",
+      "no-tn": "NA não definido",
       "auto-fail": "Falha automática"
     }
   },
@@ -293,7 +298,7 @@
         "category": {
           "strength": "Frç",
           "heart": "Cor",
-          "wits": "Esp"
+          "wits": "Ast"
         }
       },
       "proficiencies": {
@@ -314,16 +319,16 @@
         "age-range": "Idade fora da janela permitida (8–400)."
       },
       "calling": {
-        "title": "Vocação e Equipamento",
-        "body": "Escolha sua vocação, recompensa e virtude iniciais, padrão de vida e equipamento de partida.",
-        "choose-calling": "Vocação",
-        "calling-feature": "Característica da vocação",
+        "title": "Chamado e Equipamento",
+        "body": "Escolha seu chamado, recompensa e virtude iniciais, padrão de vida e equipamento de partida.",
+        "choose-calling": "Chamado",
+        "calling-feature": "Característica do chamado",
         "starting-reward": "Recompensa inicial",
         "starting-virtue": "Virtude inicial",
         "mastery-skills": "Perícias da Mestria",
         "mastery-skills-body": "Mestria torna duas perícias da sua escolha em Favoráveis.",
         "prowess-attribute": "Atributo da Proeza",
-        "prowess-attribute-body": "Proeza reduz em 1 o ND do Atributo escolhido.",
+        "prowess-attribute-body": "Proeza reduz em 1 o NA do Atributo escolhido.",
         "standard-of-living": "Padrão de Vida",
         "weapons": "Armas ({{count}}/{{max}})",
         "armour": "Armadura",
@@ -331,7 +336,7 @@
       },
       "review": {
         "title": "Revisão",
-        "body": "Hora de assinar a ficha. Confira os dados — Vigor, Esperança e Aparar são recalculados ao finalizar.",
+        "body": "Hora de assinar a ficha. Confira os dados — Resistência, Esperança e Bloqueio são recalculados ao finalizar.",
         "invalid": "Alguns campos ainda precisam de atenção. Volte aos passos com erro e tente novamente.",
         "blocking-title": "Bloqueios",
         "warnings-title": "Avisos",
@@ -342,7 +347,7 @@
     "field": {
       "name": "Nome",
       "age": "Idade",
-      "distinctive_features": "Traços marcantes",
+      "distinctive_features": "Características notáveis",
       "rewards": "Recompensas",
       "virtues": "Virtudes",
       "previous_experience": "Experiência prévia",
@@ -354,12 +359,12 @@
     "issue": {
       "name-required": "Informe um nome antes de finalizar.",
       "age-positive": "Idade deve ser maior que zero.",
-      "distinctive-features-min": "São necessários 3 traços marcantes (2 culturais + 1 da vocação).",
+      "distinctive-features-min": "São necessárias 3 características notáveis (2 culturais + 1 do chamado).",
       "rewards-one": "Escolha exatamente uma recompensa inicial.",
       "virtues-one": "Escolha exatamente uma virtude inicial.",
       "previous-experience-overspent": "Experiência prévia ultrapassada: {{spent}}/10.",
       "previous-experience-underspent": "Experiência prévia parcial: {{spent}}/10.",
-      "derived-state-bounds": "Vigor ou Esperança atual está acima do máximo permitido.",
+      "derived-state-bounds": "Resistência ou Esperança atual está acima do máximo permitido.",
       "underlined-skill-required": "Marque uma das duas perícias sublinhadas como Favorável.",
       "rangers-attribute-choice-required": "Escolha o Atributo que recebe +1 pela Bênção Reis dos Homens.",
       "mastery-selection-required": "Mestria exige a escolha de duas perícias.",
@@ -602,13 +607,13 @@
       "kings-of-men": "Reis dos Homens"
     },
     "skills": {
-      "awe": "Reverência",
+      "awe": "Fascínio",
       "athletics": "Atletismo",
-      "awareness": "Percepção",
-      "hunting": "Caça",
-      "song": "Canto",
+      "awareness": "Vigilância",
+      "hunting": "Caçada",
+      "song": "Música",
       "craft": "Ofício",
-      "enhearten": "Inspiração",
+      "enhearten": "Indução",
       "travel": "Viagem",
       "insight": "Discernimento",
       "healing": "Cura",
@@ -616,10 +621,10 @@
       "battle": "Batalha",
       "persuade": "Persuasão",
       "stealth": "Furtividade",
-      "scan": "Observar",
-      "explore": "Explorar",
-      "riddle": "Enigmas",
-      "lore": "Saber"
+      "scan": "Busca",
+      "explore": "Exploração",
+      "riddle": "Enigma",
+      "lore": "História"
     }
   },
   "dialog": {

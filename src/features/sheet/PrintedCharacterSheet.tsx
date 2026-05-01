@@ -928,7 +928,7 @@ function SidebarStat({
 
 /**
  * Sidebar cluster: one large diamond on the left, two smaller stacked
- * diamonds on the right. The cluster's section title (e.g. "Vigor Atual")
+ * diamonds on the right. The cluster's section title (e.g. "Resistência Atual")
  * is rendered by the consumer above this grid; the small `topLabel`
  * sits above the top diamond in the cluster, and `bottomLabel` spans both
  * columns below so long captions ("Cicatriz") get room to breathe.
@@ -1151,6 +1151,16 @@ function ConditionsBlock({
 						})
 					}
 				/>
+				<div className="pt-2">
+					<TextField
+						label={t("sheet.wound.label")}
+						value={character.wound}
+						onChange={(value) => update({ wound: value })}
+						placeholder={t("sheet.wound.placeholder")}
+						ariaLabel={t("sheet.wound.aria")}
+						disabled={!character.conditions.wounded}
+					/>
+				</div>
 			</div>
 		</div>
 	);
@@ -1203,9 +1213,11 @@ type TextFieldProps = {
 	value: string;
 	onChange: (value: string) => void;
 	placeholder?: string;
+	disabled?: boolean;
+	ariaLabel?: string;
 };
 
-function TextField({ label, value, onChange, placeholder }: TextFieldProps) {
+function TextField({ label, value, onChange, placeholder, disabled, ariaLabel }: TextFieldProps) {
 	return (
 		<label className="flex flex-col gap-1 min-w-0">
 			<span className="font-label text-microcaption tracking-label uppercase text-ink-red">
@@ -1215,7 +1227,9 @@ function TextField({ label, value, onChange, placeholder }: TextFieldProps) {
 				value={value}
 				onChange={(event) => onChange(event.target.value)}
 				placeholder={placeholder}
-				className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-body italic text-2xl text-ink-navy pb-0.5 placeholder:text-ink-navy/50 placeholder:not-italic focus:border-ink-red focus-visible:bg-ink-red/5 transition-colors"
+				disabled={disabled}
+				aria-label={ariaLabel}
+				className="w-full bg-transparent border-0 border-b border-ink-red/60 outline-none font-body italic text-2xl text-ink-navy pb-0.5 placeholder:text-ink-navy/50 placeholder:not-italic focus:border-ink-red focus-visible:bg-ink-red/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 			/>
 		</label>
 	);

@@ -46,6 +46,7 @@ export function createEmptyCharacter(culture: HeroicCulture = 'HOBBITS_OF_THE_SH
       miserable: false,
       wounded: false,
     },
+    wound: '',
     valour: 0,
     wisdom: 0,
     rewards: [],
