@@ -2,12 +2,26 @@
 
 > Context contract for any LLM coding agent (Claude Code, Cursor, Aider, Codex, etc.) working in this repository.
 
+<!--
+Portability note — what transfers and what doesn't:
+
+- Portable (markdown layer): this file, `AGENTS.local.md`, and anything under
+  `.agents/commands/`, `.agents/skills/`, `.agents/subagents/`, `.agents/rules/`,
+  `.agents/output-styles/`. Any AGENTS.md-aware client should read these.
+- Per-vendor (wiring layer): `.agents/settings.json`, `.claude/settings.json`,
+  hook registration, and permission grammars are necessarily client-specific.
+  Keep them thin; let `*.local.*` files hold personal overrides.
+- MCP servers live in root `mcp.json` for cross-client discovery.
+-->
+
+@AGENTS.local.md
+
 ## 1. Boot
 
 **Every session in this repository must, before non-trivial edits, read in order:**
 
 1. This file (`AGENTS.md`).
-2. The local skill `the-one-sheet` (at `.claude/skills/the-one-sheet/SKILL.md` for Claude Code; non-Claude agents read the referenced docs directly).
+2. The local skill `the-one-sheet` (at `.agents/skills/the-one-sheet/SKILL.md`; Claude Code reaches the same file via the `.claude/skills/the-one-sheet/` symlink. Non-Claude agents read the referenced docs directly).
 3. The five reference docs:
    - `PRODUCT.md` (root) — register, users, brand personality, anti-references, design principles.
    - `DESIGN.md` (root) — visual tokens, themes, typography, components, do's and don'ts. Carries `DESIGN.json` as a sidecar for tonal ramps, shadows, motion, and component snippets.
