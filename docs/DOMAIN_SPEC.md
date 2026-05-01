@@ -1,4 +1,6 @@
-# PRD — The One Sheet
+# TOR 2e Domain Specification — The One Sheet
+
+> Canonical domain specification for The One Sheet's character-sheet webapp. Strategic / brand context lives in [`PRODUCT.md`](../PRODUCT.md); visual contracts live in [`DESIGN.md`](../DESIGN.md). This document is the source of truth for *how the game works in code*: data model, formulas, validation, and reference tables.
 
 **Project:** The One Sheet — a character-sheet webapp for *The One Ring* (2nd Edition)
 **Version:** 1.0
@@ -8,7 +10,7 @@
 **Scope:** data model, computation rules, creation pipeline, reference tables, validation, and runtime state.
 **Out of scope:** UI/UX design, authentication, infrastructure, full Journey/Combat resolution rules (only the parts that mutate the sheet).
 
-> **Localisation note:** the source PDF used by the player base may be the Brazilian Portuguese edition (Devir). All field names and code identifiers in this PRD are English. The webapp **may** offer a `pt-BR` UI surface that maps these canonical labels to the Devir translations (see §16.4).
+> **Localisation note:** the source PDF used by the player base may be the Brazilian Portuguese edition (Devir). All field names and code identifiers in this spec are English. The webapp **may** offer a `pt-BR` UI surface that maps these canonical labels to the Devir translations (see §16.4).
 
 ---
 
@@ -1344,7 +1346,7 @@ Lets you reconstruct any state and gives a complete narrative history of the her
 
 ### 16.4. Internationalisation
 
-The English terms in this PRD are canonical. To support a `pt-BR` UI surface (matching the Devir translation that some players use), maintain a translation map:
+The English terms in this spec are canonical. To support a `pt-BR` UI surface (matching the Devir translation that some players use), maintain a translation map:
 
 ```json
 {
@@ -1763,4 +1765,22 @@ A reasonable phasing for a small team:
 
 ---
 
-**End of PRD — v1.0**
+## Appendix A. Content scope and licensing
+
+> Originally `docs/CONTENT_TOR2E.md`. Folded in here so domain-content rules live next to the spec they constrain.
+
+- The MVP supports **The One Ring 2e core book only**. Loremaster's Guide and supplements are out of scope.
+- This is **internal use only** for the maintainer's RPG group; no public release.
+- Reference data should structure mechanics (numbers, formulas, rule references), not reproduce flavour text from the book. Player-written descriptions, names, and notes are filled in by the user.
+- If/when the project is released publicly, content licensing must be revisited (see `[DESIGNER]` flag in `PLAN_MVP.md`).
+
+### What `src/ref-data/` must never contain
+
+- Verbatim flavour text or descriptions from the TOR 2e book — see the licensing note above.
+- Internal review notes — those go to `docs/` or to GitHub issues, not into `src/`.
+
+The shape of `src/ref-data/` itself (file layout, ID conventions, schema versioning, the "adding a new entry" checklist, and the leaf-purity rules that bind it) lives in [`ARCHITECTURE.md`](./ARCHITECTURE.md) under "Reference data conventions".
+
+---
+
+**End of TOR 2e Domain Specification — v1.0**

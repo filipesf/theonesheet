@@ -1,12 +1,28 @@
-import { legacyNameToBlessingId } from '../ref-data/blessings';
+import { BLESSINGS_BY_ID, legacyNameToBlessingId } from '../ref-data/blessings';
 import { CULTURES } from '../ref-data/cultures';
 import { legacyNameToRewardId } from '../ref-data/rewards';
 import { legacyNameToVirtueId, VIRTUES_BY_ID, type VirtueEffect } from '../ref-data/virtues';
 import type { Character, Reward, Virtue } from './types';
 
+// Cultural Blessing effects partially wired in v0:
+// - `attribute-plus` (Rangers / Kings of Men) adjusts the chosen attribute
+//   before TN derivation, so TNs and culture-formula derived stats see the
+//   bumped value.
+// - `load-halve-armour-helm` (Dwarves / Redoubtable) is applied in
+//   `recomputeLoad`.
+// Other effects (`favoured-rolls`, `hope-magic-success`,
+// `shadow-resist-bonus`, `company-society-plus`,
+// `fellowship-hope-recovery-cap`) are recorded as data only; their runtime
+// mechanics live outside character creation and are deferred to play-runtime
+// work — see `ref-data/blessings.ts` for the deferral comment.
+
+function resolveBlessingId(value: string): string | null {
+  if (BLESSINGS_BY_ID.has(value)) return value;
+  return legacyNameToBlessingId(value);
+}
+
 function isRedoubtable(character: Character): boolean {
-  if (character.cultural_blessing === 'redoubtable') return true;
-  return legacyNameToBlessingId(character.cultural_blessing) === 'redoubtable';
+  return resolveBlessingId(character.cultural_blessing) === 'redoubtable';
 }
 
 function resolveVirtueId(virtue: Virtue): string | null {
@@ -35,14 +51,49 @@ function countReward(values: Character['rewards'], id: string): number {
   return values.filter((reward) => resolveRewardId(reward) === id).length;
 }
 
-export function recomputeTns(character: Character): Character {
+function applyBlessingAttributePlus(character: Character): Character {
+  const blessingId = resolveBlessingId(character.cultural_blessing);
+  if (!blessingId) return character;
+  const entry = BLESSINGS_BY_ID.get(blessingId);
+  if (!entry) return character;
+  const attributeBoost = entry.effects.find(
+    (effect): effect is Extract<typeof effect, { kind: 'attribute-plus' }> =>
+      effect.kind === 'attribute-plus',
+  );
+  if (!attributeBoost) return character;
+  const choice = character.cultural_blessing_choice;
+  if (!choice || choice.kind !== 'attribute-plus') return character;
   return {
     ...character,
     attributes: {
       ...character.attributes,
-      tn_strength: 20 - character.attributes.strength,
-      tn_heart: 20 - character.attributes.heart,
-      tn_wits: 20 - character.attributes.wits,
+      [choice.attribute]: character.attributes[choice.attribute] + attributeBoost.amount,
+    },
+  };
+}
+
+function prowessTnDelta(
+  virtues: Character['virtues'],
+  attribute: 'strength' | 'heart' | 'wits',
+): number {
+  return virtues.reduce((total, virtue) => {
+    const id = resolveVirtueId(virtue);
+    if (id !== 'prowess') return total;
+    if (virtue.selection?.kind !== 'prowess') return total;
+    if (virtue.selection.attribute !== attribute) return total;
+    return total - 1;
+  }, 0);
+}
+
+export function recomputeTns(character: Character): Character {
+  const boosted = applyBlessingAttributePlus(character);
+  return {
+    ...boosted,
+    attributes: {
+      ...boosted.attributes,
+      tn_strength: 20 - boosted.attributes.strength + prowessTnDelta(boosted.virtues, 'strength'),
+      tn_heart: 20 - boosted.attributes.heart + prowessTnDelta(boosted.virtues, 'heart'),
+      tn_wits: 20 - boosted.attributes.wits + prowessTnDelta(boosted.virtues, 'wits'),
     },
   };
 }

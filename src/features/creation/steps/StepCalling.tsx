@@ -7,6 +7,7 @@ import { ARMOUR, SHIELDS, WEAPONS } from '../../../ref-data/equipment';
 import { STARTING_EQUIPMENT_BY_SOL } from '../../../ref-data/equipment-by-sol';
 import { callingKey, standardOfLivingKey } from '../../../ref-data/labels';
 import { REWARDS } from '../../../ref-data/rewards';
+import { SKILLS, type SkillId } from '../../../ref-data/skills';
 import { VIRTUES } from '../../../ref-data/virtues';
 import type { CreationDraft } from '../creationSchema';
 
@@ -31,6 +32,7 @@ export function StepCalling() {
   const sol = useWatch({ control, name: 'standard_of_living' });
   const startingReward = useWatch({ control, name: 'starting_reward' });
   const startingVirtue = useWatch({ control, name: 'starting_virtue' });
+  const startingVirtueSelection = useWatch({ control, name: 'starting_virtue_selection' });
   const weapons = useWatch({ control, name: 'weapons' });
   const armour = useWatch({ control, name: 'armour' });
   const shield = useWatch({ control, name: 'shield' });
@@ -130,11 +132,84 @@ export function StepCalling() {
           value={startingVirtue}
           placeholder={t('common.choose')}
           options={STANDARD_VIRTUE_IDS.map((id) => ({ value: id, label: t(`ref.virtues.standard.${id}`) }))}
-          onChange={(value) =>
-            setValue('starting_virtue', value, { shouldDirty: true, shouldValidate: true })
-          }
+          onChange={(value) => {
+            setValue('starting_virtue', value, { shouldDirty: true, shouldValidate: true });
+            setValue('starting_virtue_selection', null, { shouldValidate: true });
+          }}
         />
       </Block>
+
+      {startingVirtue === 'mastery' && (
+        <Block title={t('creation.step.calling.mastery-skills')}>
+          <p className="font-body text-sm text-ink-navy/70 mb-2">
+            {t('creation.step.calling.mastery-skills-body')}
+          </p>
+          <MasterySkillPicker
+            selected={
+              startingVirtueSelection?.kind === 'mastery'
+                ? startingVirtueSelection.skill_ids
+                : []
+            }
+            onToggle={(skillId) => {
+              const current =
+                startingVirtueSelection?.kind === 'mastery'
+                  ? [...startingVirtueSelection.skill_ids]
+                  : [];
+              const exists = current.includes(skillId);
+              const next = exists
+                ? current.filter((id) => id !== skillId)
+                : current.length < 2
+                  ? [...current, skillId]
+                  : current;
+              if (next.length === 2) {
+                setValue(
+                  'starting_virtue_selection',
+                  { kind: 'mastery', skill_ids: [next[0]!, next[1]!] },
+                  { shouldDirty: true, shouldValidate: true },
+                );
+              } else {
+                setValue('starting_virtue_selection', null, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              }
+            }}
+          />
+        </Block>
+      )}
+
+      {startingVirtue === 'prowess' && (
+        <Block title={t('creation.step.calling.prowess-attribute')}>
+          <p className="font-body text-sm text-ink-navy/70 mb-2">
+            {t('creation.step.calling.prowess-attribute-body')}
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {(['strength', 'heart', 'wits'] as const).map((attribute) => {
+              const active =
+                startingVirtueSelection?.kind === 'prowess' &&
+                startingVirtueSelection.attribute === attribute;
+              return (
+                <SelectionCard
+                  key={attribute}
+                  active={active}
+                  padding="sm"
+                  onClick={() =>
+                    setValue(
+                      'starting_virtue_selection',
+                      { kind: 'prowess', attribute },
+                      { shouldDirty: true, shouldValidate: true },
+                    )
+                  }
+                >
+                  <span className="font-display text-sm tracking-section uppercase text-ink-navy">
+                    {t(`sheet.attribute.${attribute}`)}
+                  </span>
+                </SelectionCard>
+              );
+            })}
+          </div>
+        </Block>
+      )}
 
       <Block title={t('creation.step.calling.standard-of-living')}>
         <select
@@ -222,6 +297,37 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
       </h3>
       {children}
     </section>
+  );
+}
+
+function MasterySkillPicker({
+  selected,
+  onToggle,
+}: {
+  selected: readonly string[];
+  onToggle: (skillId: SkillId) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      {SKILLS.map((skill) => {
+        const active = selected.includes(skill.id);
+        const disabled = !active && selected.length >= 2;
+        return (
+          <SelectionCard
+            key={skill.id}
+            active={active}
+            disabled={disabled}
+            padding="sm"
+            onClick={() => onToggle(skill.id)}
+          >
+            <span className="font-display text-sm tracking-section uppercase text-ink-navy">
+              {t(`ref.skills.${skill.id}`)}
+            </span>
+          </SelectionCard>
+        );
+      })}
+    </div>
   );
 }
 

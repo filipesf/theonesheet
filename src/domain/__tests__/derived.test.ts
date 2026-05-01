@@ -79,6 +79,59 @@ describe('Redoubtable load halving', () => {
   });
 });
 
+describe('Kings of Men attribute-plus blessing', () => {
+  it('adds 1 to the chosen attribute before TN derivation', () => {
+    const character = createEmptyCharacter('RANGERS_OF_THE_NORTH');
+    character.cultural_blessing = 'kings-of-men';
+    character.cultural_blessing_choice = { kind: 'attribute-plus', attribute: 'wits' };
+    character.attributes.strength = 5;
+    character.attributes.heart = 5;
+    character.attributes.wits = 4;
+
+    const result = normaliseCharacter(character);
+
+    expect(result.attributes.wits).toBe(5);
+    expect(result.attributes.tn_wits).toBe(15);
+    // Rangers parry formula = WITS + 14 → uses bumped WITS
+    expect(result.base_parry).toBe(5 + 14);
+  });
+
+  it('does nothing when the choice is not provided', () => {
+    const character = createEmptyCharacter('RANGERS_OF_THE_NORTH');
+    character.cultural_blessing = 'kings-of-men';
+    character.attributes.strength = 5;
+    character.attributes.heart = 5;
+    character.attributes.wits = 4;
+
+    const result = normaliseCharacter(character);
+
+    expect(result.attributes.wits).toBe(4);
+    expect(result.attributes.tn_wits).toBe(16);
+  });
+});
+
+describe('Prowess virtue selection', () => {
+  it('reduces the chosen attribute TN by 1', () => {
+    const character = createEmptyCharacter('HOBBITS_OF_THE_SHIRE');
+    character.attributes.strength = 4;
+    character.attributes.heart = 5;
+    character.attributes.wits = 5;
+    character.virtues = [
+      {
+        id: 'prowess',
+        name: 'Prowess',
+        origin: 'STARTING',
+        selection: { kind: 'prowess', attribute: 'wits' },
+      },
+    ];
+
+    const result = normaliseCharacter(character);
+
+    expect(result.attributes.tn_wits).toBe(20 - 5 - 1);
+    expect(result.attributes.tn_strength).toBe(20 - 4);
+  });
+});
+
 describe('virtue effects via id and legacy name', () => {
   it('grants +1 max hope from the Untameable-Spirit cultural virtue', () => {
     const character = createEmptyCharacter('DWARVES_OF_DURINS_FOLK');

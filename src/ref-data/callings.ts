@@ -49,6 +49,7 @@ export const CALLINGS_DATA: Record<Calling, CallingData> = {
   },
   CHAMPION: {
     shadowPath: 'curse-of-vengeance',
+    // Book line 1258: ATLETISMO, FASCÍNIO, CAÇADA → athletics, awe, hunting.
     favouredSkillIds: ['athletics', 'awe', 'hunting'],
     distinctiveFeatureId: 'enemy-lore',
     enemyLoreOptions: ENEMY_LORE_OPTIONS,

@@ -12,14 +12,14 @@ You are working in **The One Sheet** repository: a local-first web app for manag
 Read these files in order. If you have already read them earlier in the same session, do not re-read them.
 
 1. **`AGENTS.md`** (repo root) — universal contract: conventions, do-not-touch zones, commands, handoff rules. Read every session.
-2. **`docs/ARCHITECTURE.md`** — layers, dependency rules, persistence model, routing, dice subsystem. Read before any architectural or cross-feature change.
-3. **`docs/DESIGN_SYSTEM.md`** — colour tokens, themes (parchment + tor-dark), typography, component conventions, print rules. Read before any UI work.
-4. **`docs/CODE_STYLE.md`** — TypeScript and React conventions, naming, imports, tests, i18n, comments. Read before writing more than a handful of lines.
+2. **`PRODUCT.md`** (repo root) — register, users, brand personality, anti-references, strategic design principles. Read before any UI work or product decision.
+3. **`DESIGN.md`** (repo root) — visual tokens, themes (parchment + tor-dark), typography, elevation, component conventions, do's and don'ts. The `DESIGN.json` sidecar carries tonal ramps, motion, and component snippets. Read before any UI work.
+4. **`docs/ARCHITECTURE.md`** — layers, dependency rules, persistence model, routing, dice subsystem, shared UI primitives, reference-data conventions. Read before any architectural or cross-feature change.
+5. **`docs/CODE_STYLE.md`** — TypeScript and React conventions, naming, imports, tests, i18n, comments. Read before writing more than a handful of lines.
 
 ## Read on demand
 
-- **`docs/CONTENT_TOR2E.md`** — required when touching `src/ref-data/`, adding a Culture/Calling/Skill, or changing TOR 2e mechanics.
-- **`docs/PRD_TheOneSheet.md`** — canonical product requirements. Consult when you need an authoritative answer about a TOR rule, formula, invariant, or feature scope. Read-only.
+- **`docs/DOMAIN_SPEC.md`** — canonical TOR 2e domain specification: glossary, data model, formulas, validation invariants, reference tables, content scope and licensing. Required when touching `src/domain/`, `src/ref-data/`, adding a Culture/Calling/Skill, or changing TOR 2e mechanics. Edits are allowed when TOR errata or missing rules surface; treat the document as authoritative, not as a frozen artefact.
 - **`docs/PLAN_MVP.md`** — current implementation plan. Consult when deciding whether work is in scope.
 - **`docs/PLAN_v0.md` / `PLAN_v1.md` / `PLAN_v2.md`** — version-scoped plans. Use to decide whether something is v0, v1, or v2. Read-only.
 - **`docs/ROADMAP.md`** — one-page index of all the above.
@@ -46,11 +46,12 @@ If a request seems to require any of these, **stop and confirm with the user bef
 
 ## Do not touch without explicit user request
 
-- `docs/PRD_TheOneSheet.md` — product source of truth, immutable from the agent's perspective.
 - `docs/PLAN_v0.md`, `PLAN_v1.md`, `PLAN_v2.md` — plan snapshots. Append new versions; never edit.
 - `docs/PLAN_TECHSTACK.md` — generic blueprint reference.
 - `pnpm-lock.yaml` — only via `pnpm` commands.
 - `dist/`, `node_modules/`, `.git/`.
+
+`docs/DOMAIN_SPEC.md` and `PRODUCT.md` are authoritative but no longer immutable: edit when TOR errata or scope decisions justify it, never on a whim.
 
 ## Common tasks — orientation
 

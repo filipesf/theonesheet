@@ -8,11 +8,12 @@
 
 1. This file (`AGENTS.md`).
 2. The local skill `the-one-sheet` (at `.claude/skills/the-one-sheet/SKILL.md` for Claude Code; non-Claude agents read the referenced docs directly).
-3. The four reference docs:
-   - `docs/ARCHITECTURE.md`
-   - `docs/DESIGN_SYSTEM.md`
-   - `docs/CONTENT_TOR2E.md`
-   - `docs/CODE_STYLE.md`
+3. The five reference docs:
+   - `PRODUCT.md` (root) — register, users, brand personality, anti-references, design principles.
+   - `DESIGN.md` (root) — visual tokens, themes, typography, components, do's and don'ts. Carries `DESIGN.json` as a sidecar for tonal ramps, shadows, motion, and component snippets.
+   - `docs/DOMAIN_SPEC.md` — canonical TOR 2e domain specification: glossary, data model, formulas, validation invariants, reference tables. Authoritative for `src/domain/` and `src/ref-data/`.
+   - `docs/ARCHITECTURE.md` — layers, dependency rules, persistence model, routing, dice subsystem, shared UI primitives, reference-data conventions.
+   - `docs/CODE_STYLE.md` — TypeScript and React conventions.
 4. The current plan in `docs/PLAN_MVP.md` and the index at `docs/ROADMAP.md`.
 
 If you are Claude Code, invoke the `the-one-sheet` skill at the start of every session in this repository. The skill exists precisely to make step (3) one tool call instead of four.
@@ -25,7 +26,7 @@ The One Sheet is a local-first web app for players to manage character sheets fo
 - **v1** — hosted, accounts, multi-device, mobile.
 - **v2** — campaigns and GM controls.
 
-Canonical product source: `docs/PRD_TheOneSheet.md`.
+Canonical TOR 2e domain spec: `docs/DOMAIN_SPEC.md`. Strategic / brand context: `PRODUCT.md` (root).
 
 ## 3. Mandatory conventions
 
@@ -58,11 +59,15 @@ Dependencies: `app → features → domain ← ref-data`; `features → persiste
 
 ## 5. Do-not-touch zones
 
-- `docs/PRD_TheOneSheet.md` — read-only. PRD changes are product decisions, not agent decisions.
 - `docs/PLAN_v0.md`, `PLAN_v1.md`, `PLAN_v2.md` — versioned plan snapshots, immutable. Create a new version if scope shifts.
 - `dist/` — build artefact, never commit.
 - `pnpm-lock.yaml` — only edit via `pnpm` commands; never hand-edit.
 - `.git/`, `node_modules/` — never edit.
+
+## 5a. Treat as authoritative (edits welcome but require justification)
+
+- `docs/DOMAIN_SPEC.md` — canonical TOR 2e domain spec. Edits are allowed when TOR errata, missing rules, or misalignments with the source book surface. Never rewrite scope sections without confirmation; prefer adding clarifications inline (e.g. "as of v2 errata, …") to amending older statements.
+- `PRODUCT.md` (root) — strategic / brand context. Update when the user's brand or scope decisions evolve, not on a whim. When `PRODUCT.md` and `DOMAIN_SPEC.md` disagree on facts about the system, `DOMAIN_SPEC.md` wins.
 
 ## 6. Commands
 
@@ -82,7 +87,7 @@ CI runs: lint → typecheck → test → build → deploy (GitHub Pages).
 
 - `/commit` — signed commit (`-S`), with confirmation, no co-author trailer, no `--amend`.
 - `/push` — push to `main` with explicit confirmation; verifies clean working tree first.
-- `/audit` — sweep current diff against `docs/ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/CODE_STYLE.md`. Reports violations grouped by severity. No auto-fix.
+- `/audit` — sweep current diff against `docs/ARCHITECTURE.md`, `DESIGN.md`, `docs/CODE_STYLE.md`. Reports violations grouped by severity. No auto-fix.
 
 ## 8. Models per task (Claude Code)
 
@@ -118,36 +123,9 @@ If a task seems to require Supabase, auth, sync, campaigns, GM, mobile polish, P
 
 ## 12. Design Context
 
-> Persistent design brief for any agent working on UI/UX in this repository. Read alongside `docs/DESIGN_SYSTEM.md` (which carries the tokens). This section answers the *why* behind the tokens.
+The strategic and visual contracts that used to live inline here have moved to two top-level files at the repo root:
 
-### Users
+- **`PRODUCT.md`** — register, users, product purpose, brand personality, anti-references, design principles, accessibility & inclusion.
+- **`DESIGN.md`** (+ `DESIGN.json` sidecar) — visual tokens, themes, typography, elevation, components, do's and don'ts.
 
-- **Primary audience.** Players in the maintainer's tabletop RPG group running *The One Ring 2e* (Free League / Devir). Adults, table-experienced, comfortable with sheet-driven RPGs (D&D Beyond level of fluency).
-- **Context of use.** A second screen on a laptop or tablet during a session, alongside dice and the printed rulebook. Outside sessions, occasional bursts to update XP, gear, or tweak the hero between adventures.
-- **Job to be done.** Create a Player-hero respecting the system's invariants, keep the sheet honest during play (Endurance, Hope, Shadow, conditions), and print or share a sheet that looks at home next to the official Free League PDF.
-- **Not the audience.** Newcomers being introduced to the system. The wizard guides, but copy assumes the player has read or will read the rules; we do not re-teach TOR 2e in tooltips.
-
-### Brand Personality
-
-- **Three words.** Bookish · Crafted · Quiet.
-- **Voice and tone.** Spare, declarative, faintly literary. No marketing energy, no exclamation marks, no emoji. Microcopy should feel set in type rather than shouted by an app.
-- **Emotional goal.** Confidence and reverence — the player should feel they are tending a manuscript that belongs to their hero, not filling out a form. Calm at rest; legible at speed.
-- **References (positive).** The official TOR 2e printed character sheet (canonical visual spec — `src/features/sheet/PrintedCharacterSheet.tsx` exists to honour it). D&D Beyond for organisation patterns. Shadowdarklings for scope and restraint.
-- **Anti-references.** Generic SaaS dashboards (Stripe-style chrome, gradients, neon CTAs). Fantasy clichés that read as cosplay (dragon-scale borders, faux-medieval drop caps, parchment textures used as wallpaper). Bootstrap card grids. Anything that announces "I am a TTRPG tool" before the content does.
-
-### Aesthetic Direction
-
-- **Visual tone.** Manuscript-on-parchment, hand-illuminated but disciplined. Type does most of the work; ornament is rare and deliberate.
-- **Colour.** Two themes via CSS variables on `:root[data-theme]` — `parchment` (warm cream + ink-navy + ink-red, current default) and `tor-dark` (warm parchment text on near-black, bronze/moss accents). Token names are stable across themes; consumers never branch on theme. Print always forces the parchment palette regardless of the user's preference.
-- **Typography.** Two families. **Cormorant SC** for display and labels (small-caps companion to Cormorant; uppercase, generously tracked, weight 500/600/700). **Crimson Pro** for body, inputs, numerics, and any content that used to be hand-written; italic carries player-entered fields (name, blessing, distinctive features, rewards, virtues, gear) so they read as a manuscript entry rather than a form field. Cursive faces are intentionally absent — hierarchy comes from weight, size, tracking, italic, and case, not from a script. Numeric content uses `tabular-nums` to keep digits aligned in columns. Sub-12 px text only via the four `text-eyebrow` / `text-microlabel` / `text-microcaption` / `text-microline` tokens — 8 px is the absolute floor.
-- **Layout.** Generous tracking on uppercase labels (`tracking-eyebrow` 0.28em is the manuscript tell). Modest radii (`rounded-md` panels, `rounded-full` pills). Five named shadow tokens, never ad-hoc.
-- **Motion.** Subtle and purposeful — the only place motion is *the feature* is the 3D dice tray (`@3d-dice/dice-box`). Everywhere else, motion serves the action and bows out under `prefers-reduced-motion`.
-- **Print.** The printed sheet (`/character/:id/sheet`) is the canonical visual spec. When screen and print drift, the editor follows the printed sheet.
-
-### Design Principles
-
-1. **The printed sheet is the truth.** Every screen-only flourish must survive the print test. If the editor diverges from the printed sheet, the editor is wrong.
-2. **Type is the design.** Reach for typography (size, weight, tracking, family) before colour, before borders, before icons. Decoration is a last resort, not a default.
-3. **Tokens, not values.** Colours, shadows, sub-12 px sizes, and tracking go through the named tokens in `src/styles.css`. Ad-hoc `text-[10px]`, `tracking-[0.2em]`, `shadow-[…]`, or hex literals are smells — escalate by adding a token, not by bypassing the system.
-4. **Calm beats clever.** No gradients, no glassmorphism, no skeuomorphic ink-drying. The dice tray is the only place where motion is permitted to be theatrical; everywhere else, less.
-5. **Accessibility is non-negotiable.** WCAG AA contrast against the active theme. Every interactive element keyboard-reachable. `:focus-visible` styles mandatory. `prefers-reduced-motion` honoured beyond the global safety net.
+Both follow the [Google Stitch](https://stitch.withgoogle.com/docs/design-md/format/) PRODUCT.md / DESIGN.md format and are read by the impeccable skill (`$impeccable craft`, `polish`, `audit`, etc.) at the start of every UI task. When `PRODUCT.md` and `docs/DOMAIN_SPEC.md` disagree on facts about the system (mechanics, data model, derived formulas), `DOMAIN_SPEC.md` wins; `PRODUCT.md` is updated, never the other way around.

@@ -91,6 +91,6 @@ Out of scope:
 
 ## References
 
-- Product requirements: `PRD_TheOneSheet.md`
-- Architecture guidance: `PRD_TheOneSheet.md:1427-1728`
-- Validation invariants: `PRD_TheOneSheet.md:1241-1275`
+- Product requirements: `DOMAIN_SPEC.md`
+- Architecture guidance: `DOMAIN_SPEC.md:1427-1728`
+- Validation invariants: `DOMAIN_SPEC.md:1241-1275`

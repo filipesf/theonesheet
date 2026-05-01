@@ -9,14 +9,19 @@
 ## Working documents
 
 - [`PLAN_MVP.md`](./PLAN_MVP.md) — current implementation plan, combining v0 product scope with the project's tech-stack decisions.
-- [`PRD_TheOneSheet.md`](./PRD_TheOneSheet.md) — canonical product requirements.
+- [`DOMAIN_SPEC.md`](./DOMAIN_SPEC.md) — canonical TOR 2e domain specification (data model, formulas, validation invariants, reference tables, content scope).
 
-## Reference docs (live next to the code)
+## Reference docs
 
-- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — layers, dependency rules, data flow.
-- [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) — tokens, themes, typography, components.
+Strategic and visual contracts live at the repo root, in the [Google Stitch](https://stitch.withgoogle.com/docs/design-md/format/) PRODUCT.md / DESIGN.md format:
+
+- [`PRODUCT.md`](../PRODUCT.md) — register, users, brand personality, anti-references, design principles.
+- [`DESIGN.md`](../DESIGN.md) — visual tokens, themes, typography, elevation, components, do's and don'ts. Carries [`DESIGN.json`](../DESIGN.json) as a sidecar.
+
+Engineering contracts stay next to the code:
+
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — layers, dependency rules, data flow, shared UI primitives, library choices, reference-data conventions.
 - [`CODE_STYLE.md`](./CODE_STYLE.md) — TypeScript and React conventions.
-- [`CONTENT_TOR2E.md`](./CONTENT_TOR2E.md) — TOR 2e reference data structure.
 
 ## Versioning policy
 

@@ -10,16 +10,16 @@ The goal of this version is to validate the core domain model, sheet ergonomics,
 
 The repository currently contains only the product requirements document:
 
-- `PRD_TheOneSheet.md`
+- `DOMAIN_SPEC.md`
 
 The PRD already defines the core domain model and rule engine we should treat as canonical:
 
-- `Character` schema: `PRD_TheOneSheet.md:88-163`
-- `Company` schema: `PRD_TheOneSheet.md:273-292`
-- Derived-value formulas: `PRD_TheOneSheet.md:318-409`
-- Character creation flow: `PRD_TheOneSheet.md:425-531`
-- Validation invariants: `PRD_TheOneSheet.md:1241-1275`
-- Recommended architecture: `PRD_TheOneSheet.md:1427-1728`
+- `Character` schema: `DOMAIN_SPEC.md:88-163`
+- `Company` schema: `DOMAIN_SPEC.md:273-292`
+- Derived-value formulas: `DOMAIN_SPEC.md:318-409`
+- Character creation flow: `DOMAIN_SPEC.md:425-531`
+- Validation invariants: `DOMAIN_SPEC.md:1241-1275`
+- Recommended architecture: `DOMAIN_SPEC.md:1427-1728`
 
 Important product clarifications for `v0`:
 
@@ -45,10 +45,10 @@ The MVP is successful when the browser-only application is useful as a standalon
 
 ### Key Discoveries
 
-- The most stable core is the shared domain logic for formulas and invariants, not infrastructure: `PRD_TheOneSheet.md:1471-1478`.
-- The collaboration boundary begins at Company formation in creation Phase 9, which makes it the cleanest cut line after MVP creation support: `PRD_TheOneSheet.md:523-531`.
-- Imported data cannot be trusted as authoritative for derived fields; the app must recompute TNs, endurance, hope, parry, load, and conditions on load/import: `PRD_TheOneSheet.md:320-385`.
-- The PRD contains known rule-data gaps that should be tracked explicitly rather than hidden in code assumptions: `PRD_TheOneSheet.md:1394-1405`.
+- The most stable core is the shared domain logic for formulas and invariants, not infrastructure: `DOMAIN_SPEC.md:1471-1478`.
+- The collaboration boundary begins at Company formation in creation Phase 9, which makes it the cleanest cut line after MVP creation support: `DOMAIN_SPEC.md:523-531`.
+- Imported data cannot be trusted as authoritative for derived fields; the app must recompute TNs, endurance, hope, parry, load, and conditions on load/import: `DOMAIN_SPEC.md:320-385`.
+- The PRD contains known rule-data gaps that should be tracked explicitly rather than hidden in code assumptions: `DOMAIN_SPEC.md:1394-1405`.
 
 ## What We're NOT Doing
 
@@ -353,9 +353,9 @@ Make local-first data portable so `v0` characters can migrate into future hosted
 
 ## References
 
-- Product requirements: `PRD_TheOneSheet.md`
-- `Character` schema: `PRD_TheOneSheet.md:88-163`
-- Derived formulas: `PRD_TheOneSheet.md:318-409`
-- Creation flow: `PRD_TheOneSheet.md:425-531`
-- Invariants: `PRD_TheOneSheet.md:1241-1275`
-- Known rule-data gaps: `PRD_TheOneSheet.md:1394-1405`
+- Product requirements: `DOMAIN_SPEC.md`
+- `Character` schema: `DOMAIN_SPEC.md:88-163`
+- Derived formulas: `DOMAIN_SPEC.md:318-409`
+- Creation flow: `DOMAIN_SPEC.md:425-531`
+- Invariants: `DOMAIN_SPEC.md:1241-1275`
+- Known rule-data gaps: `DOMAIN_SPEC.md:1394-1405`

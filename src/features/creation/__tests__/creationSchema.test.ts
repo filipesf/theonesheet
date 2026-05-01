@@ -10,11 +10,23 @@ import {
 
 describe('creation step schemas', () => {
   it('cultureStep accepts a known culture', () => {
-    expect(cultureStep.parse({ heroic_culture: 'HOBBITS_OF_THE_SHIRE' })).toBeTruthy();
+    expect(
+      cultureStep.parse({
+        heroic_culture: 'HOBBITS_OF_THE_SHIRE',
+        cultural_blessing_choice: null,
+        underlined_skill_pick: 'stealth',
+      }),
+    ).toBeTruthy();
   });
 
   it('cultureStep rejects unknown values', () => {
-    expect(() => cultureStep.parse({ heroic_culture: 'ELVES_OF_NOWHERE' })).toThrow();
+    expect(() =>
+      cultureStep.parse({
+        heroic_culture: 'ELVES_OF_NOWHERE',
+        cultural_blessing_choice: null,
+        underlined_skill_pick: null,
+      }),
+    ).toThrow();
   });
 
   it('attributesStep rejects values outside 2..7', () => {
@@ -42,6 +54,7 @@ describe('creation step schemas', () => {
         calling_feature: 'X',
         starting_reward: 'A',
         starting_virtue: 'B',
+        starting_virtue_selection: null,
         standard_of_living: 'COMMON',
         weapons: [],
         armour: null,

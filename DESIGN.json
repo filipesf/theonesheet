@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-04-30T00:00:00Z",
+  "title": "Design System: The One Sheet",
+  "extensions": {
+    "colorMeta": {
+      "parchment": {
+        "role": "neutral",
+        "displayName": "Parchment",
+        "canonical": "#f5efe0",
+        "tonalRamp": [
+          "#1a1612",
+          "#3a3024",
+          "#5a4838",
+          "#7a624c",
+          "#9a8467",
+          "#bca97f",
+          "#d4c8a4",
+          "#f5efe0"
+        ]
+      },
+      "parchment-deep": {
+        "role": "neutral",
+        "displayName": "Parchment Deep",
+        "canonical": "#ede4cf",
+        "tonalRamp": [
+          "#231d17",
+          "#3a3024",
+          "#5a4838",
+          "#7a624c",
+          "#9a8467",
+          "#bca97f",
+          "#d4c4a0",
+          "#ede4cf"
+        ]
+      },
+      "parchment-soft": {
+        "role": "neutral",
+        "displayName": "Parchment Soft",
+        "canonical": "#faf4e6",
+        "tonalRamp": [
+          "#2a231b",
+          "#4a3d30",
+          "#6a5a47",
+          "#8a785f",
+          "#aa9778",
+          "#cab59a",
+          "#e0d4be",
+          "#faf4e6"
+        ]
+      },
+      "ink-navy": {
+        "role": "primary-text",
+        "displayName": "Ink Navy",
+        "canonical": "#1f2c5c",
+        "tonalRamp": [
+          "#0a0e1d",
+          "#121838",
+          "#1f2c5c",
+          "#2c3d80",
+          "#3a4a82",
+          "#5a6aa6",
+          "#8b97c4",
+          "#c8cfe2"
+        ]
+      },
+      "ink-navy-soft": {
+        "role": "secondary-text",
+        "displayName": "Ink Navy Soft",
+        "canonical": "#3a4a82",
+        "tonalRamp": [
+          "#101428",
+          "#1f2c5c",
+          "#2c3d80",
+          "#3a4a82",
+          "#5a6aa6",
+          "#7e8ec0",
+          "#a8b4d4",
+          "#dbe1ee"
+        ]
+      },
+      "ink-red": {
+        "role": "primary",
+        "displayName": "Ink Red (Rubric)",
+        "canonical": "#a33024",
+        "tonalRamp": [
+          "#33100a",
+          "#5e1c14",
+          "#82241c",
+          "#a33024",
+          "#bd4a3d",
+          "#c9685a",
+          "#dc8f84",
+          "#f0c5be"
+        ]
+      },
+      "ink-red-soft": {
+        "role": "primary-soft",
+        "displayName": "Ink Red Soft",
+        "canonical": "#c9685a",
+        "tonalRamp": [
+          "#3d1a14",
+          "#6a2a20",
+          "#92382c",
+          "#a33024",
+          "#bd4a3d",
+          "#c9685a",
+          "#dc8f84",
+          "#efc4be"
+        ]
+      },
+      "shell": {
+        "role": "shell",
+        "displayName": "Leather Shell",
+        "canonical": "#1a1410",
+        "tonalRamp": [
+          "#0d0a07",
+          "#1a1410",
+          "#2a221c",
+          "#3a3028",
+          "#4a3e34",
+          "#5a4c40",
+          "#6a5b4d",
+          "#7a6a5a"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero attribute clusters and chapter titles. Cormorant SC at small-cap height, weight 600–700, tracked tightly (0.06em)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Default uppercase label voice on cards and forms. Cormorant SC, weight 600, tracked 0.2em."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running prose, inputs, and numerics. Crimson Pro at weight 500 default, 600 for numerics and emphasis. Italic carries player-entered fields."
+      },
+      "eyebrow": {
+        "displayName": "Eyebrow",
+        "purpose": "Primary eyebrows above sections, top-nav links, primary buttons. 13px Cormorant SC tracked 0.28em — the manuscript tell."
+      },
+      "microlabel": {
+        "displayName": "Microlabel",
+        "purpose": "Diamond labels, card actions, in-component labels. 12px tracked 0.2em."
+      },
+      "microcaption": {
+        "displayName": "Microcaption",
+        "purpose": "Sheet field labels, table headers, kbd keycaps. 11px tracked 0.2em."
+      },
+      "microline": {
+        "displayName": "Microline",
+        "purpose": "Attribute pills, dice face captions. 10px is the absolute floor."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-card",
+        "value": "0 1px 0 rgba(163, 48, 36, 0.15), 0 8px 24px -12px rgba(31, 44, 92, 0.25)",
+        "purpose": "Library hero card at rest. The hairline ink-red sits flush under the card; the navy spread is the page-glow."
+      },
+      {
+        "name": "shadow-card-hover",
+        "value": "0 2px 0 rgba(163, 48, 36, 0.2), 0 12px 32px -12px rgba(31, 44, 92, 0.35)",
+        "purpose": "Library card on hover; pair with -translate-y-0.5. The card lifts and the rubric thickens."
+      },
+      {
+        "name": "shadow-sheet",
+        "value": "0 2px 24px -12px rgba(31, 44, 92, 0.4)",
+        "purpose": "The printed character sheet on screen. A single soft halo, no rubric line — the sheet is paper."
+      },
+      {
+        "name": "shadow-modal",
+        "value": "0 8px 40px -12px rgba(31, 44, 92, 0.55)",
+        "purpose": "Dialogs and modals — the only surface that owes the page weight above it."
+      },
+      {
+        "name": "shadow-launcher",
+        "value": "0 8px 24px -8px rgba(31, 44, 92, 0.5)",
+        "purpose": "The floating dice launcher. Lifted but compact."
+      }
+    ],
+    "motion": [
+      {
+        "name": "transition-default",
+        "value": "150ms ease-out",
+        "purpose": "Default for hover colour and border swaps. Restrained outside the dice tray."
+      },
+      {
+        "name": "card-lift",
+        "value": "transform 200ms ease-out, box-shadow 200ms ease-out",
+        "purpose": "Library card hover: -translate-y-0.5 + shadow swap from card to card-hover."
+      },
+      {
+        "name": "reduced-motion-cap",
+        "value": "animation-duration: 0.01ms; transition-duration: 0.01ms;",
+        "purpose": "Universal cap when prefers-reduced-motion is reduce. Each feature can layer richer behaviour on top (the dice stage disables physics via usePrefersReducedMotion)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "max", "value": "1600px" }
+    ],
+    "diamondGeometry": {
+      "purpose": "Visual gap between two 45deg-rotated diamonds = CSS gap minus (size · (√2 − 1) / 2). The vertex tokens express the visual gap directly.",
+      "sizes": [
+        { "name": "diamond-xs", "value": "28px" },
+        { "name": "diamond-sm", "value": "40px" },
+        { "name": "diamond-md", "value": "60px" },
+        { "name": "diamond-lg", "value": "104px" }
+      ],
+      "vertexGaps": [
+        { "name": "vertex-tight", "value": "8px", "purpose": "Labels right next to a diamond." },
+        { "name": "vertex-cosy", "value": "16px", "purpose": "Sibling diamonds in a cluster." },
+        { "name": "vertex-airy", "value": "24px", "purpose": "Sidebar grids, breathing room." }
+      ]
+    },
+    "themes": {
+      "parchment": {
+        "displayName": "Parchment (default)",
+        "tokens": {
+          "--color-parchment": "#f5efe0",
+          "--color-parchment-deep": "#ede4cf",
+          "--color-parchment-soft": "#faf4e6",
+          "--color-ink-red": "#a33024",
+          "--color-ink-red-soft": "#c9685a",
+          "--color-ink-navy": "#1f2c5c",
+          "--color-ink-navy-soft": "#3a4a82",
+          "--color-shell": "#1a1410"
+        }
+      },
+      "tor-dark": {
+        "displayName": "TOR Dark (bronze + moss)",
+        "tokens": {
+          "--color-parchment": "#1a1612",
+          "--color-parchment-deep": "#231d17",
+          "--color-parchment-soft": "#2a231b",
+          "--color-ink-red": "#c98a3b",
+          "--color-ink-red-soft": "#7a8a5a",
+          "--color-ink-navy": "#e9dcc0",
+          "--color-ink-navy-soft": "#bca97f",
+          "--color-shell": "#0d0a07"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Engraved label set into an ink-red panel. Square corners, generous tracking, the rubric voice.",
+      "html": "<button class=\"ds-btn-primary\">CRIAR HERÓI</button>",
+      "css": ".ds-btn-primary { font-family: 'Cormorant SC', 'Cormorant Garamond', serif; font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-parchment-soft, #faf4e6); background: var(--color-ink-red, #a33024); padding: 10px 16px; border: none; border-radius: 0; cursor: pointer; transition: background 150ms ease-out; } .ds-btn-primary:hover { background: var(--color-ink-red-soft, #c9685a); } .ds-btn-primary:active { background: rgba(163, 48, 36, 0.9); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-parchment-soft, #faf4e6), 0 0 0 4px var(--color-ink-red, #a33024); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Transparent panel with a thin ink-red stroke. The secondary voice — declines without arguing.",
+      "html": "<button class=\"ds-btn-ghost\">CANCELAR</button>",
+      "css": ".ds-btn-ghost { font-family: 'Cormorant SC', 'Cormorant Garamond', serif; font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-ink-red, #a33024); background: transparent; padding: 10px 16px; border: 1px solid rgba(163, 48, 36, 0.6); border-radius: 0; cursor: pointer; transition: background 150ms ease-out; } .ds-btn-ghost:hover { background: rgba(163, 48, 36, 0.1); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-parchment-soft, #faf4e6), 0 0 0 4px var(--color-ink-red, #a33024); }"
+    },
+    {
+      "name": "Selection Card",
+      "kind": "card",
+      "refersTo": "selection-card",
+      "description": "Wizard's pick-one affordance — culture, calling, attribute set. Active state thickens the rubric border.",
+      "html": "<button class=\"ds-selection-card ds-selection-card--active\" aria-pressed=\"true\"><div class=\"ds-selection-card__eyebrow\">CULTURA</div><div class=\"ds-selection-card__title\">Bardings</div><div class=\"ds-selection-card__body\">The river-folk of the upper Anduin and Long Lake.</div></button>",
+      "css": ".ds-selection-card { display: block; width: 100%; text-align: left; padding: 16px; background: rgba(250, 244, 230, 0.4); color: var(--color-ink-navy, #1f2c5c); border: 2px solid rgba(163, 48, 36, 0.4); border-radius: 0; cursor: pointer; transition: border-color 150ms ease-out, background 150ms ease-out; } .ds-selection-card:hover { border-color: rgba(163, 48, 36, 0.7); } .ds-selection-card--active { background: var(--color-parchment-soft, #faf4e6); border-color: var(--color-ink-red, #a33024); } .ds-selection-card__eyebrow { font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(163, 48, 36, 0.85); } .ds-selection-card__title { margin-top: 4px; font-family: 'Crimson Pro', serif; font-weight: 600; font-style: italic; font-size: 1.5rem; color: var(--color-ink-navy, #1f2c5c); } .ds-selection-card__body { margin-top: 8px; font-family: 'Crimson Pro', serif; font-size: 0.9375rem; line-height: 1.5; color: var(--color-ink-navy, #1f2c5c); } .ds-selection-card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-parchment, #f5efe0), 0 0 0 4px var(--color-ink-red, #a33024); }"
+    },
+    {
+      "name": "Character Card",
+      "kind": "card",
+      "refersTo": "character-card",
+      "description": "Library hero card. Double-stroke frame, italic name, three diamond pills, current/max ratios, four action lozenges.",
+      "html": "<article class=\"ds-character-card\"><div class=\"ds-character-card__inner\"><div class=\"ds-character-card__head\"><div class=\"ds-character-card__eyebrow\">BARDINGS <span class=\"ds-character-card__sep\">·</span> SLAYER</div><h2 class=\"ds-character-card__name\">Aelfwyn the Bold</h2><dl class=\"ds-character-card__attrs\"><div class=\"ds-attr-pill\"><span class=\"ds-attr-pill__label\">STR</span><span class=\"ds-attr-pill__diamond\"><span class=\"ds-attr-pill__diamond-mark\" aria-hidden=\"true\"></span><span class=\"ds-attr-pill__value\">5</span></span></div><div class=\"ds-attr-pill\"><span class=\"ds-attr-pill__label\">HRT</span><span class=\"ds-attr-pill__diamond\"><span class=\"ds-attr-pill__diamond-mark\" aria-hidden=\"true\"></span><span class=\"ds-attr-pill__value\">4</span></span></div><div class=\"ds-attr-pill\"><span class=\"ds-attr-pill__label\">WTS</span><span class=\"ds-attr-pill__diamond\"><span class=\"ds-attr-pill__diamond-mark\" aria-hidden=\"true\"></span><span class=\"ds-attr-pill__value\">3</span></span></div></dl><div class=\"ds-character-card__ratios\"><span class=\"ds-character-card__ratio-label\">ENDURANCE</span><span class=\"ds-character-card__ratio-value\">22<span class=\"ds-character-card__ratio-sep\">/</span>30</span><span class=\"ds-character-card__ratio-label ds-character-card__ratio-label--right\">HOPE</span><span class=\"ds-character-card__ratio-value\">8<span class=\"ds-character-card__ratio-sep\">/</span>12</span></div></div><div class=\"ds-character-card__actions\"><button class=\"ds-character-card__action\">VIEW</button><button class=\"ds-character-card__action\">EDIT</button><button class=\"ds-character-card__action\">DUPLICATE</button><button class=\"ds-character-card__action\">RENAME</button></div></div></article>",
+      "css": ".ds-character-card { background: var(--color-parchment-soft, #faf4e6); border: 2px solid rgba(163, 48, 36, 0.5); border-radius: 0; box-shadow: 0 1px 0 rgba(163, 48, 36, 0.15), 0 8px 24px -12px rgba(31, 44, 92, 0.25); transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 150ms ease-out; } .ds-character-card:hover { transform: translateY(-2px); box-shadow: 0 2px 0 rgba(163, 48, 36, 0.2), 0 12px 32px -12px rgba(31, 44, 92, 0.35); border-color: var(--color-ink-red, #a33024); } .ds-character-card__inner { border: 1px solid rgba(163, 48, 36, 0.4); margin: 6px; } .ds-character-card__head { padding: 20px 20px 16px; } .ds-character-card__eyebrow { font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(163, 48, 36, 0.8); } .ds-character-card__sep { margin: 0 8px; color: rgba(163, 48, 36, 0.4); } .ds-character-card__name { margin: 4px 0 0; font-family: 'Crimson Pro', serif; font-style: italic; font-weight: 600; font-size: 1.875rem; line-height: 1.1; color: var(--color-ink-navy, #1f2c5c); } .ds-character-card__attrs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0 0; } .ds-attr-pill { display: flex; flex-direction: column; align-items: center; gap: 4px; } .ds-attr-pill__label { font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(163, 48, 36, 0.75); } .ds-attr-pill__diamond { position: relative; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; } .ds-attr-pill__diamond-mark { position: absolute; inset: 0; transform: rotate(45deg); border: 1px solid rgba(163, 48, 36, 0.6); } .ds-attr-pill__value { position: relative; font-family: 'Crimson Pro', serif; font-weight: 600; font-variant-numeric: tabular-nums; font-size: 1.25rem; color: var(--color-ink-navy, #1f2c5c); } .ds-character-card__ratios { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 16px; font-size: 0.875rem; } .ds-character-card__ratio-label { font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(163, 48, 36, 0.8); } .ds-character-card__ratio-label--right { margin-left: 12px; } .ds-character-card__ratio-value { font-family: 'Crimson Pro', serif; font-weight: 600; font-variant-numeric: tabular-nums; font-size: 1rem; color: var(--color-ink-navy, #1f2c5c); } .ds-character-card__ratio-sep { margin: 0 4px; color: rgba(31, 44, 92, 0.4); } .ds-character-card__actions { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid rgba(163, 48, 36, 0.3); margin-top: 4px; } .ds-character-card__action { padding: 12px 8px; font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(163, 48, 36, 0.85); background: transparent; border: 0; border-right: 1px solid rgba(163, 48, 36, 0.2); cursor: pointer; transition: background 150ms ease-out, color 150ms ease-out; } .ds-character-card__action:last-child { border-right: 0; } .ds-character-card__action:hover { background: rgba(163, 48, 36, 0.1); color: var(--color-ink-red, #a33024); } .ds-character-card__action:focus-visible { outline: none; background: var(--color-ink-red, #a33024); color: var(--color-parchment-soft, #faf4e6); }"
+    },
+    {
+      "name": "Modal",
+      "kind": "custom",
+      "refersTo": "modal-shell",
+      "description": "Dialog with the manuscript's double-stroke frame, an ink-red small-caps title, and Crimson Pro body description.",
+      "html": "<div class=\"ds-modal-backdrop\"><div class=\"ds-modal\" role=\"dialog\" aria-modal=\"true\"><div class=\"ds-modal__inner\"><header class=\"ds-modal__header\"><h2 class=\"ds-modal__title\">EXCLUIR HERÓI</h2><p class=\"ds-modal__description\">This will permanently remove Aelfwyn the Bold from your library. The action cannot be undone.</p></header><footer class=\"ds-modal__footer\"><button class=\"ds-btn-ghost\">CANCELAR</button><button class=\"ds-btn-primary\">EXCLUIR</button></footer></div></div></div>",
+      "css": ".ds-modal-backdrop { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 24px 16px; background: rgba(31, 44, 92, 0.4); } .ds-modal { width: 100%; max-width: 32rem; background: var(--color-parchment-soft, #faf4e6); border: 2px solid rgba(163, 48, 36, 0.6); border-radius: 0; box-shadow: 0 8px 40px -12px rgba(31, 44, 92, 0.55); } .ds-modal__inner { border: 1px solid rgba(163, 48, 36, 0.4); margin: 6px; padding: 20px; display: flex; flex-direction: column; gap: 16px; } .ds-modal__header { display: flex; flex-direction: column; gap: 4px; } .ds-modal__title { margin: 0; font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-ink-red, #a33024); } .ds-modal__description { margin: 0; font-family: 'Crimson Pro', serif; font-size: 1rem; line-height: 1.5; color: rgba(31, 44, 92, 0.8); } .ds-modal__footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding-top: 8px; }"
+    },
+    {
+      "name": "Diamond (signature primitive)",
+      "kind": "custom",
+      "refersTo": "diamond-attribute",
+      "description": "The system's signature mark — a rotated square holding an upright value. Used for attribute TNs, the brand mark, and the theme toggle.",
+      "html": "<span class=\"ds-diamond ds-diamond--md\"><span class=\"ds-diamond__mark\" aria-hidden=\"true\"></span><span class=\"ds-diamond__value-wrap\"><span class=\"ds-diamond__value\">14</span></span></span>",
+      "css": ".ds-diamond { position: relative; display: inline-block; vertical-align: middle; } .ds-diamond--xs { width: 28px; height: 28px; } .ds-diamond--sm { width: 40px; height: 40px; } .ds-diamond--md { width: 60px; height: 60px; } .ds-diamond--lg { width: 104px; height: 104px; } .ds-diamond__mark { position: absolute; inset: 0; transform: rotate(45deg); border: 2px solid var(--color-ink-red, #a33024); } .ds-diamond--filled .ds-diamond__mark { background: var(--color-ink-red, #a33024); } .ds-diamond__value-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; } .ds-diamond__value { font-family: 'Crimson Pro', serif; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--color-ink-navy, #1f2c5c); line-height: 1; } .ds-diamond--xs .ds-diamond__value { font-size: 0.875rem; } .ds-diamond--sm .ds-diamond__value { font-size: 1rem; } .ds-diamond--md .ds-diamond__value { font-size: 1.5rem; } .ds-diamond--lg .ds-diamond__value { font-size: clamp(2.25rem, 4vw, 2.75rem); }"
+    },
+    {
+      "name": "Top Nav (leather strap)",
+      "kind": "nav",
+      "refersTo": "top-nav",
+      "description": "A 56px shell-coloured band that holds the manuscript closed. Diamond brand mark, eyebrow links, ink-red CTA, theme-toggle diamond.",
+      "html": "<header class=\"ds-topnav\"><div class=\"ds-topnav__inner\"><a class=\"ds-topnav__brand\" href=\"#/library\"><span class=\"ds-topnav__mark\" aria-hidden=\"true\"><span class=\"ds-topnav__mark-outer\"></span><span class=\"ds-topnav__mark-inner\"></span></span><span class=\"ds-topnav__title\">THE ONE SHEET</span></a><nav class=\"ds-topnav__nav\"><a class=\"ds-topnav__link ds-topnav__link--active\" href=\"#/library\">HEROES<span class=\"ds-topnav__underline\" aria-hidden=\"true\"></span></a><a class=\"ds-topnav__link\" href=\"#/sheet\">SHEET</a></nav><div class=\"ds-topnav__actions\"><a class=\"ds-topnav__link\" href=\"#/settings\">SETTINGS</a><button class=\"ds-btn-primary\">CRIAR HERÓI</button></div></div></header>",
+      "css": ".ds-topnav { position: sticky; top: 0; z-index: 40; background: var(--color-shell, #1a1410); color: var(--color-parchment-soft, #faf4e6); border-bottom: 1px solid rgba(163, 48, 36, 0.4); } .ds-topnav__inner { max-width: 1600px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; gap: 24px; } .ds-topnav__brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; } .ds-topnav__mark { position: relative; display: inline-block; width: 24px; height: 24px; } .ds-topnav__mark-outer { position: absolute; inset: 0; transform: rotate(45deg); border: 2px solid var(--color-ink-red, #a33024); background: var(--color-shell, #1a1410); } .ds-topnav__mark-inner { position: absolute; inset: 6px; transform: rotate(45deg); background: var(--color-ink-red, #a33024); } .ds-topnav__title { font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 1rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--color-parchment-soft, #faf4e6); transition: color 150ms ease-out; } .ds-topnav__brand:hover .ds-topnav__title { color: var(--color-ink-red-soft, #c9685a); } .ds-topnav__nav { display: flex; align-items: center; gap: 4px; margin-left: 8px; } .ds-topnav__link { position: relative; padding: 10px 12px; font-family: 'Cormorant SC', serif; font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(250, 244, 230, 0.7); text-decoration: none; transition: color 150ms ease-out; } .ds-topnav__link:hover { color: var(--color-parchment-soft, #faf4e6); } .ds-topnav__link--active { color: var(--color-parchment-soft, #faf4e6); } .ds-topnav__underline { position: absolute; left: 12px; right: 12px; bottom: -1px; height: 2px; background: var(--color-ink-red, #a33024); } .ds-topnav__actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Hero's Manuscript",
+    "overview": "The One Sheet is not a SaaS app pretending to be a TTRPG tool; it is a manuscript that the player tends on behalf of a hero. The interface should feel hand-set rather than rendered: warm cream paper, ink-navy body text, an ink-red rubricator's accent used sparingly, and uppercase small-caps labels stretched across generous letter-spacing the way a typesetter would space a chapter heading. The 3D dice tray is the only place where the app permits theatre; everywhere else, the design steps back so the type, the numbers, and the hero do the talking.\n\nThe aesthetic deliberately rejects the marketing chrome of contemporary product UI — gradients, glassmorphism, stripe-style dashboards, neon CTAs — and equally rejects fantasy cosplay: dragon-scale borders, faux-medieval drop caps, parchment textures used as wallpaper. The printed sheet, modelled on the official Free League TOR 2e character sheet, is the canonical visual spec; when the editor and the printed view drift, the editor is wrong.",
+    "keyCharacteristics": [
+      "Manuscript-on-parchment temperament: warm cream surfaces, ink-navy text, a single rubricator's red.",
+      "Type does the work: hierarchy from family, weight, size, tracking, italic, and case — never gradients or icons.",
+      "Italic is reserved for player-entered fields, so the hero's own words read as a manuscript entry.",
+      "Two coexisting themes via :root[data-theme] (parchment, tor-dark) with stable token names; print always forces parchment.",
+      "Diamonds are the system's signature primitive — rotated squares carry attribute values, brand mark, and microcaptions.",
+      "Five named shadow tokens; all other elevation is forbidden.",
+      "Motion is restrained outside the dice tray and bows out under prefers-reduced-motion."
+    ],
+    "rules": [
+      {
+        "name": "The Rubricator's Rule",
+        "body": "Ink-red is the only chromatic accent in the parchment theme, and it must remain rare. Never apply it to broad surfaces, gradients, or decorative fills; reserve it for the load-bearing words on a page — primary action, active nav, accent borders, focus rings, and the rare illuminated initial. If the eye finds red dominating a screen, the screen is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stable-Token Rule",
+        "body": "Token names do not branch on theme. Components reference --color-ink-navy regardless of whether the active palette renders it as #1f2c5c or warm parchment. Never write data-theme === 'tor-dark' ? … : … in component code.",
+        "section": "colors"
+      },
+      {
+        "name": "The Print-Wins Rule",
+        "body": "The print stylesheet always forces the parchment palette. Any token swap that would change the printed sheet's appearance is rejected by definition.",
+        "section": "colors"
+      },
+      {
+        "name": "The Italic-Equals-Hand Rule",
+        "body": "Italic is reserved for player-entered content — name, blessing, distinctive features, rewards, virtues, gear, weapon and armour names. Pair with placeholder:not-italic so empty inputs render their hint upright. Never italicise system labels, headings, or static content; the italic is what makes a player's words read like manuscript ink.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ten-Pixel Floor Rule",
+        "body": "Sub-12px text only via the four tokens (text-eyebrow 13px, text-microlabel 12px, text-microcaption 11px, text-microline 10px). Below 10 px is forbidden. Cormorant SC reads thin under 10 px regardless of weight; if a label needs to fit smaller, the layout is wrong, not the type.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tracked-Uppercase Rule",
+        "body": "Uppercase labels are always tracked through one of the four tracking-* tokens (display 0.06em, section 0.12em, label 0.2em, eyebrow 0.28em). Ad-hoc tracking-[Nem] values are a smell; escalate by adding a token.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular-Numerics Rule",
+        "body": "Every digit on the sheet uses tabular-nums and font-semibold so columns of values, current/max ratios, and rolled totals align without jitter as content changes.",
+        "section": "typography"
+      },
+      {
+        "name": "The Five-Shadow Rule",
+        "body": "Only the five tokens (shadow-card, shadow-card-hover, shadow-sheet, shadow-modal, shadow-launcher) carry elevation. shadow-lg, shadow-xl, ad-hoc literals, neumorphic insets, and any inner shadow are forbidden. If a new surface seems to need a sixth shadow, the surface is probably wrong — push it to a card, a modal, or no shadow at all.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Sections, fields, lists, and the printed sheet itself are flat. Hover lift is reserved for interactive cards (library, selection); state changes elsewhere are colour or border, not depth.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do treat the printed /character/:id/sheet as the canonical visual spec. If the editor and the printed view diverge, the editor follows the printed sheet — never the other way around.",
+      "Do reach for typography (size, weight, tracking, family, italic, case) before colour, border, or icon.",
+      "Do use the named tokens for colour, sub-12px sizes, tracking, and shadow (tracking-eyebrow, text-microlabel, shadow-card, etc.). Adding a token is the way to escalate; bypassing the system is not.",
+      "Do italicise player-entered content (name, blessings, distinctive features, rewards, virtues, gear, weapon and armour names) and pair the input with placeholder:not-italic.",
+      "Do apply tabular-nums and font-semibold to every digit on the sheet so columns of numbers stay aligned as content changes.",
+      "Do keep token names stable across themes (--color-ink-red is ink-red in parchment and bronze in tor-dark). Component code never branches on theme.",
+      "Do honour prefers-reduced-motion beyond the global safety net — the dice tray disables physics via usePrefersReducedMotion rather than relying on the CSS cap alone.",
+      "Do use the Diamond primitive when you need a mark that means 'attribute' or 'the One Sheet brand' — the brand mark, the attribute TN cluster, the theme toggle, the empty-state ornament."
+    ],
+    "donts": [
+      "Don't use generic SaaS dashboard chrome — Stripe-style gradients, neon CTAs, glassmorphism, blurred surfaces. They are explicit anti-references in PRODUCT context (AGENTS.md §12).",
+      "Don't dress the app in fantasy clichés — dragon-scale borders, faux-medieval drop caps, parchment textures used as wallpaper. The sheet must read as set-in-type, not cosplay.",
+      "Don't introduce a cursive face. Hierarchy comes from family, weight, tracking, italic, and case — not from a script.",
+      "Don't use border-left or border-right greater than 1 px as a coloured stripe accent on cards, list items, callouts, or alerts. Use the double-stroke frame, the rubric ink-red, or no border at all.",
+      "Don't apply gradients to text (background-clip: text + gradient is forbidden) or to broad surfaces. Solid colours and tinted neutrals only.",
+      "Don't write ad-hoc shadow-[…], tracking-[Nem], text-[Npx], or hex literals in component code. Escalate by adding a token in src/styles.css, not by bypassing the system.",
+      "Don't persist any derived value (Endurance, Parry, Load, Hope, TNs, conditions). Storage holds source fields only; recompute on every read. This is an architecture rule that affects design — derived ratings displayed on cards are computed at render time.",
+      "Don't hardcode UI strings. Every label, button, eyebrow, and tooltip routes through t('namespace.key') — even on a single-bundle pt-BR app today.",
+      "Don't ship console.* calls except console.error.",
+      "Don't drop below the 10 px type floor. If a label needs to fit smaller, the layout is wrong.",
+      "Don't use a modal as the first thought. Exhaust inline / progressive alternatives before reaching for Modal."
+    ]
+  }
+}

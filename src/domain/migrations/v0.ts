@@ -93,12 +93,19 @@ function backfillBlessingId(character: Character): Character {
   return { ...character, cultural_blessing: mapped };
 }
 
+function backfillCulturalBlessingChoice(character: Character): Character {
+  if (character.cultural_blessing_choice !== undefined) return character;
+  return { ...character, cultural_blessing_choice: null };
+}
+
 export function migrateV0ToV0(character: Character): Character {
   return normaliseCharacter(
-    backfillDistinctiveFeatureIds(
-      backfillBlessingId(
-        backfillSkillIds(
-          backfillRewardIds(backfillVirtueIds(backfillWarGearIds(backfillShadowPath(character)))),
+    backfillCulturalBlessingChoice(
+      backfillDistinctiveFeatureIds(
+        backfillBlessingId(
+          backfillSkillIds(
+            backfillRewardIds(backfillVirtueIds(backfillWarGearIds(backfillShadowPath(character)))),
+          ),
         ),
       ),
     ),

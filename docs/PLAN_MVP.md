@@ -6,7 +6,7 @@
 
 ## 1. Design and Development Philosophy
 
-1. **Canonical rules first.** The PRD is the source of truth. Schema, formulas, and invariants in `src/domain/` are canonical; the UI derives, never redefines.
+1. **Canonical rules first.** `docs/DOMAIN_SPEC.md` is the source of truth. Schema, formulas, and invariants in `src/domain/` are canonical; the UI derives, never redefines.
 2. **Derived never persists.** TNs, Endurance, Hope, Parry, Load, and conditions are always recomputed on load/import/edit. Storage holds sources only.
 3. **Local-first is a decision, not a phase.** v0 is fully offline, single-user, no network. Auth and sync are v1, an intentional architectural break — not "we'll add it later".
 4. **TypeScript strict from day 1.** No `any`. zod only at boundaries (import/export, forms).
@@ -85,7 +85,7 @@ User input
 | Forms | react-hook-form + zod | Single schema for form and payload | MVP |
 | Server state | — | No server in v0 | v1 (Supabase + TanStack Query) |
 | Client state | Context + custom hooks | Sufficient for one user, one tab | MVP |
-| Persistence | `localStorage` | Aligns with PRD; small payload; simple | MVP |
+| Persistence | `localStorage` | Aligns with DOMAIN_SPEC; small payload; simple | MVP |
 | Migrations | `domain/migrations/` (versioned) | `schemaVersion: 'v0'` from day 1 | MVP |
 | Import/Export | JSON + zod on import | Cross-version compat for v1 | MVP |
 | Dice roller | `@3d-dice/dice-box` | Approved, lazy-loaded | MVP |
@@ -142,7 +142,7 @@ Spec:
 Specs:
 1. `/commit` — `git status` → `git diff` → propose imperative-style message (≤72 char title, no co-author, GPG-signed) → confirm → specific `git add` → `git commit -S`.
 2. `/push` — verify branch is `main`, working tree clean → confirm → `git push origin main` → report deploy URL when GH Pages completes.
-3. `/audit` — read `docs/ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/CODE_STYLE.md` → scan `git diff main` → report violations grouped by severity. No auto-fix.
+3. `/audit` — read `docs/ARCHITECTURE.md`, `DESIGN.md`, `docs/CODE_STYLE.md` → scan `git diff main` → report violations grouped by severity. No auto-fix.
 
 ### 3.3 Hooks
 
@@ -198,7 +198,7 @@ If other agent runners are adopted (Cursor, Aider, etc.), their configs go under
 | --- | --- |
 | Human | Defines scope, decides trade-offs, reviews diffs, authorises commit/push |
 | LLM | Reads context, proposes plans, writes code and tests, runs lint/test, reports |
-| LLM **never** | Commits without `/commit`, pushes without `/push`, deletes data, edits `docs/PRD*` or `docs/PLAN_v*`, adds dependencies without explicit flag |
+| LLM **never** | Commits without `/commit`, pushes without `/push`, deletes data, edits `docs/PLAN_v*` snapshots, adds dependencies without explicit flag |
 
 ---
 
@@ -210,7 +210,9 @@ If other agent runners are adopted (Cursor, Aider, etc.), their configs go under
 
 ## 7. References
 
-- `docs/PRD_TheOneSheet.md` — canonical product spec
+- `docs/DOMAIN_SPEC.md` — canonical TOR 2e domain spec
+- `PRODUCT.md` (root) — strategic / brand context
+- `DESIGN.md` (root) — visual contracts
 - `docs/PLAN_v0.md` — local-first MVP detail
 - `docs/PLAN_v1.md` — hosted product outline
 - `docs/PLAN_v2.md` — campaigns outline

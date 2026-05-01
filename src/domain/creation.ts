@@ -1,4 +1,5 @@
-import type { Character } from './types';
+import { CULTURAL_UNDERLINED_SKILLS } from '../ref-data/cultural-skills';
+import type { Character, SkillId } from './types';
 
 export type CreationIssueCode =
   | 'name-required'
@@ -8,7 +9,12 @@ export type CreationIssueCode =
   | 'virtues-one'
   | 'previous-experience-overspent'
   | 'previous-experience-underspent'
-  | 'derived-state-bounds';
+  | 'derived-state-bounds'
+  | 'mastery-selection-required'
+  | 'mastery-skills-distinct'
+  | 'prowess-selection-required'
+  | 'rangers-attribute-choice-required'
+  | 'underlined-skill-required';
 
 export type CreationIssue = {
   field: string;
@@ -102,6 +108,60 @@ export function validateCreation(character: Character): CreationIssue[] {
 
   if (character.current_endurance > character.max_endurance || character.current_hope > character.max_hope) {
     issues.push({ field: 'derived_state', code: 'derived-state-bounds', blocking: true });
+  }
+
+  // Cultural underlined skill: exactly one of the pair must be Favoured.
+  const underlinedPair = CULTURAL_UNDERLINED_SKILLS[character.heroic_culture];
+  const favouredFromPair = character.skills.filter(
+    (skill): skill is typeof skill & { id: SkillId } =>
+      skill.favoured && !!skill.id && (underlinedPair as readonly SkillId[]).includes(skill.id as SkillId),
+  );
+  if (favouredFromPair.length === 0) {
+    issues.push({
+      field: 'underlined_skill',
+      code: 'underlined-skill-required',
+      blocking: true,
+    });
+  }
+
+  // Rangers blessing: an attribute choice is required.
+  if (character.heroic_culture === 'RANGERS_OF_THE_NORTH') {
+    if (character.cultural_blessing_choice?.kind !== 'attribute-plus') {
+      issues.push({
+        field: 'cultural_blessing_choice',
+        code: 'rangers-attribute-choice-required',
+        blocking: true,
+      });
+    }
+  }
+
+  // Virtue selection invariants for starting Mastery / Prowess.
+  for (const virtue of character.virtues) {
+    if (virtue.id === 'mastery') {
+      if (virtue.selection?.kind !== 'mastery') {
+        issues.push({
+          field: 'starting_virtue_selection',
+          code: 'mastery-selection-required',
+          blocking: true,
+        });
+      } else {
+        const [a, b] = virtue.selection.skill_ids;
+        if (a === b) {
+          issues.push({
+            field: 'starting_virtue_selection',
+            code: 'mastery-skills-distinct',
+            blocking: true,
+          });
+        }
+      }
+    }
+    if (virtue.id === 'prowess' && virtue.selection?.kind !== 'prowess') {
+      issues.push({
+        field: 'starting_virtue_selection',
+        code: 'prowess-selection-required',
+        blocking: true,
+      });
+    }
   }
 
   return issues;

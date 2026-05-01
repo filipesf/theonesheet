@@ -74,10 +74,20 @@ export type Reward = {
   origin?: 'STARTING' | 'STANDARD' | 'CULTURAL';
 };
 
+export type VirtueSelection =
+  | { kind: 'mastery'; skill_ids: readonly [SkillId, SkillId] }
+  | { kind: 'prowess'; attribute: 'strength' | 'heart' | 'wits' };
+
 export type Virtue = {
   id?: VirtueId;
   name: string;
   origin: 'STARTING' | 'STANDARD' | 'CULTURAL';
+  selection?: VirtueSelection;
+};
+
+export type CulturalBlessingChoice = {
+  kind: 'attribute-plus';
+  attribute: 'strength' | 'heart' | 'wits';
 };
 
 export type Weapon = {
@@ -118,6 +128,7 @@ export type Character = {
   age: number;
   heroic_culture: HeroicCulture;
   cultural_blessing: BlessingId | string;
+  cultural_blessing_choice: CulturalBlessingChoice | null;
   calling: Calling;
   shadow_path: ShadowPath | string;
   standard_of_living: StandardOfLiving;

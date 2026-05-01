@@ -34,7 +34,7 @@
 
 ## Naming
 
-- Domain entities follow the PRD: `Character`, `Calling`, `Culture`, `Skill`, `CombatProficiency`, `Virtue`, `Reward`. Do not invent synonyms.
+- Domain entities follow `docs/DOMAIN_SPEC.md`: `Character`, `Calling`, `Culture`, `Skill`, `CombatProficiency`, `Virtue`, `Reward`. Do not invent synonyms.
 - Derived fields are prefixed with `derived` only when ambiguity would otherwise arise; usually the field name itself (`endurance`, `hope`, `parry`) is enough — context makes it clear.
 - Boolean variables read as predicates: `isWeary`, `hasShadow`, `canAdvance`.
 

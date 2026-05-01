@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createBelbaWorkedExample } from '../schema';
 
 describe('Belba worked example', () => {
-  it('matches PRD-derived totals for key fields', () => {
+  it('matches DOMAIN_SPEC-derived totals for key fields', () => {
     const belba = createBelbaWorkedExample();
 
     expect(belba.name).toBe('Belba Bolger');

@@ -76,14 +76,16 @@ Planned scope:
 
 ## Core Design Principles
 
-- Canonical rules first: the PRD is the source of truth for schema, formulas, and validation.
+- Canonical rules first: `docs/DOMAIN_SPEC.md` is the source of truth for schema, formulas, and validation.
 - Derived values are never trusted as user input and must always be recomputed.
 - The product starts local-first, then evolves to hosted persistence, then to collaborative campaign features.
 - Architecture should preserve a stable domain core even as storage and collaboration layers change.
 
 ## Documentation
 
-- Product requirements: `docs/PRD_TheOneSheet.md`
+- Strategic / brand context: `PRODUCT.md` (root)
+- Visual contracts: `DESIGN.md` (root, with `DESIGN.json` sidecar)
+- TOR 2e domain spec (rules, formulas, data model): `docs/DOMAIN_SPEC.md`
 - MVP plan: `docs/PLAN_v0.md`
 - Hosted persistence outline: `docs/PLAN_v1.md`
 - Campaigns outline: `docs/PLAN_v2.md`
@@ -97,7 +99,7 @@ The current planning documents lean towards:
 - a shared domain layer for formulas and validation
 - a future hosted stack with API, database, and account-backed persistence
 
-These choices are documented in the PRD and may still evolve as implementation begins.
+These choices are documented in `docs/DOMAIN_SPEC.md` and may still evolve as implementation begins.
 
 ## Getting Started
 
@@ -105,7 +107,7 @@ There is no runnable application yet.
 
 If you are starting implementation, read the documents in this order:
 
-1. `docs/PRD_TheOneSheet.md`
+1. `docs/DOMAIN_SPEC.md`
 2. `docs/PLAN_v0.md`
 3. `docs/PLAN_v1.md`
 4. `docs/PLAN_v2.md`

@@ -88,6 +88,6 @@ Out of scope:
 
 ## References
 
-- Product requirements: `PRD_TheOneSheet.md`
-- `Company` and collaboration concepts: `PRD_TheOneSheet.md:273-292`, `523-531`, `1300-1308`
-- Realtime architecture ideas for future use: `PRD_TheOneSheet.md:1618-1675`
+- Product requirements: `DOMAIN_SPEC.md`
+- `Company` and collaboration concepts: `DOMAIN_SPEC.md:273-292`, `523-531`, `1300-1308`
+- Realtime architecture ideas for future use: `DOMAIN_SPEC.md:1618-1675`

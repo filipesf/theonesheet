@@ -10,9 +10,9 @@ Verify that recent changes still align with the project's architecture, design s
 
 1. Read the three contracts:
    - `docs/ARCHITECTURE.md`
-   - `docs/DESIGN_SYSTEM.md`
+   - `DESIGN.md` (root) — visual tokens, themes, typography, do's and don'ts.
    - `docs/CODE_STYLE.md`
-   - Plus `AGENTS.md` for the universal rules.
+   - Plus `AGENTS.md` for the universal rules and `PRODUCT.md` (root) for strategic anti-references.
 
 2. Determine the diff scope:
    - Default: `git diff main...HEAD` plus the working tree (`git diff` and `git diff --staged`).

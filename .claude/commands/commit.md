@@ -17,7 +17,8 @@ Create a single git commit for the currently staged-or-pending changes.
 2. Inspect the changes:
    - Confirm there is something to commit. If the working tree is clean, stop and tell the user.
    - Refuse to commit if the diff includes `.env`, `.env.local`, files under `dist/`, or any secret-looking content. Warn the user and stop.
-   - Refuse to commit if the diff touches `docs/PRD_TheOneSheet.md` or `docs/PLAN_v0.md` / `PLAN_v1.md` / `PLAN_v2.md` without an explicit request from the user — those are immutable.
+   - Refuse to commit if the diff touches `docs/PLAN_v0.md` / `PLAN_v1.md` / `PLAN_v2.md` without an explicit request from the user — those are immutable plan snapshots.
+   - For `docs/DOMAIN_SPEC.md` and `PRODUCT.md`: edits are allowed, but warn the user before committing if the diff is large or rewrites scope sections; treat them as authoritative documents that deserve a deliberate change message.
 
 3. Draft a commit message:
    - Imperative present tense, ≤72 chars on the title line.

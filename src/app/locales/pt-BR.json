@@ -274,7 +274,11 @@
       "culture": {
         "title": "Cultura Heroica",
         "body": "Escolha a cultura de origem do seu herói. A bênção cultural é aplicada automaticamente.",
-        "blessing-label": "Bênção"
+        "blessing-label": "Bênção",
+        "blessing-attribute-title": "Atributo da Bênção",
+        "blessing-attribute-body": "Reis dos Homens concede +1 a um Atributo da sua escolha.",
+        "underlined-skill-title": "Perícia Sublinhada",
+        "underlined-skill-body": "Sua cultura sublinha duas perícias. Escolha uma delas para marcar como Favorável."
       },
       "attributes": {
         "title": "Atributos",
@@ -316,6 +320,10 @@
         "calling-feature": "Característica da vocação",
         "starting-reward": "Recompensa inicial",
         "starting-virtue": "Virtude inicial",
+        "mastery-skills": "Perícias da Mestria",
+        "mastery-skills-body": "Mestria torna duas perícias da sua escolha em Favoráveis.",
+        "prowess-attribute": "Atributo da Proeza",
+        "prowess-attribute-body": "Proeza reduz em 1 o ND do Atributo escolhido.",
         "standard-of-living": "Padrão de Vida",
         "weapons": "Armas ({{count}}/{{max}})",
         "armour": "Armadura",
@@ -338,7 +346,10 @@
       "rewards": "Recompensas",
       "virtues": "Virtudes",
       "previous_experience": "Experiência prévia",
-      "derived_state": "Estado derivado"
+      "derived_state": "Estado derivado",
+      "underlined_skill": "Perícia sublinhada",
+      "cultural_blessing_choice": "Bênção cultural",
+      "starting_virtue_selection": "Virtude inicial"
     },
     "issue": {
       "name-required": "Informe um nome antes de finalizar.",
@@ -348,7 +359,12 @@
       "virtues-one": "Escolha exatamente uma virtude inicial.",
       "previous-experience-overspent": "Experiência prévia ultrapassada: {{spent}}/10.",
       "previous-experience-underspent": "Experiência prévia parcial: {{spent}}/10.",
-      "derived-state-bounds": "Vigor ou Esperança atual está acima do máximo permitido."
+      "derived-state-bounds": "Vigor ou Esperança atual está acima do máximo permitido.",
+      "underlined-skill-required": "Marque uma das duas perícias sublinhadas como Favorável.",
+      "rangers-attribute-choice-required": "Escolha o Atributo que recebe +1 pela Bênção Reis dos Homens.",
+      "mastery-selection-required": "Mestria exige a escolha de duas perícias.",
+      "mastery-skills-distinct": "As duas perícias de Mestria devem ser diferentes.",
+      "prowess-selection-required": "Proeza exige a escolha de um Atributo."
     }
   },
   "common": {

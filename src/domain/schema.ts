@@ -14,6 +14,7 @@ export function createEmptyCharacter(culture: HeroicCulture = 'HOBBITS_OF_THE_SH
     age: 0,
     heroic_culture: culture,
     cultural_blessing: '',
+    cultural_blessing_choice: null,
     calling: 'CAPTAIN',
     shadow_path: '',
     standard_of_living: 'COMMON',
@@ -88,12 +89,19 @@ export function createBelbaWorkedExample(): Character {
   character.calling = 'TREASURE_HUNTER';
   character.shadow_path = 'Dragon-Sickness';
   character.company_id = 'gandalf';
+  // Hobbit row 4 (4/5/5) is the canonical set matching Belba's (str/hrt/wts).
   character.attributes.strength = 4;
   character.attributes.heart = 5;
   character.attributes.wits = 5;
   character.distinctive_features = ['keen-eyed', 'inquisitive', 'burglary'];
   character.rewards = [{ name: 'Hardiness', origin: 'STARTING' }];
-  character.virtues = [{ name: 'Mastery', origin: 'STARTING' }];
+  character.virtues = [
+    {
+      name: 'Mastery',
+      origin: 'STARTING',
+      selection: { kind: 'mastery', skill_ids: ['explore', 'healing'] },
+    },
+  ];
   character.current_endurance = 24;
   character.current_hope = 15;
   character.treasure = 30;

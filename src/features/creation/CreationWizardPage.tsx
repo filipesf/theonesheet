@@ -37,6 +37,8 @@ type Props = {
 // keeps the errors silent until interaction.
 const DEFAULT_VALUES: CreationDraft = {
   heroic_culture: undefined as unknown as HeroicCulture,
+  cultural_blessing_choice: null,
+  underlined_skill_pick: null,
   attribute_set_index: -1,
   strength: 0,
   heart: 0,
@@ -50,6 +52,7 @@ const DEFAULT_VALUES: CreationDraft = {
   calling_feature: '',
   starting_reward: '',
   starting_virtue: '',
+  starting_virtue_selection: null,
   standard_of_living: undefined as unknown as StandardOfLiving,
   weapons: [],
   armour: null,
