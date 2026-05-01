@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
-    "tsc": "tsc"
+    "tsc": "tsc -b"
   },
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
