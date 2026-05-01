@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { CALLINGS, HEROIC_CULTURES, STANDARD_OF_LIVING } from '../../domain/types';
 import { CULTURAL_UNDERLINED_SKILLS } from '../../ref-data/cultural-skills';
-import { SKILLS } from '../../ref-data/skills';
+import { SKILLS, type SkillId } from '../../ref-data/skills';
 
-const SKILL_IDS = SKILLS.map((skill) => skill.id) as [string, ...string[]];
+const SKILL_IDS = SKILLS.map((skill) => skill.id) as [SkillId, ...SkillId[]];
 
 export const culturalBlessingChoiceSchema = z
   .object({
@@ -101,7 +101,7 @@ const callingStepShape = z.object({
   shield: shieldEntry.nullable(),
 });
 
-function refineVirtueSelection<T extends z.ZodTypeAny>(schema: T): z.ZodEffects<T> {
+function refineVirtueSelection<T extends z.ZodTypeAny>(schema: T): T {
   return schema.superRefine((data, ctx) => {
     const draft = data as Partial<{
       heroic_culture: (typeof HEROIC_CULTURES)[number];
@@ -148,7 +148,7 @@ function refineVirtueSelection<T extends z.ZodTypeAny>(schema: T): z.ZodEffects<
         });
       }
     }
-  }) as z.ZodEffects<T>;
+  }) as unknown as T;
 }
 
 export const callingStep = refineVirtueSelection(callingStepShape);

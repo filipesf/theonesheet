@@ -296,7 +296,7 @@ function MasteryPicker() {
     }
     if (persisted?.kind === 'mastery') {
       const [a, b] = persisted.skill_ids;
-      if (draft[0] !== a || draft[1] !== b) {
+      if (a && b && (draft[0] !== a || draft[1] !== b)) {
         setDraft([a, b]);
       }
     } else if (draft.length === 2) {
