@@ -177,9 +177,23 @@ textarea::placeholder {
 
 /* Mirror the print rule on the printed route's screen view, so the top nav
  * (and other no-print chrome) disappears when reviewing the sheet on-screen.
+ * The printed sheet is the canonical visual spec — it must stay parchment on
+ * screen even under tor-dark, so the on-screen preview matches what prints
+ * (PRODUCT.md "the printed sheet is the truth"). Mirrors the @media print
+ * overrides above.
  */
 body[data-view="printed"] .no-print {
   display: none !important;
+}
+
+body[data-view="printed"] {
+  --color-parchment: #f5efe0;
+  --color-parchment-deep: #ede4cf;
+  --color-parchment-soft: #faf4e6;
+  --color-ink-navy: #1f2c5c;
+  --color-ink-navy-soft: #3a4a82;
+  --color-ink-red: #a33024;
+  --color-ink-red-soft: #c9685a;
 }
 
 /* Universal cap on motion when the user opts into reduced motion. Each feature

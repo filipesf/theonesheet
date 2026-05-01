@@ -194,7 +194,27 @@ export function DiceStage() {
               return Promise.reject(new Error('A roll is already in progress'));
             }
             return new Promise<StageRollResult>((resolve, reject) => {
-              pendingRef.current = { resolve, reject };
+              // Bound the wait — if onRollComplete never fires (physics sim
+              // wedged, dice fall off-stage, worker hung) we still want the
+              // tray to recover. Without this, `rolling` stays true forever
+              // and the Roll button is stuck on its loading state.
+              const timeout = window.setTimeout(() => {
+                if (!pendingRef.current) return;
+                hideOverlay();
+                pendingRef.current = null;
+                if (boxRef.current) boxRef.current.clear();
+                reject(new Error('Dice roll timed out'));
+              }, 5000);
+              pendingRef.current = {
+                resolve: (value) => {
+                  window.clearTimeout(timeout);
+                  resolve(value);
+                },
+                reject: (reason) => {
+                  window.clearTimeout(timeout);
+                  reject(reason);
+                },
+              };
               showOverlay();
               const notation: string[] = [];
               if (featCount > 0) notation.push(`${featCount}d12`);
@@ -202,6 +222,7 @@ export function DiceStage() {
               try {
                 void boxRef.current!.roll(notation);
               } catch (error) {
+                window.clearTimeout(timeout);
                 hideOverlay();
                 pendingRef.current = null;
                 reject(error instanceof Error ? error : new Error('Dice roll failed'));

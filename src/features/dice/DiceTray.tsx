@@ -108,6 +108,7 @@ export function DiceTray() {
           <input
             value={label}
             onChange={(event) => setLabel(event.target.value)}
+            aria-label={t('dice.tray.label')}
             className="bg-transparent border-0 border-b border-ink-red/60 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 font-body italic text-xl text-ink-navy py-1 transition-colors"
           />
         </label>
@@ -126,6 +127,7 @@ export function DiceTray() {
                   Math.max(1, Math.min(MAX_DICE, sanitiseDigits(event.target.value) || 1)),
                 )
               }
+              aria-label={t('dice.tray.success-dice')}
               className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-body font-semibold tabular-nums text-lg text-ink-navy transition-colors"
             />
           </label>
@@ -140,6 +142,7 @@ export function DiceTray() {
               value={tn}
               onChange={(event) => setTn(event.target.value.replace(/\D/g, ''))}
               placeholder={t('common.dash')}
+              aria-label={t('dice.tray.tn')}
               className="bg-transparent border border-ink-red/40 outline-none focus:border-ink-red focus-visible:bg-ink-red/5 px-2 py-1 font-body font-semibold tabular-nums text-lg text-ink-navy transition-colors"
             />
           </label>

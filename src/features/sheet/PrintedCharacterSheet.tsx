@@ -3,7 +3,7 @@ import type { ChangeEvent, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { sanitiseDigits } from "../../app/ui/numeric-input";
 import { normaliseCharacter } from "../../domain/normalise";
-import type { Character, Skill } from "../../domain/types";
+import type { Character, Reward, Skill, Virtue } from "../../domain/types";
 import {
 	CALLINGS,
 	HEROIC_CULTURES,
@@ -26,6 +26,8 @@ import {
 	standardOfLivingKey,
 } from "../../ref-data/labels";
 import { PATRONS, patronFallbackName } from "../../ref-data/patrons";
+import { legacyNameToRewardId } from "../../ref-data/rewards";
+import { legacyNameToVirtueId } from "../../ref-data/virtues";
 import { ConditionCheck } from "./ui/ConditionCheck";
 import { CornerOrnament } from "./ui/CornerOrnament";
 import { Diamond, DiamondLabel, type DiamondSize } from "./ui/Diamond";
@@ -124,6 +126,24 @@ function splitList(value: string): string[] {
 		.filter(Boolean);
 }
 
+// Belba's worked example stores rewards/virtues with raw English `name`.
+// Resolve to a canonical id so we can render the localised label. Legacy
+// virtue-rewards (hardiness/confidence/nimbleness) share their slug with
+// virtues, so the lookup falls back to ref.virtues.standard for them.
+function rewardLabel(t: TFunction, reward: Reward): string {
+	const id = reward.id ?? legacyNameToRewardId(reward.name);
+	if (!id) return reward.name;
+	return t([`ref.rewards.standard.${id}`, `ref.virtues.standard.${id}`], {
+		defaultValue: reward.name,
+	});
+}
+
+function virtueLabel(t: TFunction, virtue: Virtue): string {
+	const id = virtue.id ?? legacyNameToVirtueId(virtue.name);
+	if (!id) return virtue.name;
+	return t(`ref.virtues.standard.${id}`, { defaultValue: virtue.name });
+}
+
 export function PrintedCharacterSheet({ character, onChange }: Props) {
 	const { t } = useTranslation();
 
@@ -173,8 +193,8 @@ export function PrintedCharacterSheet({ character, onChange }: Props) {
 			<CornerOrnament corner="bl" />
 			<CornerOrnament corner="br" />
 			<div className="border border-ink-red p-4">
-				<div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
-					<div className="flex flex-col gap-6 min-w-0 lg:col-span-3">
+				<div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+					<div className="flex flex-col gap-6 min-w-0 md:col-span-3">
 						<NameCartouche
 							value={character.name}
 							onChange={(value) => update({ name: value })}
@@ -524,7 +544,7 @@ function SkillRow({
 				onChange={() => updateSkill(skill.name, { favoured: !skill.favoured })}
 				label={label}
 			/>
-			<span className="font-body text-lg text-ink-navy truncate">{label}</span>
+			<span className="font-body text-lg text-ink-navy">{label}</span>
 			<PipRow
 				rating={skill.rating}
 				onChange={(rating) => updateSkill(skill.name, { rating })}
@@ -582,16 +602,20 @@ function ProfRewardsVirtuesBand({
 				title={t("sheet.section.rewards")}
 				statLabel={t("sheet.label.valour")}
 				statValue={character.valour}
+				statMin={1}
+				statMax={6}
 				onStatChange={(value) => update({ valour: value })}
-				items={character.rewards.map((r) => r.name)}
+				items={character.rewards.map((r) => rewardLabel(t, r))}
 				emptyMessage={t("sheet.empty.no-rewards")}
 			/>
 			<RewardLikeColumn
 				title={t("sheet.section.virtues")}
 				statLabel={t("sheet.label.wisdom")}
 				statValue={character.wisdom}
+				statMin={1}
+				statMax={6}
 				onStatChange={(value) => update({ wisdom: value })}
-				items={character.virtues.map((v) => v.name)}
+				items={character.virtues.map((v) => virtueLabel(t, v))}
 				emptyMessage={t("sheet.empty.no-virtues")}
 			/>
 		</section>
@@ -602,6 +626,8 @@ function RewardLikeColumn({
 	title,
 	statLabel,
 	statValue,
+	statMin,
+	statMax,
 	onStatChange,
 	items,
 	emptyMessage,
@@ -609,6 +635,8 @@ function RewardLikeColumn({
 	title: string;
 	statLabel: string;
 	statValue: number;
+	statMin?: number;
+	statMax?: number;
 	onStatChange: (value: number) => void;
 	items: string[];
 	emptyMessage: string;
@@ -629,7 +657,12 @@ function RewardLikeColumn({
 							pattern="[0-9]*"
 							value={statValue}
 							onChange={(event) =>
-								onStatChange(sanitiseDigits(event.target.value))
+								onStatChange(
+									sanitiseDigits(event.target.value, {
+										min: statMin,
+										max: statMax,
+									}),
+								)
 							}
 							aria-label={statLabel}
 							className="w-7 bg-transparent border-0 outline-none focus-visible:bg-ink-red/10 text-center font-body font-semibold tabular-nums text-base text-ink-navy"
