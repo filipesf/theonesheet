@@ -67,6 +67,33 @@ describe('draftToCharacter', () => {
     expect(character.current_hope).toBe(character.max_hope);
   });
 
+  // Regression for BUG-004: conditions used to be computed against the
+  // pre-stamp current_endurance=0, then frozen — leaving newly-created
+  // heroes flagged Esgotado/Miserável on the editor.
+  it('clears weary/miserable on a freshly created hero with full endurance and hope', () => {
+    const character = draftToCharacter(makeDraft());
+    expect(character.conditions.weary).toBe(false);
+    expect(character.conditions.miserable).toBe(false);
+  });
+
+  // Regression for BUG-003: the canonical Belba build (stealth 4 + Swords 2)
+  // estimates to ~24 PE under the absolute-cost formula, which trips
+  // previous-experience-overspent unless draftToCharacter stamps the
+  // 10-PE budget directly.
+  it('stamps the 10 PE budget so a canonical stealth-4 / swords-2 build finalises', () => {
+    const draft = makeDraft();
+    draft.skills = draft.skills.map((s) =>
+      s.id === 'stealth' ? { ...s, rating: 4, favoured: true } : s,
+    );
+    draft.combat_proficiencies = draft.combat_proficiencies.map((p) =>
+      p.name === 'SWORDS' ? { ...p, rating: 2 } : p,
+    );
+    const character = draftToCharacter(draft);
+    expect(character.experience.total_skill_points_spent).toBe(10);
+    const blocking = validateCreation(character).filter((issue) => issue.blocking);
+    expect(blocking.some((i) => i.code === 'previous-experience-overspent')).toBe(false);
+  });
+
   it('marks the chosen underlined skill as Favoured', () => {
     const draft = makeDraft();
     draft.underlined_skill_pick = 'riddle';

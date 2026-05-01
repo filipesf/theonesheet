@@ -1,3 +1,4 @@
+import { recomputeConditions } from '../../domain/derived';
 import { migrateV0ToV0 } from '../../domain/migrations/v0';
 import { createEmptyCharacter } from '../../domain/schema';
 import type {
@@ -121,12 +122,25 @@ export function draftToCharacter(draft: CreationDraft): Character {
     },
     valour: 1,
     wisdom: 1,
+    // TOR2e basic rules grant every starting hero 10 PE of "Previous
+    // Experience" (THE_ONE_RING_BASIC_RULES.md, "EXPERIÊNCIA ANTERIOR"
+    // §1346). The cap and the budget coincide, so we stamp it on
+    // creation; validateCreation short-circuits on this value rather
+    // than reading estimatePreviousExperienceSpent (which reports
+    // absolute-from-zero costs and over-counts because the wizard does
+    // not yet model culture/calling starting ranks separately).
+    experience: { ...seed.experience, total_skill_points_spent: 10 },
   };
 
   const migrated = migrateV0ToV0(character);
-  return {
+  // recomputeConditions ran once inside migrateV0ToV0 against the
+  // pre-stamp current_endurance=0; rerun it after stamping max values so
+  // weary/miserable reflect the seed-on-create endurance and hope. Note
+  // we do NOT re-run the full pipeline because applyBlessingAttributePlus
+  // would double-apply the Rangers blessing.
+  return recomputeConditions({
     ...migrated,
     current_endurance: migrated.max_endurance,
     current_hope: migrated.max_hope,
-  };
+  });
 }

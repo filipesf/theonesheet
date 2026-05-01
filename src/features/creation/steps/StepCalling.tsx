@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { SelectionCard } from '../../../app/ui/SelectionCard';
@@ -144,37 +145,7 @@ export function StepCalling() {
           <p className="font-body text-sm text-ink-navy/70 mb-2">
             {t('creation.step.calling.mastery-skills-body')}
           </p>
-          <MasterySkillPicker
-            selected={
-              startingVirtueSelection?.kind === 'mastery'
-                ? startingVirtueSelection.skill_ids
-                : []
-            }
-            onToggle={(skillId) => {
-              const current =
-                startingVirtueSelection?.kind === 'mastery'
-                  ? [...startingVirtueSelection.skill_ids]
-                  : [];
-              const exists = current.includes(skillId);
-              const next = exists
-                ? current.filter((id) => id !== skillId)
-                : current.length < 2
-                  ? [...current, skillId]
-                  : current;
-              if (next.length === 2) {
-                setValue(
-                  'starting_virtue_selection',
-                  { kind: 'mastery', skill_ids: [next[0]!, next[1]!] },
-                  { shouldDirty: true, shouldValidate: true },
-                );
-              } else {
-                setValue('starting_virtue_selection', null, {
-                  shouldDirty: true,
-                  shouldValidate: true,
-                });
-              }
-            }}
-          />
+          <MasteryPicker />
         </Block>
       )}
 
@@ -300,26 +271,79 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
   );
 }
 
-function MasterySkillPicker({
-  selected,
-  onToggle,
-}: {
-  selected: readonly string[];
-  onToggle: (skillId: SkillId) => void;
-}) {
+// In-progress mastery state lives locally because the form schema only
+// accepts a complete pair (skill_ids of length 2). Without this lift the
+// picker could not show a single-skill intermediate selection — every
+// click would round-trip to null in the form and the chips would never
+// appear pressed before the second pick.
+function MasteryPicker() {
   const { t } = useTranslation();
+  const { control, setValue } = useFormContext<CreationDraft>();
+  const persisted = useWatch({ control, name: 'starting_virtue_selection' });
+  const startingVirtue = useWatch({ control, name: 'starting_virtue' });
+
+  const [draft, setDraft] = useState<readonly SkillId[]>(() =>
+    persisted?.kind === 'mastery' ? [...persisted.skill_ids] : [],
+  );
+
+  // Re-sync from the form when the persisted value changes from outside
+  // (e.g. starting_virtue toggled away from mastery and back, or the
+  // user navigated back into this step with a previous pair stored).
+  useEffect(() => {
+    if (startingVirtue !== 'mastery') {
+      setDraft([]);
+      return;
+    }
+    if (persisted?.kind === 'mastery') {
+      const [a, b] = persisted.skill_ids;
+      if (draft[0] !== a || draft[1] !== b) {
+        setDraft([a, b]);
+      }
+    } else if (draft.length === 2) {
+      // Persisted was cleared elsewhere — drop the local pair too.
+      setDraft([]);
+    }
+  }, [persisted, startingVirtue, draft]);
+
+  function toggle(skillId: SkillId) {
+    const exists = draft.includes(skillId);
+    const next: readonly SkillId[] = exists
+      ? draft.filter((id) => id !== skillId)
+      : draft.length < 2
+        ? [...draft, skillId]
+        : draft;
+    if (next === draft) return;
+    // setValue must not run inside the setDraft updater: react-hook-form
+    // schedules a parent state update synchronously, which React then
+    // flags as "setState in another component while rendering this one".
+    if (next.length === 2) {
+      setValue(
+        'starting_virtue_selection',
+        { kind: 'mastery', skill_ids: [next[0]!, next[1]!] },
+        { shouldDirty: true, shouldValidate: true },
+      );
+    } else if (persisted?.kind === 'mastery') {
+      // Drop a previously complete pair only when leaving the 2-state.
+      setValue('starting_virtue_selection', null, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+    setDraft(next);
+  }
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
       {SKILLS.map((skill) => {
-        const active = selected.includes(skill.id);
-        const disabled = !active && selected.length >= 2;
+        const active = draft.includes(skill.id);
+        const disabled = !active && draft.length >= 2;
         return (
           <SelectionCard
             key={skill.id}
             active={active}
             disabled={disabled}
             padding="sm"
-            onClick={() => onToggle(skill.id)}
+            onClick={() => toggle(skill.id)}
           >
             <span className="font-display text-sm tracking-section uppercase text-ink-navy">
               {t(`ref.skills.${skill.id}`)}

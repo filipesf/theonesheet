@@ -24,4 +24,15 @@ describe('i18n bundle', () => {
     expect(one).toContain('herói');
     expect(many).toContain('heróis');
   });
+
+  // Burglary (Treasure Hunter calling feature) and Stealth (Wits skill) used
+  // to both resolve to "Furtividade" in pt-BR, making the printed sheet
+  // ambiguous. The TOR2e basic rules pt-BR translation uses "Ladroagem".
+  it('renders burglary distinctly from the stealth skill', () => {
+    const burglary = i18n.t('ref.distinctiveFeatures.callings.burglary');
+    const stealth = i18n.t('ref.skills.stealth');
+    expect(burglary).not.toBe(stealth);
+    expect(burglary).toBe('Ladroagem');
+    expect(stealth).toBe('Furtividade');
+  });
 });

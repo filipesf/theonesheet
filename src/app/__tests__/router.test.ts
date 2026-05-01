@@ -60,6 +60,14 @@ describe('parseHash', () => {
     expect(parseHash('#/unknown/path')).toEqual({ name: 'library' });
     expect(parseHash('#/character')).toEqual({ name: 'library' });
   });
+
+  // Stale deep-links into the wizard (e.g. an older build that wrote
+  // sub-routes for each step) should resolve to the wizard rather than
+  // bouncing the user to the library and discarding their draft.
+  it('resolves stale wizard sub-paths to characterNew', () => {
+    expect(parseHash('#/character/new/calling')).toEqual({ name: 'characterNew' });
+    expect(parseHash('#/character/new/anything/else')).toEqual({ name: 'characterNew' });
+  });
 });
 
 describe('buildHash', () => {
@@ -100,5 +108,11 @@ describe('redirectLegacyHashIfNeeded', () => {
     window.history.replaceState(null, '', '#/character/foo/sheet');
     redirectLegacyHashIfNeeded();
     expect(window.location.hash).toBe('#/character/foo/sheet');
+  });
+
+  it('rewrites stale wizard sub-paths to #/character/new', () => {
+    window.history.replaceState(null, '', '#/character/new/calling');
+    redirectLegacyHashIfNeeded();
+    expect(window.location.hash).toBe('#/character/new');
   });
 });

@@ -45,12 +45,24 @@ export function StepCulture() {
                   key={c}
                   active={active}
                   onClick={() => {
+                    const isChange = field.value !== undefined && field.value !== c;
                     field.onChange(c);
                     if (!formState.dirtyFields.age) {
                       setValue('age', MEDIAN_AGE_BY_CULTURE[c], { shouldValidate: true });
                     }
-                    setValue('cultural_blessing_choice', null, { shouldValidate: true });
-                    setValue('underlined_skill_pick', null, { shouldValidate: true });
+                    // Reset culture-bound fields only on a genuine switch.
+                    // Re-clicking the active culture should be a no-op so
+                    // the user doesn't lose blessing / underlined-skill /
+                    // attribute / feature picks they already made.
+                    if (isChange) {
+                      setValue('cultural_blessing_choice', null, { shouldValidate: true });
+                      setValue('underlined_skill_pick', null, { shouldValidate: true });
+                      setValue('attribute_set_index', -1, { shouldValidate: true });
+                      setValue('strength', 0, { shouldValidate: true });
+                      setValue('heart', 0, { shouldValidate: true });
+                      setValue('wits', 0, { shouldValidate: true });
+                      setValue('cultural_features', [], { shouldValidate: true });
+                    }
                   }}
                 >
                   <p className="font-display text-base tracking-section uppercase text-ink-navy">

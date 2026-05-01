@@ -20,6 +20,10 @@ function parseHash(hash: string): Route {
     return { name: 'library' };
   }
   if (trimmed === 'character/new') return { name: 'characterNew' };
+  // Unknown sub-path under the wizard placeholder (e.g. character/new/calling
+  // from a stale deep-link). Resolve to the wizard so the persisted draft —
+  // if any — can rehydrate the user back to the correct step.
+  if (/^character\/new\/.+/.test(trimmed)) return { name: 'characterNew' };
   if (trimmed === 'settings') return { name: 'settings' };
 
   const printedMatch = trimmed.match(/^character\/([^/]+)\/sheet$/);
@@ -77,6 +81,12 @@ export function redirectLegacyHashIfNeeded(): void {
       '',
       buildHash({ name: 'characterPrinted', id: decodeURIComponent(legacy[1]!) }),
     );
+    return;
+  }
+  // Stale wizard sub-paths (e.g. #/character/new/calling) rewrite to the
+  // canonical placeholder so the user never sees a broken URL bar.
+  if (/^character\/new\/.+/.test(trimmed)) {
+    window.history.replaceState(null, '', buildHash({ name: 'characterNew' }));
   }
 }
 

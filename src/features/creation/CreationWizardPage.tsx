@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -17,6 +17,7 @@ import {
   type CreationDraft,
   type StepName,
 } from './creationSchema';
+import { clearDraft, loadDraft, saveDraft } from './draftPersistence';
 import { draftToCharacter } from './draftToCharacter';
 import { StepAttributes } from './steps/StepAttributes';
 import { StepCalling } from './steps/StepCalling';
@@ -61,10 +62,15 @@ const DEFAULT_VALUES: CreationDraft = {
 
 export function CreationWizardPage({ onCreate }: Props) {
   const { t } = useTranslation();
-  const [stepIndex, setStepIndex] = useState(0);
+  // Resolve any persisted draft synchronously, before useForm/useState see
+  // their defaults. Reading once on the first render avoids late hydration
+  // (react-hook-form snapshots defaultValues at mount).
+  const initialDraftRef = useRef(loadDraft());
+  const initialDraft = initialDraftRef.current;
+  const [stepIndex, setStepIndex] = useState(initialDraft?.stepIndex ?? 0);
   const methods = useForm<CreationDraft>({
     resolver: zodResolver(creationSchema),
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: initialDraft?.draft ?? DEFAULT_VALUES,
     mode: 'onTouched',
   });
 
@@ -88,6 +94,7 @@ export function CreationWizardPage({ onCreate }: Props) {
   }
 
   function handleCancel() {
+    clearDraft();
     navigate({ name: 'library' });
   }
 
@@ -101,6 +108,32 @@ export function CreationWizardPage({ onCreate }: Props) {
     window.addEventListener('beforeunload', handler);
     return () => window.removeEventListener('beforeunload', handler);
   }, [methods.formState.isDirty]);
+
+  // Persist the draft on every change, debounced. We only start writing
+  // once the form has been touched so an unloaded fresh wizard doesn't
+  // overwrite a previous draft we just chose to ignore (cancel path).
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const subscription = methods.watch((value) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!methods.formState.isDirty && !initialDraftRef.current) return;
+        saveDraft({ draft: value as CreationDraft, stepIndex });
+      }, 300);
+    });
+    return () => {
+      if (timer) clearTimeout(timer);
+      subscription.unsubscribe();
+    };
+  }, [methods, stepIndex]);
+
+  // Snapshot stepIndex changes immediately so a reload between steps
+  // restores the user to the right place even if they didn't type
+  // anything on the new step yet.
+  useEffect(() => {
+    if (!methods.formState.isDirty && !initialDraftRef.current) return;
+    saveDraft({ draft: methods.getValues(), stepIndex });
+  }, [methods, stepIndex]);
 
   async function handleFinalise() {
     const ok = await methods.trigger();
@@ -120,6 +153,7 @@ export function CreationWizardPage({ onCreate }: Props) {
       return;
     }
     const id = onCreate(character);
+    clearDraft();
     toast.success(t('creation.wizard.created-toast'));
     navigate({ name: 'characterEditor', id });
   }
