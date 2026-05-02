@@ -15,9 +15,9 @@ import {
 } from "../../ref-data/blessings";
 import { legacyNameToShadowPath, SHADOW_PATHS } from "../../ref-data/callings";
 import {
-	findCultureForFeature,
+	deprecatedDistinctiveFeatureCanonical,
 	isCallingDistinctiveFeatureId,
-	isKnownDistinctiveFeatureId,
+	isCulturalDistinctiveFeatureId,
 	legacyNameToDistinctiveFeatureId,
 } from "../../ref-data/distinctive-features";
 import {
@@ -86,10 +86,12 @@ function renderDistinctiveFeatureLabel(
 	if (isCallingDistinctiveFeatureId(raw)) {
 		return t(`ref.distinctiveFeatures.callings.${raw}`);
 	}
-	if (isKnownDistinctiveFeatureId(raw)) {
-		const culture = findCultureForFeature(raw) ?? characterCulture;
-		const cultureKey = culture.toLowerCase().replace(/_/g, "-");
-		return t(`ref.distinctiveFeatures.cultures.${cultureKey}.${raw}`);
+	if (isCulturalDistinctiveFeatureId(raw)) {
+		return t(`ref.distinctiveFeatures.canonical.${raw}`);
+	}
+	const deprecated = deprecatedDistinctiveFeatureCanonical(raw);
+	if (deprecated) {
+		return t(`ref.distinctiveFeatures.canonical.${deprecated}`);
 	}
 	const legacyId = legacyNameToDistinctiveFeatureId(raw);
 	if (legacyId) {

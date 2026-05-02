@@ -117,6 +117,15 @@ export function StepCalling() {
         </div>
       </Block>
 
+      {callingData && (
+        <Block title={t('creation.step.calling.calling-favoured-skills')}>
+          <p className="font-body text-sm text-ink-navy/70 mb-2">
+            {t('creation.step.calling.calling-favoured-skills-body')}
+          </p>
+          <CallingFavouredPicker callingSkillIds={callingData.favouredSkillIds} />
+        </Block>
+      )}
+
       <Block title={t('creation.step.calling.starting-reward')}>
         <SelectRow
           value={startingReward}
@@ -256,6 +265,54 @@ export function StepCalling() {
           }}
         />
       </Block>
+    </div>
+  );
+}
+
+function CallingFavouredPicker({
+  callingSkillIds,
+}: {
+  callingSkillIds: readonly SkillId[];
+}) {
+  const { t } = useTranslation();
+  const { control, setValue } = useFormContext<CreationDraft>();
+  const skills = useWatch({ control, name: 'skills' });
+
+  const favouredFromCalling = skills.filter(
+    (skill) => skill.id && callingSkillIds.includes(skill.id as SkillId) && skill.favoured,
+  ).length;
+
+  function toggle(skillId: string) {
+    const index = skills.findIndex((s) => s.id === skillId);
+    if (index < 0) return;
+    const isCurrentlyFavoured = skills[index]?.favoured ?? false;
+    if (!isCurrentlyFavoured && favouredFromCalling >= 2) return;
+    setValue(`skills.${index}.favoured`, !isCurrentlyFavoured, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+      {callingSkillIds.map((skillId) => {
+        const skill = skills.find((s) => s.id === skillId);
+        const active = skill?.favoured ?? false;
+        const disabled = !active && favouredFromCalling >= 2;
+        return (
+          <SelectionCard
+            key={skillId}
+            active={active}
+            disabled={disabled}
+            padding="sm"
+            onClick={() => toggle(skillId)}
+          >
+            <span className="font-display text-sm tracking-section uppercase text-ink-navy">
+              {t(`ref.skills.${skillId}`)}
+            </span>
+          </SelectionCard>
+        );
+      })}
     </div>
   );
 }

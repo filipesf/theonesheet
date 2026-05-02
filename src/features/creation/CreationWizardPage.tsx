@@ -21,6 +21,7 @@ import { clearDraft, loadDraft, saveDraft } from './draftPersistence';
 import { draftToCharacter } from './draftToCharacter';
 import { StepAttributes } from './steps/StepAttributes';
 import { StepCalling } from './steps/StepCalling';
+import { StepCompany } from './steps/StepCompany';
 import { StepCulture } from './steps/StepCulture';
 import { StepDistinctiveFeatures } from './steps/StepDistinctiveFeatures';
 import { StepIdentity } from './steps/StepIdentity';
@@ -58,6 +59,8 @@ const DEFAULT_VALUES: CreationDraft = {
   weapons: [],
   armour: null,
   shield: null,
+  patron_id: '',
+  safe_haven: '',
 };
 
 export function CreationWizardPage({ onCreate }: Props) {
@@ -172,6 +175,7 @@ export function CreationWizardPage({ onCreate }: Props) {
         {currentStep === 'features' && <StepDistinctiveFeatures />}
         {currentStep === 'identity' && <StepIdentity />}
         {currentStep === 'calling' && <StepCalling />}
+        {currentStep === 'company' && <StepCompany />}
         {currentStep === 'review' && <StepReview />}
 
         <WizardFooter

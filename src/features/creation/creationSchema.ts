@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { CALLINGS, HEROIC_CULTURES, STANDARD_OF_LIVING } from '../../domain/types';
+import { CALLINGS_DATA } from '../../ref-data/callings';
 import { CULTURAL_UNDERLINED_SKILLS } from '../../ref-data/cultural-skills';
+import { PATRON_IDS } from '../../ref-data/patrons';
 import { SKILLS, type SkillId } from '../../ref-data/skills';
 
 const SKILL_IDS = SKILLS.map((skill) => skill.id) as [SkillId, ...SkillId[]];
@@ -101,6 +103,13 @@ const callingStepShape = z.object({
   shield: shieldEntry.nullable(),
 });
 
+export const companyStep = z.object({
+  // Optional in v0 (the player may finalise solo and add a Patron later).
+  // Stored as `'' | PatronId`; use `''` to mean "no patron yet".
+  patron_id: z.union([z.enum(PATRON_IDS), z.literal('')]),
+  safe_haven: z.string().trim().max(80),
+});
+
 function refineVirtueSelection<T extends z.ZodTypeAny>(schema: T): T {
   return schema.superRefine((data, ctx) => {
     const draft = data as Partial<{
@@ -148,6 +157,27 @@ function refineVirtueSelection<T extends z.ZodTypeAny>(schema: T): T {
         });
       }
     }
+    // Phase 3.11 (8b): the player must pick exactly 2 of the calling's
+    // 3 listed skills as Favoured. Validate after the calling has been
+    // selected; the per-skill `favoured` flags are toggled in StepCalling.
+    const fullDraft = data as Partial<{
+      calling: (typeof CALLINGS)[number];
+      skills: ReadonlyArray<{ id?: string; favoured: boolean }>;
+    }>;
+    if (fullDraft.calling && fullDraft.skills) {
+      const callingSkills: readonly string[] =
+        CALLINGS_DATA[fullDraft.calling].favouredSkillIds;
+      const favouredFromCalling = fullDraft.skills.filter(
+        (skill) => !!skill.id && callingSkills.includes(skill.id) && skill.favoured,
+      );
+      if (favouredFromCalling.length !== 2) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['calling_favoured_skills'],
+          message: 'calling-favoured-skills-pick-two',
+        });
+      }
+    }
   }) as unknown as T;
 }
 
@@ -160,7 +190,8 @@ export const creationSchema = refineVirtueSelection(
     .merge(proficienciesStep)
     .merge(distinctiveFeaturesStep)
     .merge(identityStep)
-    .merge(callingStepShape),
+    .merge(callingStepShape)
+    .merge(companyStep),
 );
 
 export type CreationDraft = z.infer<typeof creationSchema>;
@@ -183,6 +214,7 @@ export const STEP_FIELDS = {
     'armour',
     'shield',
   ] as const,
+  company: ['patron_id', 'safe_haven'] as const,
 } satisfies Record<string, readonly (keyof CreationDraft)[]>;
 
 export type StepName = keyof typeof STEP_FIELDS | 'review';
@@ -195,5 +227,6 @@ export const STEP_ORDER: StepName[] = [
   'features',
   'identity',
   'calling',
+  'company',
   'review',
 ];

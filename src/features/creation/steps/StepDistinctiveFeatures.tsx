@@ -4,22 +4,12 @@ import { SelectionCard } from '../../../app/ui/SelectionCard';
 import { CULTURAL_DISTINCTIVE_FEATURES } from '../../../ref-data/distinctive-features';
 import type { CreationDraft } from '../creationSchema';
 
-const CULTURE_KEY: Record<string, string> = {
-  DWARVES_OF_DURINS_FOLK: 'dwarves-of-durins-folk',
-  BARDINGS: 'bardings',
-  ELVES_OF_LINDON: 'elves-of-lindon',
-  HOBBITS_OF_THE_SHIRE: 'hobbits-of-the-shire',
-  MEN_OF_BREE: 'men-of-bree',
-  RANGERS_OF_THE_NORTH: 'rangers-of-the-north',
-};
-
 export function StepDistinctiveFeatures() {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<CreationDraft>();
   const culture = useWatch({ control, name: 'heroic_culture' });
   const picks = useWatch({ control, name: 'cultural_features' });
   const pool = CULTURAL_DISTINCTIVE_FEATURES[culture];
-  const cultureKey = CULTURE_KEY[culture] ?? '';
 
   function toggle(feature: string) {
     const next = picks.includes(feature)
@@ -54,7 +44,7 @@ export function StepDistinctiveFeatures() {
               onClick={() => toggle(featureId)}
             >
               <span className="font-display text-sm tracking-section uppercase text-ink-navy">
-                {t(`ref.distinctiveFeatures.cultures.${cultureKey}.${featureId}`)}
+                {t(`ref.distinctiveFeatures.canonical.${featureId}`)}
               </span>
             </SelectionCard>
           );

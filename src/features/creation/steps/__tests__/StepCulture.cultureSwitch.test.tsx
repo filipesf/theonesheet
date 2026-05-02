@@ -28,12 +28,12 @@ function makeDefaults(): CreationDraft {
       name: p.name,
       rating: p.rating,
     })),
-    cultural_features: ['curious', 'hospitable'],
+    cultural_features: ['inquisitive', 'keen-eyed'],
     name: 'Belba',
     age: 28,
     calling: 'TREASURE_HUNTER',
     calling_feature: 'burglary',
-    starting_reward: 'hardiness',
+    starting_reward: 'keen',
     starting_virtue: 'mastery',
     starting_virtue_selection: {
       kind: 'mastery',
@@ -43,6 +43,8 @@ function makeDefaults(): CreationDraft {
     weapons: [],
     armour: null,
     shield: null,
+    patron_id: '',
+    safe_haven: '',
   };
 }
 
@@ -82,7 +84,7 @@ describe('StepCulture · culture switch', () => {
     const probe = screen.getByTestId('state-json');
     expect(probe.textContent).toContain('"attributeSetIndex":4');
     expect(probe.textContent).toContain('"strength":4');
-    expect(probe.textContent).toContain('"culturalFeatures":["curious","hospitable"]');
+    expect(probe.textContent).toContain('"culturalFeatures":["inquisitive","keen-eyed"]');
 
     // Switch to Dwarves of Durin's Folk.
     await user.click(screen.getByRole('button', { name: /Anão do Povo de Durin/i }));
@@ -110,6 +112,6 @@ describe('StepCulture · culture switch', () => {
 
     expect(probe.textContent).toContain('"attributeSetIndex":4');
     expect(probe.textContent).toContain('"strength":4');
-    expect(probe.textContent).toContain('"culturalFeatures":["curious","hospitable"]');
+    expect(probe.textContent).toContain('"culturalFeatures":["inquisitive","keen-eyed"]');
   });
 });

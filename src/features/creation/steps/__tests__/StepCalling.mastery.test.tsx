@@ -28,18 +28,20 @@ function makeDefaults(): CreationDraft {
       name: p.name,
       rating: p.rating,
     })),
-    cultural_features: ['curious', 'hospitable'],
+    cultural_features: ['inquisitive', 'keen-eyed'],
     name: 'Belba',
     age: 28,
     calling: 'TREASURE_HUNTER',
     calling_feature: 'burglary',
-    starting_reward: 'hardiness',
+    starting_reward: 'keen',
     starting_virtue: 'mastery',
     starting_virtue_selection: null,
     standard_of_living: 'COMMON',
     weapons: [],
     armour: null,
     shield: null,
+    patron_id: '',
+    safe_haven: '',
   };
 }
 

@@ -19,7 +19,7 @@ function sampleDraft(): CreationDraft {
     wits: 5,
     skills: [],
     combat_proficiencies: [],
-    cultural_features: ['curious', 'hospitable'],
+    cultural_features: ['inquisitive', 'keen-eyed'],
     name: 'Belba',
     age: 28,
     calling: 'TREASURE_HUNTER',
@@ -31,6 +31,8 @@ function sampleDraft(): CreationDraft {
     weapons: [],
     armour: null,
     shield: null,
+    patron_id: '',
+    safe_haven: '',
   } as unknown as CreationDraft;
 }
 

@@ -28,12 +28,12 @@ function makeDraft(): CreationDraft {
     wits: 5,
     skills,
     combat_proficiencies: proficiencies,
-    cultural_features: ['curious', 'hospitable'],
+    cultural_features: ['inquisitive', 'keen-eyed'],
     name: 'Belba Bolger',
     age: 28,
     calling: 'TREASURE_HUNTER',
     calling_feature: 'burglary',
-    starting_reward: 'hardiness',
+    starting_reward: 'keen',
     starting_virtue: 'mastery',
     starting_virtue_selection: {
       kind: 'mastery',
@@ -43,6 +43,8 @@ function makeDraft(): CreationDraft {
     weapons: [{ id: 'sword', load: 2 }],
     armour: { id: 'leather-shirt', load: 3 },
     shield: null,
+    patron_id: 'bilbo',
+    safe_haven: 'Pônei Empinado (Bri)',
   };
 }
 
@@ -52,10 +54,10 @@ describe('draftToCharacter', () => {
     const character = draftToCharacter(draft);
     const blocking = validateCreation(character).filter((issue) => issue.blocking);
     expect(blocking).toEqual([]);
-    expect(character.distinctive_features).toEqual(['curious', 'hospitable', 'burglary']);
+    expect(character.distinctive_features).toEqual(['inquisitive', 'keen-eyed', 'burglary']);
     expect(character.cultural_blessing).toBe('hobbit-sense');
     expect(character.shadow_path).toBe('dragon-sickness');
-    expect(character.rewards[0]?.id).toBe('hardiness');
+    expect(character.rewards[0]?.id).toBe('keen');
     expect(character.virtues[0]?.id).toBe('mastery');
     expect(character.war_gear.weapons[0]?.id).toBe('sword');
     expect(character.war_gear.armour?.id).toBe('leather-shirt');

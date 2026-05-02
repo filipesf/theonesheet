@@ -122,6 +122,8 @@ export function draftToCharacter(draft: CreationDraft): Character {
     },
     valour: 1,
     wisdom: 1,
+    company_id: draft.patron_id ?? '',
+    safe_haven: draft.safe_haven || undefined,
     // TOR2e basic rules grant every starting hero 10 PE of "Previous
     // Experience" (THE_ONE_RING_BASIC_RULES.md, "EXPERIÊNCIA ANTERIOR"
     // §1346). The cap and the budget coincide, so we stamp it on
