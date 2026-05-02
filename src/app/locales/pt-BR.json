@@ -182,7 +182,8 @@
         "injury": "Ferimento",
         "load": "Carga",
         "notes": "Notas"
-      }
+      },
+      "protected": "Recompensa aplicada — item inalienável: {{rewards}}"
     },
     "armour": {
       "label": {
@@ -326,6 +327,9 @@
         "calling-favoured-skills": "Perícias Favoráveis do Chamado",
         "calling-favoured-skills-body": "Cada Chamado lista 3 perícias. Escolha 2 para marcar como Favoráveis.",
         "starting-reward": "Recompensa inicial",
+        "reward-target": "Aplicar a Recompensa a qual arma?",
+        "reward-target-body": "A Recompensa fica vinculada a um item específico do equipamento inicial. Esse item passa a ser inalienável (não pode ser perdido nem transferido).",
+        "reward-target-load": "Carga {{load}}",
         "starting-virtue": "Virtude inicial",
         "mastery-skills": "Perícias da Mestria",
         "mastery-skills-body": "Mestria torna duas perícias da sua escolha em Favoráveis.",
@@ -387,7 +391,8 @@
       "mastery-selection-required": "Mestria exige a escolha de duas perícias.",
       "mastery-skills-distinct": "As duas perícias de Mestria devem ser diferentes.",
       "prowess-selection-required": "Proeza exige a escolha de um Atributo.",
-      "calling-favoured-skills-pick-two": "Escolha exatamente 2 das 3 perícias do chamado para marcar como Favoráveis."
+      "calling-favoured-skills-pick-two": "Escolha exatamente 2 das 3 perícias do chamado para marcar como Favoráveis.",
+      "reward-target-required": "Selecione a arma do equipamento inicial que receberá a Recompensa."
     }
   },
   "common": {
