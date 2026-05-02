@@ -1,11 +1,12 @@
 # TOR 2e Domain Specification — The One Sheet
 
-> Canonical domain specification for The One Sheet's character-sheet webapp. Strategic / brand context lives in [`PRODUCT.md`](../PRODUCT.md); visual contracts live in [`DESIGN.md`](../DESIGN.md). This document is the source of truth for *how the game works in code*: data model, formulas, validation, and reference tables.
+> Canonical domain specification for The One Sheet's character-sheet webapp. Strategic / brand context lives in [`PRODUCT.md`](../PRODUCT.md); visual contracts live in [`DESIGN.md`](../DESIGN.md). This document is the source of truth for _how the game works in code_: data model, formulas, validation, and reference tables.
 
-**Project:** The One Sheet — a character-sheet webapp for *The One Ring* (2nd Edition)
+**Project:** The One Sheet — a character-sheet webapp for _The One Ring_ (2nd Edition)
 **Version:** 1.0
 **Content language:** English (canonical terminology from Free League / Devir 2nd ed.)
-**Source system:** *The One Ring — Roleplaying Game* (2nd ed.), Core Rules
+**Source system:** _The One Ring — Roleplaying Game_ (2nd ed.), Core Rules
+**Canonical source-of-record:** [`docs/THE_ONE_RING_BASIC_RULES.md`](./THE_ONE_RING_BASIC_RULES.md) (Devir pt-BR markdown extraction). Earlier drafts of this document referenced the Free League PDF by page number; those references have been rebound to section anchors in `THE_ONE_RING_BASIC_RULES.md`. See Appendix A for the cross-reference table.
 **Purpose:** canonical domain specification for a webapp implementing character-sheet management with Player-hero ↔ Loremaster sharing.
 **Scope:** data model, computation rules, creation pipeline, reference tables, validation, and runtime state.
 **Out of scope:** UI/UX design, authentication, infrastructure, full Journey/Combat resolution rules (only the parts that mutate the sheet).
@@ -33,8 +34,9 @@ The webapp must:
 5. Maintain a history of state changes during a session.
 
 > **Terminology disambiguation:** The One Ring uses two distinct words that the Devir translation collapses:
-> - **Company** — the *group* of Player-heroes adventuring together.
-> - **Fellowship** — the numerical *rating* representing the bond of mutual trust within the Company.
+>
+> - **Company** — the _group_ of Player-heroes adventuring together.
+> - **Fellowship** — the numerical _rating_ representing the bond of mutual trust within the Company.
 > - **Fellowship Focus** — a stronger personal bond between two Company members.
 >
 > The webapp **must** preserve this distinction in code: `Company` is the entity, `fellowship_rating` is the integer.
@@ -43,43 +45,43 @@ The webapp must:
 
 ## 2. Glossary of Domain Terms
 
-| Term | Definition (concise) | Webapp type |
-|---|---|---|
-| Heroic Culture | The hero's people/culture (6 options). Defines Cultural Blessing, suggested Attributes, Standard of Living, base Skills, Combat Proficiencies, available Distinctive Features, languages, and Cultural Virtues. | enum |
-| Calling | The drive that pushes the hero to adventure (6 options). Adds 2 Favoured Skills, 1 additional Distinctive Feature, 1 Shadow Path. | enum |
-| Attribute | STRENGTH, HEART, or WITS. The hero's three numerical base ratings. | int |
-| Target Number (TN) | Default difficulty for a roll bound to an Attribute. **TN = 20 − Attribute rating.** | int (derived) |
-| Skill | Learned ability (18 skills, grouped by Attribute). Rating 0–6. | int + favoured flag |
-| Combat Proficiency | Weapon category (Axes, Bows, Spears, Swords). Rating 0–6. | int |
-| Distinctive Feature | Personality trait that can be invoked to make a Player-hero Inspired on a roll. | string[] |
-| Cultural Blessing | Passive special ability granted by the Heroic Culture. | string |
-| Endurance | Physical stamina. Derived stat. Reduced by injury/exertion. | int (max + current) |
-| Hope | Spiritual reserve. Derived stat. Spent for bonus dice and Cultural Virtue effects. | int (max + current) |
-| Parry | Defensive TN of the hero (target of incoming attacks). | int (derived) |
-| Shadow | Corruption points. When ≥ current Hope → Miserable. | int |
-| Shadow Scars | Permanent Shadow exchanged for resilience. | int |
-| Load | Weight carried (weapons + armour + shield + treasure). | int (derived) |
-| Fatigue | Temporary Load accrued during journeys. | int |
-| Standard of Living | Socioeconomic tier (6 levels). Determines starting gear, Treasure, mount. | enum |
-| Treasure | Accumulated wealth. Rises → Standard of Living rises. | int |
-| VALOUR | Heroic renown (1–6). Each new rank grants 1 Reward. | int |
-| WISDOM | Self-understanding (1–6). Each new rank grants 1 Virtue. | int |
-| Reward | War-gear upgrade. | object + target ref |
-| Virtue | Special ability (Standard or Cultural). | object |
-| Shadow Path | Corruption tendency suggested by the Calling. | enum |
-| Flaws | Negative traits acquired under Shadow's pressure. | string[] |
-| Company | The group of Player-heroes. Shares Patron, Safe Haven, Fellowship rating. | shared object |
-| Patron | Mentor of the Company (e.g. Bilbo Baggins, Gandalf). | enum |
-| Safe Haven | Base of operations (e.g. Bree). | string |
-| Fellowship rating | Pool of points shared by the Company, spent to recover Hope or trigger Patron effects. Restored at session end. | int (max + current) |
-| Fellowship Focus | Another Company member to which this hero is more strongly bound. | ref |
-| Inspired | State on a single roll: roll 2 Feat Dice, keep best (only when triggered by a Distinctive Feature or Cultural Virtue). | per-roll flag |
-| Favoured (roll) | Same dice mechanic as Inspired (2 Feat Dice, keep best). Triggered by Favoured Skills or special abilities. | per-roll flag |
-| Ill-favoured | Roll 2 Feat Dice, keep worst. | per-roll flag |
-| Miserable | Condition: Shadow ≥ current Hope. Eye-of-Sauron icon on Feat Die → automatic failure. | bool (derived) |
-| Weary | Condition: current Endurance ≤ Load total. Success Dice showing 1/2/3 count as zero. | bool (derived) |
-| Wounded | Condition: suffered a Piercing Blow. Slow recovery; risk of death if active. | bool |
-| Loremaster | The Game Master (canonical term in The One Ring). | role |
+| Term                | Definition (concise)                                                                                                                                                                                            | Webapp type         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Heroic Culture      | The hero's people/culture (6 options). Defines Cultural Blessing, suggested Attributes, Standard of Living, base Skills, Combat Proficiencies, available Distinctive Features, languages, and Cultural Virtues. | enum                |
+| Calling             | The drive that pushes the hero to adventure (6 options). Adds 2 Favoured Skills, 1 additional Distinctive Feature, 1 Shadow Path.                                                                               | enum                |
+| Attribute           | STRENGTH, HEART, or WITS. The hero's three numerical base ratings.                                                                                                                                              | int                 |
+| Target Number (TN)  | Default difficulty for a roll bound to an Attribute. **TN = 20 − Attribute rating.**                                                                                                                            | int (derived)       |
+| Skill               | Learned ability (18 skills, grouped by Attribute). Rating 0–6.                                                                                                                                                  | int + favoured flag |
+| Combat Proficiency  | Weapon category (Axes, Bows, Spears, Swords). Rating 0–6.                                                                                                                                                       | int                 |
+| Distinctive Feature | Personality trait that can be invoked to make a Player-hero Inspired on a roll.                                                                                                                                 | string[]            |
+| Cultural Blessing   | Passive special ability granted by the Heroic Culture.                                                                                                                                                          | string              |
+| Endurance           | Physical stamina. Derived stat. Reduced by injury/exertion.                                                                                                                                                     | int (max + current) |
+| Hope                | Spiritual reserve. Derived stat. Spent for bonus dice and Cultural Virtue effects.                                                                                                                              | int (max + current) |
+| Parry               | Defensive TN of the hero (target of incoming attacks).                                                                                                                                                          | int (derived)       |
+| Shadow              | Corruption points. When ≥ current Hope → Miserable.                                                                                                                                                             | int                 |
+| Shadow Scars        | Permanent Shadow exchanged for resilience.                                                                                                                                                                      | int                 |
+| Load                | Weight carried (weapons + armour + shield + treasure).                                                                                                                                                          | int (derived)       |
+| Fatigue             | Temporary Load accrued during journeys.                                                                                                                                                                         | int                 |
+| Standard of Living  | Socioeconomic tier (6 levels). Determines starting gear, Treasure, mount.                                                                                                                                       | enum                |
+| Treasure            | Accumulated wealth. Rises → Standard of Living rises.                                                                                                                                                           | int                 |
+| VALOUR              | Heroic renown (1–6). Each new rank grants 1 Reward.                                                                                                                                                             | int                 |
+| WISDOM              | Self-understanding (1–6). Each new rank grants 1 Virtue.                                                                                                                                                        | int                 |
+| Reward              | War-gear upgrade.                                                                                                                                                                                               | object + target ref |
+| Virtue              | Special ability (Standard or Cultural).                                                                                                                                                                         | object              |
+| Shadow Path         | Corruption tendency suggested by the Calling.                                                                                                                                                                   | enum                |
+| Flaws               | Negative traits acquired under Shadow's pressure.                                                                                                                                                               | string[]            |
+| Company             | The group of Player-heroes. Shares Patron, Safe Haven, Fellowship rating.                                                                                                                                       | shared object       |
+| Patron              | Mentor of the Company (e.g. Bilbo Baggins, Gandalf).                                                                                                                                                            | enum                |
+| Safe Haven          | Base of operations (e.g. Bree).                                                                                                                                                                                 | string              |
+| Fellowship rating   | Pool of points shared by the Company, spent to recover Hope or trigger Patron effects. Restored at session end.                                                                                                 | int (max + current) |
+| Fellowship Focus    | Another Company member to which this hero is more strongly bound.                                                                                                                                               | ref                 |
+| Inspired            | State on a single roll: roll 2 Feat Dice, keep best (only when triggered by a Distinctive Feature or Cultural Virtue).                                                                                          | per-roll flag       |
+| Favoured (roll)     | Same dice mechanic as Inspired (2 Feat Dice, keep best). Triggered by Favoured Skills or special abilities.                                                                                                     | per-roll flag       |
+| Ill-favoured        | Roll 2 Feat Dice, keep worst.                                                                                                                                                                                   | per-roll flag       |
+| Miserable           | Condition: Shadow ≥ current Hope. Eye-of-Sauron icon on Feat Die → automatic failure.                                                                                                                           | bool (derived)      |
+| Weary               | Condition: current Endurance ≤ Load total. Success Dice showing 1/2/3 count as zero.                                                                                                                            | bool (derived)      |
+| Wounded             | Condition: suffered a Piercing Blow. Slow recovery; risk of death if active.                                                                                                                                    | bool                |
+| Loremaster          | The Game Master (canonical term in The One Ring).                                                                                                                                                               | role                |
 
 ---
 
@@ -333,16 +335,17 @@ tn_wits     = 20 − attributes.wits
 
 The formula is **culture-dependent**. See §6.2.
 
-| Culture | max Endurance | max Hope | base Parry |
-|---|---|---|---|
-| Dwarves of Durin's Folk | STRENGTH + 22 | HEART + 8 | WITS + 10 |
-| Bardings | STRENGTH + 20 | HEART + 8 | WITS + 12 |
-| Elves of Lindon | STRENGTH + 20 | HEART + 8 | WITS + 12 |
-| Hobbits of the Shire | STRENGTH + 18 | HEART + 10 | WITS + 12 |
-| Men of Bree | STRENGTH + 20 | HEART + 10 | WITS + 10 |
-| Rangers of the North | STRENGTH + 20 | HEART + 6 | WITS + 14 |
+| Culture                 | max Endurance | max Hope   | base Parry |
+| ----------------------- | ------------- | ---------- | ---------- |
+| Dwarves of Durin's Folk | STRENGTH + 22 | HEART + 8  | WITS + 10  |
+| Bardings                | STRENGTH + 20 | HEART + 8  | WITS + 12  |
+| Elves of Lindon         | STRENGTH + 20 | HEART + 8  | WITS + 12  |
+| Hobbits of the Shire    | STRENGTH + 18 | HEART + 10 | WITS + 12  |
+| Men of Bree             | STRENGTH + 20 | HEART + 10 | WITS + 10  |
+| Rangers of the North    | STRENGTH + 20 | HEART + 6  | WITS + 14  |
 
 > **After applying the cultural formula**, the following permanent modifiers may apply:
+>
 > - Virtue **Hardiness** → +2 max Endurance (repeatable).
 > - Virtue **Confidence** → +2 max Hope (repeatable).
 > - Virtue **Nimbleness** → +1 base Parry (repeatable).
@@ -389,14 +392,14 @@ wounded   = explicit flag; affects Endurance recovery
 
 The Standard of Living rises when accumulated Treasure reaches the threshold of the next tier:
 
-| Standard of Living | Starting Treasure | Threshold to advance |
-|---|---|---|
-| Poor | 0 | — (narrative event only) |
-| Frugal | 0 | 30 |
-| Common | 30 | 90 |
-| Prosperous | 90 | 180 |
-| Rich | 180 | 300+ |
-| Very Rich | 300+ | — (campaign-end tier) |
+| Standard of Living | Starting Treasure | Threshold to advance     |
+| ------------------ | ----------------- | ------------------------ |
+| Poor               | 0                 | — (narrative event only) |
+| Frugal             | 0                 | 30                       |
+| Common             | 30                | 90                       |
+| Prosperous         | 90                | 180                      |
+| Rich               | 180               | 300+                     |
+| Very Rich          | 300+              | — (campaign-end tier)    |
 
 > **Rule:** the starting Standard of Living is set by the Heroic Culture. It rises automatically when `treasure ≥ next_tier_threshold`. It does **not** drop automatically — only via narrative event or controlled spending.
 
@@ -411,14 +414,14 @@ max_fellowship = number_of_player_heroes_in_company
 
 ### 4.8. Age — cultural windows (validation)
 
-| Culture | Min adventuring age | Typical retirement |
-|---|---|---|
-| Dwarves | ~50 | ~90 |
-| Bardings | 18 | ~40 |
-| Elves | ~100 | open-ended (sail to the West) |
-| Hobbits | 20–30 ("irresponsible years") | ~50 |
-| Men of Bree | young adult | ~40 |
-| Rangers | 20 (sometimes younger) | ~50 |
+| Culture     | Min adventuring age           | Typical retirement            |
+| ----------- | ----------------------------- | ----------------------------- |
+| Dwarves     | ~50                           | ~90                           |
+| Bardings    | 18                            | ~40                           |
+| Elves       | ~100                          | open-ended (sail to the West) |
+| Hobbits     | 20–30 ("irresponsible years") | ~50                           |
+| Men of Bree | young adult                   | ~40                           |
+| Rangers     | 20 (sometimes younger)        | ~50                           |
 
 > **Recommendation:** the webapp should validate but allow override with a warning (narrative rules are flexible).
 
@@ -479,41 +482,46 @@ Creation follows **9 mandatory ordered phases**. Each phase has inputs, outputs,
 This phase has 4 sequential sub-steps:
 
 #### 8a. Choose Calling (1 of 6)
+
 - Copy `shadow_path` to the sheet.
 - Add the Calling's additional Distinctive Feature.
 
 #### 8b. Mark the Calling's Favoured Skills
+
 - Pick **2** of the 3 Skills listed by the Calling and mark them as Favoured.
 - **Validation:** if a Calling Skill is already Favoured by culture, just record (the `favoured` flag is boolean, not a counter).
 
 #### 8c. Spend 10 Previous Experience points
+
 - **Pool:** 10 points.
 - **Skill costs:**
 
   | Target rating | Cost |
-  |---|---|
-  | 0 → 1 | 1 |
-  | 1 → 2 | 2 |
-  | 2 → 3 | 3 |
-  | 3 → 4 | 5 |
+  | ------------- | ---- |
+  | 0 → 1         | 1    |
+  | 1 → 2         | 2    |
+  | 2 → 3         | 3    |
+  | 3 → 4         | 5    |
 
 - **Combat Proficiency costs:**
 
   | Target rating | Cost |
-  |---|---|
-  | 0 → 1 | 2 |
-  | 1 → 2 | 4 |
-  | 2 → 3 | 6 |
+  | ------------- | ---- |
+  | 0 → 1         | 2    |
+  | 1 → 2         | 4    |
+  | 2 → 3         | 6    |
 
 - **Validation:** sum of costs ≤ 10. Spending all 10 is not mandatory. May raise multiple ranks in the same skill by paying cumulatively.
 
 #### 8d. Choose Starting Gear
+
 - **Weapons:** one weapon per Combat Proficiency with rating ≥ 1, using §8.1. Cultural restrictions apply.
 - **Armour / Helm / Shield:** Standard-of-Living-gated selection (see §8.2 — heavier armour requires higher Standard of Living).
 - **Useful Items:** count per Standard of Living (§8.4).
 - **Travelling Gear:** free text, no Load.
 
 #### 8e. Set VALOUR and WISDOM to 1; choose Starting Reward and Starting Virtue
+
 - `valour = 1`, `wisdom = 1`.
 - Pick **1 Starting Reward** from the 6 listed (§10.3).
 - Pick **1 Starting Virtue** from the 6 listed (§10.4) — must be a **Standard Virtue** (Cultural Virtues require WISDOM ≥ 2).
@@ -537,92 +545,93 @@ This phase is **collaborative across all players and the Loremaster**. The webap
 
 ### 6.1. Comparison Summary
 
-| Culture | Cultural Blessing | Standard of Living | Base Combat Proficiency | Restrictions |
-|---|---|---|---|---|
-| Dwarves of Durin's Folk | Redoubtable (½ Load on armour + helm) | Prosperous | Axes OR Swords (2) + 1 (1) | No Great Bow, Great Spear, Great Shield |
-| Bardings | Stout-Hearted (VALOUR rolls Favoured) | Prosperous | Bows OR Swords (2) + 1 (1) | — |
-| Elves of Lindon | Elven-Skill (spend Hope → Magical success on Skill roll) | Frugal | Bows OR Spears (2) + 1 (1) | The Long Defeat: removes only 1 Shadow per Fellowship Phase |
-| Hobbits of the Shire | Hobbit-Sense (WISDOM rolls Favoured; +1d on Shadow Tests vs Greed) | Common | Bows OR Swords (2) + 1 (1) | — |
-| Men of Bree | Bree-Blood (+1 Fellowship per Bree-man in Company) | Common | Axes OR Spears (2) + 1 (1) | — |
-| Rangers of the North | Kings of Men (+1 to a chosen Attribute) | Frugal | Spears OR Swords (2) + 1 (1) | — |
+| Culture                 | Cultural Blessing                                                  | Standard of Living | Base Combat Proficiency      | Restrictions                                                |
+| ----------------------- | ------------------------------------------------------------------ | ------------------ | ---------------------------- | ----------------------------------------------------------- |
+| Dwarves of Durin's Folk | Redoubtable (½ Load on armour + helm)                              | Prosperous         | Axes OR Swords (2) + 1 (1)   | No Great Bow, Great Spear, Great Shield                     |
+| Bardings                | Stout-Hearted (VALOUR rolls Favoured)                              | Prosperous         | Bows OR Swords (2) + 1 (1)   | —                                                           |
+| Elves of Lindon         | Elven-Skill (spend Hope → Magical success on Skill roll)           | Frugal             | Bows OR Spears (2) + 1 (1)   | The Long Defeat: removes only 1 Shadow per Fellowship Phase |
+| Hobbits of the Shire    | Hobbit-Sense (WISDOM rolls Favoured; +1d on Shadow Tests vs Greed) | Common             | Bows OR Swords (2) + 1 (1)   | —                                                           |
+| Men of Bree             | Bree-Blood (+1 Fellowship per Bree-man in Company)                 | Common             | Axes OR Spears (2) + 1 (1)   | —                                                           |
+| Rangers of the North    | Kings of Men (+1 to a chosen Attribute)                            | Frugal             | Spears OR Swords (2) + 1 (1) | —                                                           |
 
 ### 6.2. Attribute Sets (roll 1 Success Die or pick)
 
 #### Dwarves of Durin's Folk
 
 | Result | STRENGTH | HEART | WITS |
-|---|---|---|---|
-| 1 | 7 | 2 | 5 |
-| 2 | 7 | 3 | 4 |
-| 3 | 6 | 3 | 5 |
-| 4 | 6 | 4 | 4 |
-| 5 | 5 | 4 | 5 |
-| 6 | 6 | 2 | 6 |
+| ------ | -------- | ----- | ---- |
+| 1      | 7        | 2     | 5    |
+| 2      | 7        | 3     | 4    |
+| 3      | 6        | 3     | 5    |
+| 4      | 6        | 4     | 4    |
+| 5      | 5        | 4     | 5    |
+| 6      | 6        | 2     | 6    |
 
 #### Bardings
 
 | Result | STRENGTH | HEART | WITS |
-|---|---|---|---|
-| 1 | 6 | 4 | 4 |
-| 2 | 5 | 4 | 5 |
-| 3 | 5 | 5 | 4 |
-| 4 | 4 | 6 | 4 |
-| 5 | 5 | 5 | 4 |
-| 6 | 6 | 6 | 2 |
+| ------ | -------- | ----- | ---- |
+| 1      | 6        | 4     | 4    |
+| 2      | 5        | 4     | 5    |
+| 3      | 5        | 5     | 4    |
+| 4      | 4        | 6     | 4    |
+| 5      | 5        | 5     | 4    |
+| 6      | 6        | 6     | 2    |
 
-> Implementer note: rows 1–3 of the Bardings table were partially obscured in the extraction; verify against the original PDF before seeding production data.
+> Implementer note: rows 1–3 in this spec are stale from an earlier extraction; the canonical values are in basic-rules §"BARDESES — ATRIBUTOS" (linhas 782–789). See the refinement plan in `docs/plans/2026-05-01-domain-spec-refinement.md` Phase 0.1.
 
 #### Elves of Lindon
 
 | Result | STRENGTH | HEART | WITS |
-|---|---|---|---|
-| 1 | 5 | 2 | 7 |
-| 2 | 4 | 3 | 7 |
-| 3 | 5 | 3 | 6 |
-| 4 | 4 | 4 | 6 |
-| 5 | 5 | 4 | 5 |
-| 6 | 6 | 2 | 6 |
+| ------ | -------- | ----- | ---- |
+| 1      | 5        | 2     | 7    |
+| 2      | 4        | 3     | 7    |
+| 3      | 5        | 3     | 6    |
+| 4      | 4        | 4     | 6    |
+| 5      | 5        | 4     | 5    |
+| 6      | 6        | 2     | 6    |
 
 #### Hobbits of the Shire
 
 | Result | STRENGTH | HEART | WITS |
-|---|---|---|---|
-| 1 | 3 | 4 | 7 |
-| 2 | 3 | 5 | 6 |
-| 3 | 4 | 4 | 6 |
-| 4 | 4 | 6 | 4 |
-| 5 | 4 | 5 | 5 |
-| 6 | 2 | 6 | 6 |
+| ------ | -------- | ----- | ---- |
+| 1      | 3        | 4     | 7    |
+| 2      | 3        | 5     | 6    |
+| 3      | 4        | 4     | 6    |
+| 4      | 4        | 6     | 4    |
+| 5      | 4        | 5     | 5    |
+| 6      | 2        | 6     | 6    |
 
-> Implementer note: verify rows 1–3 against the original PDF.
+> Implementer note: rows 1–3 in this spec are stale from an earlier extraction; the canonical values are in basic-rules §"HOBBITS DO CONDADO — ATRIBUTOS" (linhas 968–975). See the refinement plan in `docs/plans/2026-05-01-domain-spec-refinement.md` Phase 0.2.
 
 #### Men of Bree
 
 | Result | STRENGTH | HEART | WITS |
-|---|---|---|---|
-| 1 | 2 | 5 | 7 |
-| 2 | 3 | 4 | 7 |
-| 3 | 3 | 5 | 6 |
-| 4 | 4 | 4 | 6 |
-| 5 | 4 | 5 | 5 |
-| 6 | 2 | 6 | 6 |
+| ------ | -------- | ----- | ---- |
+| 1      | 2        | 5     | 7    |
+| 2      | 3        | 4     | 7    |
+| 3      | 3        | 5     | 6    |
+| 4      | 4        | 4     | 6    |
+| 5      | 4        | 5     | 5    |
+| 6      | 2        | 6     | 6    |
 
 #### Rangers of the North
 
 | Result | STRENGTH | HEART | WITS |
-|---|---|---|---|
-| 1 | 7 | 5 | 2 |
-| 2 | 7 | 4 | 3 |
-| 3 | 6 | 5 | 3 |
-| 4 | 6 | 4 | 4 |
-| 5 | 5 | 5 | 4 |
-| 6 | 6 | 6 | 2 |
+| ------ | -------- | ----- | ---- |
+| 1      | 7        | 5     | 2    |
+| 2      | 7        | 4     | 3    |
+| 3      | 6        | 5     | 3    |
+| 4      | 6        | 4     | 4    |
+| 5      | 5        | 5     | 4    |
+| 6      | 6        | 6     | 2    |
 
 ### 6.3. Skills by Culture (starting ratings)
 
 The order is fixed: 18 Skills in 3 columns (STRENGTH / HEART / WITS), 6 rows. The webapp should load the matrix per culture.
 
 #### Dwarves of Durin's Folk
+
 ```
 Awe        2 | Enhearten     0 | Persuade  0
 Athletics  1 | Travel        3 | Stealth   0
@@ -631,9 +640,11 @@ Hunting    0 | Healing       0 | Explore   2
 Song       1 | Courtesy      1 | Riddle    2
 Craft      2 | Battle        1 | Lore      1
 ```
-Underlined (pick 1 as Favoured): **Courtesy / Riddle** (verify against PDF)
+
+Underlined (pick 1 as Favoured): see `src/ref-data/cultural-skills.ts` (the markdown extraction in `THE_ONE_RING_BASIC_RULES.md` does not preserve underline formatting).
 
 #### Bardings
+
 ```
 Awe        1 | Enhearten     2 | Persuade  3
 Athletics  1 | Travel        1 | Stealth   0
@@ -644,6 +655,7 @@ Craft      1 | Battle        2 | Lore      1
 ```
 
 #### Elves of Lindon
+
 ```
 Awe        2 | Enhearten     1 | Persuade  0
 Athletics  2 | Travel        0 | Stealth   3
@@ -654,6 +666,7 @@ Craft      2 | Battle        0 | Lore      3
 ```
 
 #### Hobbits of the Shire
+
 ```
 Awe        0 | Enhearten     0 | Persuade  2
 Athletics  0 | Travel        0 | Stealth   3
@@ -664,6 +677,7 @@ Craft      1 | Battle        0 | Lore      0
 ```
 
 #### Men of Bree
+
 ```
 Awe        0 | Enhearten     2 | Persuade  2
 Athletics  1 | Travel        1 | Stealth   1
@@ -674,6 +688,7 @@ Craft      2 | Battle        0 | Lore      0
 ```
 
 #### Rangers of the North
+
 ```
 Awe        1 | Enhearten     0 | Persuade  0
 Athletics  2 | Travel        2 | Stealth   2
@@ -686,24 +701,24 @@ Craft      0 | Battle        2 | Lore      2
 ### 6.4. The 18 Skills (canonical list)
 
 | STRENGTH column | HEART column | WITS column |
-|---|---|---|
-| Awe | Enhearten | Persuade |
-| Athletics | Travel | Stealth |
-| Awareness | Insight | Scan |
-| Hunting | Healing | Explore |
-| Song | Courtesy | Riddle |
-| Craft | Battle | Lore |
+| --------------- | ------------ | ----------- |
+| Awe             | Enhearten    | Persuade    |
+| Athletics       | Travel       | Stealth     |
+| Awareness       | Insight      | Scan        |
+| Hunting         | Healing      | Explore     |
+| Song            | Courtesy     | Riddle      |
+| Craft           | Battle       | Lore        |
 
 ### 6.5. Distinctive Features by Culture (pick 2)
 
-| Culture | Available Distinctive Features |
-|---|---|
-| Dwarves | (verify PDF p. 32) |
-| Bardings | Tall, Eager, Fair, Bold, Fierce, Generous, Proud, Stern |
-| Elves | Swift, Merry, Fair, Wary, Lordly, Keen-Eyed, Patient, Subtle |
-| Hobbits | Merry, Eager, Fair-Spoken, Faithful, Honourable, Inquisitive, Keen-Eyed, Rustic |
+| Culture     | Available Distinctive Features                                                       |
+| ----------- | ------------------------------------------------------------------------------------ |
+| Dwarves     | Cunning, Wary, Fierce, Lordly, Proud, Stern, Secretive, Wilful (basic-rules §"ANÕES DO POVO DE DURIN — CARACTERÍSTICAS NOTÁVEIS" ~linha 738) |
+| Bardings    | Tall, Eager, Fair, Bold, Fierce, Generous, Proud, Stern                              |
+| Elves       | Swift, Merry, Fair, Wary, Lordly, Keen-Eyed, Patient, Subtle                         |
+| Hobbits     | Merry, Eager, Fair-Spoken, Faithful, Honourable, Inquisitive, Keen-Eyed, Rustic      |
 | Men of Bree | Cunning, Inquisitive, Fair-Spoken, Faithful, Generous, Patient, Rustic, True-Hearted |
-| Rangers | Swift, Tall, Bold, Honourable, Stern, Secretive, True-Hearted, Subtle |
+| Rangers     | Swift, Tall, Bold, Honourable, Stern, Secretive, True-Hearted, Subtle                |
 
 ### 6.6. Canonical list of the 24 Distinctive Features
 
@@ -721,14 +736,14 @@ Each Calling provides:
 - **Additional Distinctive Feature:** fixed per Calling.
 - **Shadow Path:** typical corruption arc.
 
-| Calling | Skills (pick 2) | Additional Distinctive Feature | Shadow Path |
-|---|---|---|---|
-| Treasure Hunter | EXPLORE, SCAN, STEALTH | Burglary | Dragon-Sickness |
-| Champion | ATHLETICS, AWE, HUNTING | Enemy-Lore (pick type) | Curse of Vengeance |
-| Captain | BATTLE, ENHEARTEN, PERSUADE | Leadership | Lure of Power |
-| Scholar | CRAFT, LORE, RIDDLE | Rhymes of Lore | Lure of Secrets |
-| Warden | AWARENESS, HEALING, INSIGHT | Shadow-Lore | Path of Despair |
-| Messenger | COURTESY, SONG, TRAVEL | Folk-Lore | Wandering-Madness |
+| Calling         | Skills (pick 2)             | Additional Distinctive Feature | Shadow Path        |
+| --------------- | --------------------------- | ------------------------------ | ------------------ |
+| Treasure Hunter | EXPLORE, SCAN, STEALTH      | Burglary                       | Dragon-Sickness    |
+| Champion        | ATHLETICS, AWE, HUNTING     | Enemy-Lore (pick type)         | Curse of Vengeance |
+| Captain         | BATTLE, ENHEARTEN, PERSUADE | Leadership                     | Lure of Power      |
+| Scholar         | CRAFT, LORE, RIDDLE         | Rhymes of Lore                 | Lure of Secrets    |
+| Warden          | AWARENESS, HEALING, INSIGHT | Shadow-Lore                    | Path of Despair    |
+| Messenger       | COURTESY, SONG, TRAVEL      | Folk-Lore                      | Wandering-Madness  |
 
 > **Enemy-Lore (Champion):** the player must pick one type from `[Evil Men, Orcs, Spiders, Trolls, Wargs, Undead]`. Store as nominal string.
 
@@ -738,82 +753,82 @@ Each Calling provides:
 
 ### 8.1. Weapons
 
-| Weapon | Damage | Injury | Load | Combat Proficiency | Notes |
-|---|---|---|---|---|---|
-| Unarmed | 1 | — | 0 | Brawling* | Includes throwing stones; cannot cause Piercing Blow |
-| Dagger | 2 | 14 | 0 | Brawling* | — |
-| Cudgel | 3 | 12 | 0 | Brawling* | — |
-| Club | 4 | 14 | 1 | Brawling* | — |
-| Short Sword | 3 | 16 | 1 | Swords | — |
-| Sword | 4 | 16 | 2 | Swords | — |
-| Long Sword | 5 | 16 (1h) / 18 (2h) | 3 | Swords | 1- or 2-handed |
-| Short Spear | 3 | 14 | 2 | Spears | Can be thrown |
-| Spear | 4 | 14 (1h) / 16 (2h) | 3 | Spears | 1- or 2-handed; can be thrown |
-| Great Spear | 5 | 16 | 4 | Spears | 2-handed |
-| Axe | 5 | 18 | 2 | Axes | — |
-| Long-hafted Axe | 6 | 18 (1h) / 20 (2h) | 3 | Axes | 1- or 2-handed |
-| Great Axe | 7 | 20 | 4 | Axes | 2-handed |
-| Mattock | 7 | 18 | 3 | Axes | 2-handed |
-| Bow | 3 | 14 | 2 | Bows | Ranged |
-| Great Bow | 4 | 16 | 4 | Bows | Ranged |
+| Weapon          | Damage | Injury            | Load | Combat Proficiency | Notes                                                |
+| --------------- | ------ | ----------------- | ---- | ------------------ | ---------------------------------------------------- |
+| Unarmed         | 1      | —                 | 0    | Brawling\*         | Includes throwing stones; cannot cause Piercing Blow |
+| Dagger          | 2      | 14                | 0    | Brawling\*         | —                                                    |
+| Cudgel          | 3      | 12                | 0    | Brawling\*         | —                                                    |
+| Club            | 4      | 14                | 1    | Brawling\*         | —                                                    |
+| Short Sword     | 3      | 16                | 1    | Swords             | —                                                    |
+| Sword           | 4      | 16                | 2    | Swords             | —                                                    |
+| Long Sword      | 5      | 16 (1h) / 18 (2h) | 3    | Swords             | 1- or 2-handed                                       |
+| Short Spear     | 3      | 14                | 2    | Spears             | Can be thrown                                        |
+| Spear           | 4      | 14 (1h) / 16 (2h) | 3    | Spears             | 1- or 2-handed; can be thrown                        |
+| Great Spear     | 5      | 16                | 4    | Spears             | 2-handed                                             |
+| Axe             | 5      | 18                | 2    | Axes               | —                                                    |
+| Long-hafted Axe | 6      | 18 (1h) / 20 (2h) | 3    | Axes               | 1- or 2-handed                                       |
+| Great Axe       | 7      | 20                | 4    | Axes               | 2-handed                                             |
+| Mattock         | 7      | 18                | 3    | Axes               | 2-handed                                             |
+| Bow             | 3      | 14                | 2    | Bows               | Ranged                                               |
+| Great Bow       | 4      | 16                | 4    | Bows               | Ranged                                               |
 
 `*` Brawling: roll a number of dice equal to the highest Combat Proficiency, but the roll loses (1d).
 
 ### 8.2. Armour
 
-| Armour | Protection | Load | Type | Restriction |
-|---|---|---|---|---|
-| Leather Shirt | 1d | 3 | Leather | — |
-| Leather Corslet | 2d | 6 | Leather | — |
-| Mail-shirt | 3d | 9 | Mail | Standard of Living ≥ Common (verify p. 100) |
-| Coat of Mail | 4d | 12 | Mail | Standard of Living ≥ Prosperous (verify p. 100) |
-| Helm | +1d | 4 | Headgear | — |
+| Armour          | Protection | Load | Type     | Restriction                                     |
+| --------------- | ---------- | ---- | -------- | ----------------------------------------------- |
+| Leather Shirt   | 1d         | 3    | Leather  | —                                               |
+| Leather Corslet | 2d         | 6    | Leather  | —                                               |
+| Mail-shirt      | 3d         | 9    | Mail     | Standard of Living ≥ Common (basic-rules §"ARMADURA E ESCUDOS" ~linha 2363)     |
+| Coat of Mail    | 4d         | 12   | Mail     | Standard of Living ≥ Prosperous (basic-rules §"ARMADURA E ESCUDOS" ~linha 2363) |
+| Helm            | +1d        | 4    | Headgear | —                                               |
 
 > Helm may be removed in combat to lower Load.
 
 ### 8.3. Shields
 
-| Shield | Parry Modifier | Load | Restriction |
-|---|---|---|---|
-| Buckler | +1 | 2 | — |
-| Shield | +2 | 4 | Standard of Living ≥ Common |
-| Great Shield | +3 | 6 | Standard of Living ≥ Prosperous |
+| Shield       | Parry Modifier | Load | Restriction                     |
+| ------------ | -------------- | ---- | ------------------------------- |
+| Buckler      | +1             | 2    | —                               |
+| Shield       | +2             | 4    | Standard of Living ≥ Common     |
+| Great Shield | +3             | 6    | Standard of Living ≥ Prosperous |
 
 > Shields can be smashed in combat (Combat rules — out of scope).
 
 ### 8.4. Useful Items (starting count by Standard of Living)
 
-| Standard of Living | Typical culture | Useful Items |
-|---|---|---|
-| Poor | — | 0 |
-| Frugal | Elves, Rangers | 1 |
-| Common | Hobbits, Men of Bree | 2 |
-| Prosperous | Bardings, Dwarves | 3 |
-| Rich or Very Rich | — | 4 |
+| Standard of Living | Typical culture      | Useful Items |
+| ------------------ | -------------------- | ------------ |
+| Poor               | —                    | 0            |
+| Frugal             | Elves, Rangers       | 1            |
+| Common             | Hobbits, Men of Bree | 2            |
+| Prosperous         | Bardings, Dwarves    | 3            |
+| Rich or Very Rich  | —                    | 4            |
 
 Each Useful Item grants (1d) on a Skill roll associated with it, outside combat, at the Loremaster's discretion.
 
 ### 8.5. Ponies and Horses (mount by Standard of Living)
 
-| Standard of Living | Mount type/quality | Vigour |
-|---|---|---|
-| Poor or Frugal | No mount | — |
-| Common | Old horse or half-starved pony | 1 |
-| Prosperous | Decent creature | 2 |
-| Rich or Very Rich | Fine creature | 3 |
+| Standard of Living | Mount type/quality             | Vigour |
+| ------------------ | ------------------------------ | ------ |
+| Poor or Frugal     | No mount                       | —      |
+| Common             | Old horse or half-starved pony | 1      |
+| Prosperous         | Decent creature                | 2      |
+| Rich or Very Rich  | Fine creature                  | 3      |
 
 Each pack animal can carry up to **10 Load points** of Treasure.
 
 ### 8.6. Standards of Living — starting Treasure
 
-| Standard of Living | Starting Treasure |
-|---|---|
-| Poor | 0 |
-| Frugal | 0 |
-| Common | 30 |
-| Prosperous | 90 |
-| Rich | 180 |
-| Very Rich | (advanced campaign tier) |
+| Standard of Living | Starting Treasure        |
+| ------------------ | ------------------------ |
+| Poor               | 0                        |
+| Frugal             | 0                        |
+| Common             | 30                       |
+| Prosperous         | 90                       |
+| Rich               | 180                      |
+| Very Rich          | (advanced campaign tier) |
 
 ---
 
@@ -862,12 +877,12 @@ Each pack animal can carry up to **10 Load points** of Treasure.
 
 ### 9.6. Inspired / Favoured / Ill-Favoured
 
-| State | Mechanic | Persistence |
-|---|---|---|
-| Favoured | Roll 2 Feat Dice, keep best | Per roll |
-| Ill-favoured | Roll 2 Feat Dice, keep worst | Per roll |
-| Inspired (1d) | Receive 1 bonus Success Die (costs 1 Hope) | Per roll |
-| Inspired (2d) | Receive 2 bonus Success Dice (costs 1 Hope + invoked Distinctive Feature) | Per roll |
+| State         | Mechanic                                                                  | Persistence |
+| ------------- | ------------------------------------------------------------------------- | ----------- |
+| Favoured      | Roll 2 Feat Dice, keep best                                               | Per roll    |
+| Ill-favoured  | Roll 2 Feat Dice, keep worst                                              | Per roll    |
+| Inspired (1d) | Receive 1 bonus Success Die (costs 1 Hope)                                | Per roll    |
+| Inspired (2d) | Receive 2 bonus Success Dice (costs 1 Hope + invoked Distinctive Feature) | Per roll    |
 
 > These states are **transient** — they do not persist on the sheet. The webapp may offer a "Roll dice" modal that applies the modifiers.
 
@@ -879,16 +894,16 @@ Each pack animal can carry up to **10 Load points** of Treasure.
 
 Each Reward modifies **a single piece of war gear**. Cannot be applied twice to the same item.
 
-| Reward | Valid target | Effect |
-|---|---|---|
-| Close-fitting | armour, helm | +2 to PROTECTION roll result |
-| Cunning Make | armour, helm, shield | Reduce Load by 2 (min. 0) |
-| Fell | weapon | +2 to Injury rating |
-| Grievous | weapon | +1 to Damage rating |
-| Keen | weapon | Piercing Blow on a Feat Die result of 9+ |
-| Reinforced | shield | +1 to Parry bonus |
+| Reward        | Valid target         | Effect                                   |
+| ------------- | -------------------- | ---------------------------------------- |
+| Close-fitting | armour, helm         | +2 to PROTECTION roll result             |
+| Cunning Make  | armour, helm, shield | Reduce Load by 2 (min. 0)                |
+| Fell          | weapon               | +2 to Injury rating                      |
+| Grievous      | weapon               | +1 to Damage rating                      |
+| Keen          | weapon               | Piercing Blow on a Feat Die result of 9+ |
+| Reinforced    | shield               | +1 to Parry bonus                        |
 
-> **Enchanted Rewards** (Ancient Close Fitting, Superior Fell, etc.) exist for Famous Weapons / Wondrous Artefacts — out of scope for character creation. See p. 165 of the core rules.
+> **Enchanted Rewards** (Ancient Close Fitting, Superior Fell, etc.) exist for Famous Weapons / Wondrous Artefacts — out of scope for character creation. See basic-rules §"RECOMPENSAS ENCANTADAS" (linhas 5658+).
 
 ### 10.2. Named Weapons
 
@@ -903,46 +918,47 @@ Cultural naming conventions:
 
 ### 10.3. Starting Rewards (pick 1 at creation)
 
-| Starting Reward | Type | Effect |
-|---|---|---|
-| Close-fitting | gear (armour or helm) | +2 to PROTECTION roll |
-| Cunning Make | gear (armour, helm, shield) | −2 Load |
-| Fell | gear (weapon) | +2 to Injury |
-| Grievous | gear (weapon) | +1 to Damage |
-| Keen | gear (weapon) | Piercing Blow on 9+ |
-| Reinforced | gear (shield) | +1 to Parry bonus |
+| Starting Reward | Type                        | Effect                |
+| --------------- | --------------------------- | --------------------- |
+| Close-fitting   | gear (armour or helm)       | +2 to PROTECTION roll |
+| Cunning Make    | gear (armour, helm, shield) | −2 Load               |
+| Fell            | gear (weapon)               | +2 to Injury          |
+| Grievous        | gear (weapon)               | +1 to Damage          |
+| Keen            | gear (weapon)               | Piercing Blow on 9+   |
+| Reinforced      | gear (shield)               | +1 to Parry bonus     |
 
 ### 10.4. Starting Virtues (pick 1 at creation)
 
-| Starting Virtue | Effect |
-|---|---|
-| Confidence | +2 max Hope |
-| Dour-Handed | +1 damage on Heavy Blow |
-| Hardiness | +2 max Endurance |
-| Mastery | Pick 2 Skills and mark them Favoured |
-| Nimbleness | +1 Parry |
-| Prowess | −1 to one Attribute TN |
+| Starting Virtue | Effect                               |
+| --------------- | ------------------------------------ |
+| Confidence      | +2 max Hope                          |
+| Dour-Handed     | +1 damage on Heavy Blow              |
+| Hardiness       | +2 max Endurance                     |
+| Mastery         | Pick 2 Skills and mark them Favoured |
+| Nimbleness      | +1 Parry                             |
+| Prowess         | −1 to one Attribute TN               |
 
 ### 10.5. Standard Virtues (full list — for progression)
 
 The same 6 Virtues are available for every WISDOM rank-up. Each can be taken multiple times unless stated otherwise.
 
-| Virtue | Effect | Repeatable |
-|---|---|---|
-| Confidence | +2 max Hope | yes |
-| Dour-Handed | +1 STRENGTH on Heavy Blow; +1 Feat Die numerical result on Pierce | yes |
-| Hardiness | +2 max Endurance | yes |
-| Mastery | Pick 2 Skills → Favoured | yes |
-| Nimbleness | +1 Parry | yes |
-| Prowess | −1 to one Attribute TN | yes |
+| Virtue      | Effect                                                            | Repeatable |
+| ----------- | ----------------------------------------------------------------- | ---------- |
+| Confidence  | +2 max Hope                                                       | yes        |
+| Dour-Handed | +1 STRENGTH on Heavy Blow; +1 Feat Die numerical result on Pierce | yes        |
+| Hardiness   | +2 max Endurance                                                  | yes        |
+| Mastery     | Pick 2 Skills → Favoured                                          | yes        |
+| Nimbleness  | +1 Parry                                                          | yes        |
+| Prowess     | −1 to one Attribute TN                                            | yes        |
 
-> The full canonical Virtue effect (Standard) is more powerful than the simplified Starting effect. The Starting list shows only the immediate stat change; the full description is on p. 80 of the core rules.
+> The full canonical Virtue effect is in basic-rules §"LISTA DE VIRTUDES" (linhas 2504–2542). There is no "simplified Starting effect" in the source — Starting Virtues use the same effect text as Standard Virtues.
 
 ### 10.6. Cultural Virtues (require WISDOM ≥ 2)
 
 Each culture has **6 exclusive Cultural Virtues**. Summary:
 
 #### Dwarves
+
 - **Baruk Khazâd!** — 1×/combat in Forward Stance: Favoured attack + Intimidate Foe as secondary action.
 - **Path of Durin** — +2 Parry when fighting underground / in cramped spaces.
 - **Stiff-Necked** — All PROTECTION rolls Favoured (if not Miserable).
@@ -951,6 +967,7 @@ Each culture has **6 exclusive Cultural Virtues**. Summary:
 - **Words of Power** — Mark 1 Skill per category; spend 1 Hope → Magical success.
 
 #### Bardings
+
 - **Cram** — −1 Fatigue per Journey Event; Short Rest restores +WISDOM Endurance to Company.
 - **Dragon-Slayer** — All attack rolls Favoured vs Might-2+ creatures.
 - **Dwarf-Friend** — Fellowship Focus is a Dwarf: free Protect Companion in Defensive Stance; Dwarves always Friendly.
@@ -959,6 +976,7 @@ Each culture has **6 exclusive Cultural Virtues**. Summary:
 - **The Language of Birds** — Communicate with birds via COURTESY/PERSUADE/SONG; +1 free Inspired roll per Combat/Council/Journey.
 
 #### Elves
+
 - **Against the Unseen** — Shadow Tests vs Dread Favoured; (1d) vs evil spirits.
 - **Deadly Archery** — Bow + Rearward Stance: free Prepare Shot as secondary action.
 - **Elbereth Gilthoniel!** — +1 max Hope; +WISDOM free Inspired rolls per Adventuring Phase.
@@ -967,6 +985,7 @@ Each culture has **6 exclusive Cultural Virtues**. Summary:
 - **Memory of Ancient Days** — Journey Events rolled as if in a Border Land (2 Feat Dice, keep best).
 
 #### Hobbits
+
 - **Art of Disappearing** — Successful STEALTH in marginal cover: simply disappear.
 - **Brave at a Pinch** — Inspired on all rolls when Miserable, Weary, or Wounded.
 - **Small Folk** — +2 Parry vs larger foes; Rearward Stance allowed with only 1 ally in close combat.
@@ -975,22 +994,24 @@ Each culture has **6 exclusive Cultural Virtues**. Summary:
 - **Tough as Old Tree-Roots** — Wounded: roll 2 Feat Dice (keep best); double STRENGTH on rest recovery.
 
 #### Men of Bree
-- **Bold and Hale** — (varies — verify p. 87)
+
+- **Bold and Hale** — (verify basic-rules §"VIRTUDES DOS HOMENS DE BREE" linhas 2770–2822 — likely mistranslation; the canonical 6 are listed there)
 - **Bree-Pony** — +1 max Hope; pony Vigour 4.
 - **Defiance** — End of each Combat (if not Wounded/Miserable): recover Endurance equal to HEART or VALOUR (higher).
 - **Pipe-Smoking** — Whenever you recover Hope, recover 1 extra Hope.
-- **Stout** — (varies — verify p. 87)
+- **Stout** — (verify basic-rules §"VIRTUDES DOS HOMENS DE BREE" linhas 2770–2822 — likely mistranslation; the canonical 6 are listed there)
 - **Strange as News from Bree** — In Fellowship Phase: INSIGHT or RIDDLE roll → receive a rumour.
 
 #### Rangers of the North
+
 - **Foresight of His Folk** — +WISDOM uses per Adventuring Phase: re-roll all dice on any roll.
 - **Heir of Arnor** — Create a Wondrous Artefact / Famous Weapon with 1 Enchanted Reward (passable to heir).
-- **Hidden Sentinel** — (varies — verify p. 89)
+- **Hidden Sentinel** — (verify basic-rules §"VIRTUDES DOS PATRULHEIROS DO NORTE" linhas 2824–2873 — likely a placeholder for **Ranger's Resilience** found there)
 - **Royalty Revealed** — 1×/combat in Open Stance: free Rally Comrades; Company Inspired next round.
 - **Strider** — In EXPLORE/HUNTING/TRAVEL: spend 1 Hope → Magical success; can cover multiple journey roles.
 - **Strong-willed** — (1d) on Shadow Tests vs Dread.
 
-> The effect descriptions above are summarised. Implementers must seed full mechanical text from the core rulebook (pp. 81–89).
+> The effect descriptions above are summarised. Implementers must seed full mechanical text from basic-rules §"VIRTUDES CULTURAIS" (linhas 2544–2873).
 
 ---
 
@@ -998,7 +1019,7 @@ Each culture has **6 exclusive Cultural Virtues**. Summary:
 
 ### 11.1. Patrons (6 default)
 
-The full list is on p. 52 of the core rules. The webapp should load:
+The full list is in basic-rules §"PATRONO" (linhas 1569–1604) and §"PATRONOS" appendix (linhas 6903–7160). The webapp should load:
 
 ```
 Patron {
@@ -1009,7 +1030,7 @@ Patron {
 }
 ```
 
-Canonical Patrons (resumed): Bilbo Baggins, Gandalf the Grey, plus 4 additional listed on p. 52. The extracted PDF chunk did not include the full table — implementers should consult the original.
+Canonical Patrons (6 default): Balin son of Fundin, Bilbo Baggins, Círdan the Shipwright, Gandalf the Grey, Gilraen the Fair, Tom Bombadil & Goldberry — full descriptions in basic-rules §"PATRONOS" appendix (linhas 6903–7160).
 
 ### 11.2. Fellowship rating computation
 
@@ -1021,6 +1042,7 @@ max_fellowship = number_of_player_heroes
 ```
 
 **Current Fellowship:**
+
 - Initialised equal to `max_fellowship`.
 - Decremented by spends (recover Hope or trigger Patron effects).
 - **Fully restored at the end of each session.**
@@ -1045,40 +1067,40 @@ max_fellowship = number_of_player_heroes
 
 ### 12.1. Point types
 
-| Type | Use |
-|---|---|
-| Skill points | Buy Skill ranks |
+| Type             | Use                                                  |
+| ---------------- | ---------------------------------------------------- |
+| Skill points     | Buy Skill ranks                                      |
 | Adventure points | Buy Combat Proficiency ranks; raise VALOUR or WISDOM |
 
 ### 12.2. Earning
 
-| Source | Skill points | Adventure points |
-|---|---|---|
-| End of each session | +3 | +3 |
-| Yule (Fellowship Phase) | +WITS | — |
-| (Alternative rate) | +1/hour of play | +1/hour of play |
+| Source                  | Skill points    | Adventure points |
+| ----------------------- | --------------- | ---------------- |
+| End of each session     | +3              | +3               |
+| Yule (Fellowship Phase) | +WITS           | —                |
+| (Alternative rate)      | +1/hour of play | +1/hour of play  |
 
 ### 12.3. Costs (Skills and Combat Proficiencies)
 
 #### Skills
 
-| Target rating | Cost (Skill points) |
-|---|---|
-| 0 → 1 | 1 |
-| 1 → 2 | 2 |
-| 2 → 3 | 3 |
-| 3 → 4 | 5 |
-| 4 → 5 | (verify full rulebook) |
-| 5 → 6 | (verify full rulebook) |
+| Target rating | Cost (Skill points)    |
+| ------------- | ---------------------- |
+| 0 → 1         | 1                      |
+| 1 → 2         | 2                      |
+| 2 → 3         | 3                      |
+| 3 → 4         | 5                      |
+| 4 → 5         | (verify full rulebook) |
+| 5 → 6         | (verify full rulebook) |
 
 #### Combat Proficiencies
 
-| Target rating | Cost (Adventure points) |
-|---|---|
-| 0 → 1 | 2 |
-| 1 → 2 | 4 |
-| 2 → 3 | 6 |
-| (higher ranks) | (verify full rulebook) |
+| Target rating  | Cost (Adventure points) |
+| -------------- | ----------------------- |
+| 0 → 1          | 2                       |
+| 1 → 2          | 4                       |
+| 2 → 3          | 6                       |
+| (higher ranks) | (verify full rulebook)  |
 
 ### 12.4. Raising VALOUR and WISDOM
 
@@ -1114,39 +1136,47 @@ Heir {
 **Scenario:** create a Hobbit of the Shire, Treasure Hunter named **Belba Bolger**, age 28.
 
 ### Step 1 — Culture: Hobbit of the Shire
+
 - Cultural Blessing: **Hobbit-Sense** (WISDOM rolls Favoured; +1d on Shadow Tests vs Greed).
 - Standard of Living: **Common** → starting Treasure 30.
 
 ### Step 2 — Attributes
+
 Rolled 1 Success Die → result **5**:
 
 | STRENGTH | HEART | WITS |
-|---|---|---|
-| 4 | 5 | 5 |
+| -------- | ----- | ---- |
+| 4        | 5     | 5    |
 
 ### Step 3 — TNs
+
 - TN STRENGTH = 16
 - TN HEART = 15
 - TN WITS = 15
 
 ### Step 4 — Derived Stats
+
 - max Endurance = 4 + 18 = **22**
 - max Hope = 5 + 10 = **15**
 - base Parry = 5 + 12 = **17**
 
 ### Step 5 — Skills and Combat Proficiencies (Hobbit)
-Copies hobbit matrix. Underlined Skills (per PDF): pick 1. Belba marks **STEALTH 3** as Favoured.
+
+Copies hobbit matrix. Underlined Skills (see `src/ref-data/cultural-skills.ts`): pick 1. Belba marks **STEALTH 3** as Favoured.
 
 Base Hobbit Combat Proficiency: **Bows OR Swords (2)** → picks **Swords 2**.
 Additional Combat Proficiency: **Bows 1**.
 
 ### Step 6 — Distinctive Features (Hobbit)
+
 Belba picks: **Keen-Eyed** and **Inquisitive**.
 
 ### Step 7 — Name and Age
+
 Name: **Belba Bolger** (canonical hobbit surname). Age: **28**.
 
 ### Step 8 — Calling: Treasure Hunter
+
 - Shadow Path: **Dragon-Sickness**.
 - Additional Distinctive Feature: **Burglary**.
 - Favoured Skills (pick 2 of EXPLORE/SCAN/STEALTH):
@@ -1155,6 +1185,7 @@ Name: **Belba Bolger** (canonical hobbit surname). Age: **28**.
   - Picks **EXPLORE** as the second → Favoured.
 
 #### Previous Experience — 10 points
+
 - STEALTH: 3 → 4 (5 points)
 - SCAN: 0 → 1 (1 point)
 - ATHLETICS: 0 → 1 (1 point)
@@ -1165,6 +1196,7 @@ Name: **Belba Bolger** (canonical hobbit surname). Age: **28**.
 Total spent: **10 points**. ✓
 
 #### Starting Gear
+
 - Swords (2): **Sword** (Damage 4, Injury 16, Load 2).
 - Bows (1): **Bow** (Damage 3, Injury 14, Load 2).
 - Armour: **Leather Shirt** (1d Protection, Load 3).
@@ -1177,10 +1209,12 @@ Total spent: **10 points**. ✓
 **Initial Load:** 2 + 2 + 3 = **7**.
 
 #### VALOUR and WISDOM = 1
+
 - Starting Reward: **Hardiness** (+2 max Endurance → 22 + 2 = **24**).
 - Starting Virtue: **Mastery** (picks **HEALING** and **PERSUADE** as Favoured).
 
 ### Step 9 — Company
+
 - Patron: **Bilbo Baggins**.
 - Safe Haven: **Prancing Pony (Bree)**.
 - Fellowship: 4 players → base 4 + Bilbo bonus (X) = **(verify Patron table)**.
@@ -1312,6 +1346,7 @@ Recommendation: **read-only mode for the Loremaster on hero-owned fields** + **s
 ### 16.2. Per-session state
 
 Snapshot the sheet per session (timestamps), allowing rollback. Useful for:
+
 - Recovering from input errors.
 - Visualising progression at campaign end.
 - Auditing Hope expenditure / Shadow gained.
@@ -1391,20 +1426,21 @@ The English terms in this spec are canonical. To support a `pt-BR` UI surface (m
 
 > Code identifiers, schema field names, enum values, and event names stay English. Only display labels are localised.
 
-### 16.5. Known gaps (verify against full rulebook)
+### 16.5. Known gaps (verify against `THE_ONE_RING_BASIC_RULES.md`)
 
-The following items were not fully visible in the consulted excerpts and should be sourced from the original PDF before seeding production data:
+The following items were not fully resolved in earlier drafts of this spec. Each one should be reconciled against the section anchor cited below in `THE_ONE_RING_BASIC_RULES.md`:
 
-1. Distinctive Features list for Dwarves (8 to choose 2).
-2. Underlined Skills per culture (the Skill amongst which the player picks 1 as Favoured).
-3. Full table of Patrons and their effects (p. 52).
-4. Skill costs for ranks 4→5 and 5→6.
-5. Combat Proficiency costs for ranks 3→4 and beyond.
-6. Costs to raise VALOUR and WISDOM.
-7. Full mechanical text of all Cultural Virtues for Bardings, Bree-folk, and some Rangers virtues (placeholder summaries above).
-8. Full Enchanted Rewards list (p. 165+).
+1. Distinctive Features list for Dwarves (8 to choose 2) — basic-rules §"ANÕES — CARACTERÍSTICAS NOTÁVEIS" linha ~738. Resolved by inspection: Cunning, Wary, Fierce, Lordly, Proud, Stern, Secretive, Wilful.
+2. Underlined Skills per culture (1 of 2 marked as Favoured at creation) — markdown extraction does not preserve underline formatting; resolved in `src/ref-data/cultural-skills.ts`. Confirm visually against the Devir PDF if doubt remains.
+3. Full table of Patrons and their effects — basic-rules §"PATRONOS" appendix (linhas 6903–7160). Resolved: Balin, Bilbo, Círdan, Gandalf, Gilraen, Tom & Goldberry.
+4. Skill costs for ranks 4→5 and 5→6 — basic-rules §"FAZER ATUALIZAÇÕES — CUSTOS DE PONTOS DE EXPERIÊNCIA" (linhas 3739–3756). Table extraction is partial; values 8 and 12 are likely but require visual confirmation.
+5. Combat Proficiency costs for ranks 3→4 and beyond — same anchor as item 4.
+6. Costs to raise VALOUR and WISDOM — basic-rules same anchor (linhas 3741–3752): rank 2=8, 3=12, 4=20, 5=26, 6=30 Adventure points.
+7. Full mechanical text of Cultural Virtues — basic-rules §"VIRTUDES CULTURAIS" linhas 2544–2873. The placeholders "Bold and Hale", "Stout", and "Hidden Sentinel" in §10.6 above are likely mistranslations: the canonical Bree virtues are Friendly and Familiar, Pipe-Smoking, Desperate Courage, Strange as News from Bree, Bree-Pony, Defiance; the canonical Rangers virtues include Ranger's Resilience.
+8. Full Enchanted Rewards list — basic-rules §"RECOMPENSAS ENCANTADAS" (linhas 5658+).
+9. Special Successes table per Skill (Tengwar / magical-success effects) — not fully captured in basic-rules excerpt; confirm against Free League PDF.
 
-> **Recommendation:** the implementer should fill these from the official PDF before finalising the database seed.
+> **Recommendation:** the implementer should fill these from `THE_ONE_RING_BASIC_RULES.md` before finalising the database seed; the refinement plan in `docs/plans/2026-05-01-domain-spec-refinement.md` walks through the corrections.
 
 ---
 
@@ -1431,6 +1467,7 @@ If any check fails: block submission and surface the offending field(s).
 This section translates the domain spec above into concrete implementation guidance for a React-based webapp.
 
 > **Assumed context** (challenge any assumption that doesn't fit your case):
+>
 > - **1 Loremaster + 3–6 Player-heroes** per Company (typical TTRPG group size).
 > - **Single owner per sheet** — the Player-hero edits; the Loremaster reads. No co-editing inside one sheet → no CRDTs.
 > - **Desktop-first, mobile-friendly** UI.
@@ -1438,26 +1475,26 @@ This section translates the domain spec above into concrete implementation guida
 
 ### 18.1. Stack at a Glance
 
-| Concern | Recommendation | Rationale |
-|---|---|---|
-| Build tool | **Vite** | Fastest HMR for React; native ESM; minimal config; first-class TS. |
-| Package manager | **pnpm** workspaces | Efficient disk + install for monorepos; the monorepo is justified by the shared `@theonesheet/domain` package (see §18.3). |
-| Language | **TypeScript** strict mode | The domain has many invariants — types catch them cheaply. |
-| UI framework | **React 19** | The Compiler removes most `useMemo`/`useCallback` boilerplate. |
-| Styling | **Tailwind CSS v4** + **shadcn/ui** | Utility-first speeds layout for a sheet-heavy UI; shadcn primitives are copy-paste owned, no dependency surface. |
-| Routing | **TanStack Router** | Type-safe params + search params; first-class TanStack Query integration. (React Router v7 is a fine swap if you prefer wider familiarity — it doesn't change the rest of the architecture.) |
-| Server state | **TanStack Query** | De-facto standard for React + REST/SSE; cache invalidation handled. |
-| Client UI state | **Zustand** | Tiny, no boilerplate, fits ephemeral state (modal open, current wizard phase). |
-| Forms | **React Hook Form** + Zod resolver | Best-in-class for complex multi-step forms; uncontrolled inputs keep wizard pages snappy. (TanStack Form is a credible alternative if you want fully type-safe field paths, but the ecosystem and docs around RHF are larger.) |
-| Validation | **Zod** | One schema serves frontend forms, API contracts, and inferred TS types. First-class react-hook-form resolver. (Valibot is smaller-bundle but has weaker form-library integration.) |
-| API server | **Fastify** | Mature, plugin-rich, schema-first validation, great TS DX, excellent perf for a Node target. (**Hono** is a credible greenfield alternative — smaller core, runtime-portable to Bun/Deno/edge — pick it if portability matters more than plugin ecosystem.) |
-| Database | **PostgreSQL** (≥ 14) | Schema is relational with some JSONB; Postgres handles both natively. |
-| ORM / migrations | **Drizzle ORM** + **drizzle-kit** | SQL-like API (`db.select().from(...)`), end-to-end type safety, schema-diff migrations generated as **plain SQL files** (committed and reviewable), `drizzle-zod` integrates with the `@theonesheet/schema` Zod source-of-truth, raw SQL escape hatch via `sql\`\`` template. (See Decision 6.) |
-| Realtime | **Server-Sent Events (SSE)** via `@fastify/sse-v2` | One-way Loremaster view; no WebSocket infra; trivial in Fastify. (See §18.5.) |
-| Authentication | **Better Auth** | Modern, batteries-included session auth (email + magic link, OAuth providers, passkeys); active maintenance; works with any DB driver. (Lucia v3 was deprecated as a library and lives on as a learning resource — don't pick it for greenfield in 2026.) |
-| Tests (unit) | **Vitest** + **React Testing Library** | De facto choice for Vite projects; ESM-native; instant test feedback. |
-| Tests (API routes) | **Vitest** + `fastify.inject()` | Built-in, no real HTTP server needed; canonical Fastify test pattern. |
-| Tests (E2E) | **Playwright** | Realistic browser; auto-wait; works offline against your local stack. |
+| Concern            | Recommendation                                     | Rationale                                                                                                                                                                                                                                                                                       |
+| ------------------ | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Build tool         | **Vite**                                           | Fastest HMR for React; native ESM; minimal config; first-class TS.                                                                                                                                                                                                                              |
+| Package manager    | **pnpm** workspaces                                | Efficient disk + install for monorepos; the monorepo is justified by the shared `@theonesheet/domain` package (see §18.3).                                                                                                                                                                      |
+| Language           | **TypeScript** strict mode                         | The domain has many invariants — types catch them cheaply.                                                                                                                                                                                                                                      |
+| UI framework       | **React 19**                                       | The Compiler removes most `useMemo`/`useCallback` boilerplate.                                                                                                                                                                                                                                  |
+| Styling            | **Tailwind CSS v4** + **shadcn/ui**                | Utility-first speeds layout for a sheet-heavy UI; shadcn primitives are copy-paste owned, no dependency surface.                                                                                                                                                                                |
+| Routing            | **TanStack Router**                                | Type-safe params + search params; first-class TanStack Query integration. (React Router v7 is a fine swap if you prefer wider familiarity — it doesn't change the rest of the architecture.)                                                                                                    |
+| Server state       | **TanStack Query**                                 | De-facto standard for React + REST/SSE; cache invalidation handled.                                                                                                                                                                                                                             |
+| Client UI state    | **Zustand**                                        | Tiny, no boilerplate, fits ephemeral state (modal open, current wizard phase).                                                                                                                                                                                                                  |
+| Forms              | **React Hook Form** + Zod resolver                 | Best-in-class for complex multi-step forms; uncontrolled inputs keep wizard pages snappy. (TanStack Form is a credible alternative if you want fully type-safe field paths, but the ecosystem and docs around RHF are larger.)                                                                  |
+| Validation         | **Zod**                                            | One schema serves frontend forms, API contracts, and inferred TS types. First-class react-hook-form resolver. (Valibot is smaller-bundle but has weaker form-library integration.)                                                                                                              |
+| API server         | **Fastify**                                        | Mature, plugin-rich, schema-first validation, great TS DX, excellent perf for a Node target. (**Hono** is a credible greenfield alternative — smaller core, runtime-portable to Bun/Deno/edge — pick it if portability matters more than plugin ecosystem.)                                     |
+| Database           | **PostgreSQL** (≥ 14)                              | Schema is relational with some JSONB; Postgres handles both natively.                                                                                                                                                                                                                           |
+| ORM / migrations   | **Drizzle ORM** + **drizzle-kit**                  | SQL-like API (`db.select().from(...)`), end-to-end type safety, schema-diff migrations generated as **plain SQL files** (committed and reviewable), `drizzle-zod` integrates with the `@theonesheet/schema` Zod source-of-truth, raw SQL escape hatch via `sql\`\`` template. (See Decision 6.) |
+| Realtime           | **Server-Sent Events (SSE)** via `@fastify/sse-v2` | One-way Loremaster view; no WebSocket infra; trivial in Fastify. (See §18.5.)                                                                                                                                                                                                                   |
+| Authentication     | **Better Auth**                                    | Modern, batteries-included session auth (email + magic link, OAuth providers, passkeys); active maintenance; works with any DB driver. (Lucia v3 was deprecated as a library and lives on as a learning resource — don't pick it for greenfield in 2026.)                                       |
+| Tests (unit)       | **Vitest** + **React Testing Library**             | De facto choice for Vite projects; ESM-native; instant test feedback.                                                                                                                                                                                                                           |
+| Tests (API routes) | **Vitest** + `fastify.inject()`                    | Built-in, no real HTTP server needed; canonical Fastify test pattern.                                                                                                                                                                                                                           |
+| Tests (E2E)        | **Playwright**                                     | Realistic browser; auto-wait; works offline against your local stack.                                                                                                                                                                                                                           |
 
 ### 18.2. Architectural Decisions (the meaningful tradeoffs)
 
@@ -1509,6 +1546,7 @@ If requirements grow (e.g. live dice rolls broadcast to the Company), WebSockets
 **Alternatives considered:** raw SQL queries + hand-written migrations (with `node-postgres` or `postgres`); Prisma; Kysely.
 
 **Why Drizzle wins here:**
+
 - **SQL-like API that doesn't hide what's happening.** `db.select().from(characters).where(eq(characters.id, id))` reads like SQL, runs as the SQL you'd write. No `findMany({ include: { ... } })` magic.
 - **End-to-end type safety** from the DB column to the API response, without code generation steps.
 - **Schema-diff migrations via drizzle-kit**, emitted as **plain SQL files** that you commit and review. You get the auditability of raw SQL with the ergonomics of a typed schema.
@@ -1563,13 +1601,13 @@ the-one-sheet/
 
 #### State boundaries
 
-| What | Where | Why |
-|---|---|---|
-| Server state (sheet data, Company, Patrons) | TanStack Query | Cached, deduplicated, invalidated cleanly. |
-| Wizard step / modal / sidebar | Zustand | Ephemeral, doesn't belong in URL or server. |
-| Current route, query params, dialog params | TanStack Router | Shareable URLs; browser back button works. |
-| Form draft (during a wizard phase) | React Hook Form local state | Best-in-class form perf and validation. |
-| **Derived values (TN, max Endurance, Load, Parry)** | `@theonesheet/domain` pure functions called in `useMemo` | Instant, testable, shared with backend. |
+| What                                                | Where                                                    | Why                                         |
+| --------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------- |
+| Server state (sheet data, Company, Patrons)         | TanStack Query                                           | Cached, deduplicated, invalidated cleanly.  |
+| Wizard step / modal / sidebar                       | Zustand                                                  | Ephemeral, doesn't belong in URL or server. |
+| Current route, query params, dialog params          | TanStack Router                                          | Shareable URLs; browser back button works.  |
+| Form draft (during a wizard phase)                  | React Hook Form local state                              | Best-in-class form perf and validation.     |
+| **Derived values (TN, max Endurance, Load, Parry)** | `@theonesheet/domain` pure functions called in `useMemo` | Instant, testable, shared with backend.     |
 
 #### Computed values — the canonical pattern
 
@@ -1582,10 +1620,13 @@ export function computeMaxEndurance(
   rewards: Reward[],
 ): number {
   const base = CULTURE_FORMULAS[culture].endurance(attributes.strength);
-  const hardinessBonus = virtues.filter(v => v.name === 'Hardiness').length * 2;
+  const hardinessBonus =
+    virtues.filter((v) => v.name === 'Hardiness').length * 2;
   const startingHardiness = rewards.some(
-    r => r.name === 'Hardiness' && r.origin === 'STARTING',
-  ) ? 2 : 0;
+    (r) => r.name === 'Hardiness' && r.origin === 'STARTING',
+  )
+    ? 2
+    : 0;
   return base + hardinessBonus + startingHardiness;
 }
 ```
@@ -1593,12 +1634,13 @@ export function computeMaxEndurance(
 ```tsx
 // apps/web/src/features/sheet/StatsPanel.tsx
 const maxEndurance = useMemo(
-  () => computeMaxEndurance(
-    character.heroic_culture,
-    character.attributes,
-    character.virtues,
-    character.rewards,
-  ),
+  () =>
+    computeMaxEndurance(
+      character.heroic_culture,
+      character.attributes,
+      character.virtues,
+      character.rewards,
+    ),
   [character],
 );
 ```
@@ -1668,7 +1710,9 @@ fastify.get('/api/companies/:id/stream', async (req, reply) => {
 const eventSource = new EventSource(`/api/companies/${companyId}/stream`);
 eventSource.onmessage = (e) => {
   const event = JSON.parse(e.data);
-  queryClient.invalidateQueries({ queryKey: ['character', event.character_id] });
+  queryClient.invalidateQueries({
+    queryKey: ['character', event.character_id],
+  });
 };
 ```
 
@@ -1678,23 +1722,23 @@ Domain events fired via SSE match the list in §16.3. The Loremaster's `useQuery
 
 ### 18.6. Backend Shape (brief)
 
-| Concern | Approach |
-|---|---|
-| API style | REST with explicit resources (`/characters`, `/companies`, `/sessions`). No GraphQL — overhead unjustified for this scope. |
-| Schema | Drizzle table definitions in `apps/api/src/db/schema.ts`; one table per top-level entity (`characters`, `companies`, `change_log`, `sessions`); JSONB columns for nested objects (`war_gear`, `attributes`, `skills`). Migrations generated via `drizzle-kit generate`, committed as plain SQL. |
-| Re-validation | Every write passes through `@theonesheet/domain` validators before hitting Postgres. Never trust client-computed derived values — the API recomputes from inputs. |
-| Auth | Session-based via Better Auth (DB-backed). Roles: `player`, `loremaster`, `admin`. Per-route authorisation via Fastify hooks. |
-| Audit log | Every mutation appends an entry to `change_log` (the §16.3 events). Used for the history feature and for SSE replay if a Loremaster reconnects. |
+| Concern       | Approach                                                                                                                                                                                                                                                                                        |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| API style     | REST with explicit resources (`/characters`, `/companies`, `/sessions`). No GraphQL — overhead unjustified for this scope.                                                                                                                                                                      |
+| Schema        | Drizzle table definitions in `apps/api/src/db/schema.ts`; one table per top-level entity (`characters`, `companies`, `change_log`, `sessions`); JSONB columns for nested objects (`war_gear`, `attributes`, `skills`). Migrations generated via `drizzle-kit generate`, committed as plain SQL. |
+| Re-validation | Every write passes through `@theonesheet/domain` validators before hitting Postgres. Never trust client-computed derived values — the API recomputes from inputs.                                                                                                                               |
+| Auth          | Session-based via Better Auth (DB-backed). Roles: `player`, `loremaster`, `admin`. Per-route authorisation via Fastify hooks.                                                                                                                                                                   |
+| Audit log     | Every mutation appends an entry to `change_log` (the §16.3 events). Used for the history feature and for SSE replay if a Loremaster reconnects.                                                                                                                                                 |
 
 ### 18.7. Testing Strategy
 
-| Layer | Tool | What to test |
-|---|---|---|
-| `@theonesheet/domain` | Vitest | Every formula in §4. Every invariant in §14. Worked example in §13 reproducible. **This is where you spend most testing effort.** |
-| `@theonesheet/schema` | Vitest | Round-trip `Character` through Zod parse → serialise → parse. |
-| Component logic | RTL + Vitest | Form validation triggers, conditional rendering by phase, derived value display. |
-| API routes | Vitest + `fastify.inject()` | One happy-path + one validation-failure test per endpoint. No HTTP server needed. |
-| End-to-end | Playwright | One test per user journey: full creation, mid-creation resume, Loremaster sees player edit. |
+| Layer                 | Tool                        | What to test                                                                                                                      |
+| --------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `@theonesheet/domain` | Vitest                      | Every formula in §4. Every invariant in §14. Worked example in §13 reproducible. **This is where you spend most testing effort.** |
+| `@theonesheet/schema` | Vitest                      | Round-trip `Character` through Zod parse → serialise → parse.                                                                     |
+| Component logic       | RTL + Vitest                | Form validation triggers, conditional rendering by phase, derived value display.                                                  |
+| API routes            | Vitest + `fastify.inject()` | One happy-path + one validation-failure test per endpoint. No HTTP server needed.                                                 |
+| End-to-end            | Playwright                  | One test per user journey: full creation, mid-creation resume, Loremaster sees player edit.                                       |
 
 The domain package is where complexity lives. If `@theonesheet/domain` is well-tested, the rest of the app is mostly UI plumbing.
 
@@ -1703,27 +1747,32 @@ The domain package is where complexity lives. If `@theonesheet/domain` is well-t
 A reasonable phasing for a small team:
 
 **Phase 1 — Foundation (1–2 weeks)**
+
 - Monorepo skeleton; Vite + Fastify boot; shadcn/ui set up.
 - `@theonesheet/schema` with `Character`, `Attributes`, `Skill` Zod schemas.
 - `@theonesheet/domain` with TN computation, max Endurance, max Hope, base Parry, Load.
 - Vitest suite covering all of §4 formulas.
 
 **Phase 2 — Creation wizard (2–3 weeks)**
+
 - 9-phase wizard, route per phase.
 - Cultural reference data seeded.
 - Worked example (§13) reproducible end-to-end.
 
 **Phase 3 — Sheet view + persistence (1–2 weeks)**
+
 - Read/write API.
 - Sheet view with all panels.
 - Per-session change log.
 
 **Phase 4 — Company + Loremaster view (1–2 weeks)**
+
 - Company entity.
 - Loremaster dashboard listing all Player-heroes.
 - SSE channel + frontend subscription.
 
 **Phase 5 — Progression & polish (1+ weeks)**
+
 - VALOUR/WISDOM rank-up flow.
 - Cultural Virtues unlock at WISDOM 2.
 - Mobile responsiveness pass.
@@ -1731,37 +1780,52 @@ A reasonable phasing for a small team:
 
 ---
 
-## Appendix A — Page References (Core Rules 2nd ed., English)
+## Appendix A — Cross-references to `THE_ONE_RING_BASIC_RULES.md`
 
-| Topic | Pages |
-|---|---|
-| Action Resolution + sheet overview | 22–25 |
-| Adventurers (Ch. 3) | 27–58 |
-| Dwarves of Durin's Folk | 32–33 |
-| Bardings | 34–35 |
-| Elves of Lindon | 36–37 |
-| Hobbits of the Shire | 38–39 |
-| Men of Bree | 40–41 |
-| Rangers of the North | 42–43 |
-| Callings | 44–46 |
-| Previous Experience | 46 |
-| Starting Gear | 47–50 |
-| Starting Reward and Virtue | 51 |
-| The Company | 51–55 |
-| Adventuring Career / Heirs | 56–57 |
-| Characteristics (Ch. 4) | 59–75 |
-| Skills | 60–65 |
-| Combat Proficiencies | 65–67 |
-| Distinctive Features | 67–68 |
-| Endurance and Hope | 69–71 |
-| Standard of Living | 72 |
-| War Gear (detail) | 73–75 |
-| Valour and Wisdom (Ch. 5) | 77–89 |
-| Rewards | 78–80 |
-| Standard Virtues | 80 |
-| Cultural Virtues | 81–89 |
-| Blank Character Sheet | 239 |
-| Journey Log | 240 |
+> The canonical source for this spec is the markdown extraction in `docs/THE_ONE_RING_BASIC_RULES.md` (Devir pt-BR edition). Earlier versions of this document referenced the Free League PDF by page number; those references have been rebound to section anchors below. Line numbers are approximate (within ±5 of the heading) and may drift when the file is re-extracted; the section name (`§"…"`) is the durable anchor.
+
+| Topic                              | Section anchor (basic-rules)                                           | ~line  |
+| ---------------------------------- | ---------------------------------------------------------------------- | ------ |
+| Action Resolution + sheet overview | §"RESOLUÇÃO DE AÇÕES" → §"PROCEDIMENTO DA JOGADA DE DADOS"             | 192–475 |
+| Adventurers (cultures, callings)   | §"AVENTUREIROS" → §"CRIANDO O HERDEIRO"                                | 550–1746 |
+| Dwarves of Durin's Folk            | §"ANÕES DO POVO DE DURIN"                                              | 662–750 |
+| Bardings                           | §"BARDESES"                                                            | 752–836 |
+| Elves of Lindon                    | §"ELFOS DE LINDON"                                                     | 838–930 |
+| Hobbits of the Shire               | §"HOBBITS DO CONDADO"                                                  | 932–1024 |
+| Men of Bree                        | §"HOMENS DE BRI"                                                       | 1026–1112 |
+| Rangers of the North               | §"PATRULHEIROS DO NORTE"                                               | 1114–1202 |
+| Callings (six)                     | §"CHAMADOS" → §"MENSAGEIRO"                                            | 1204–1340 |
+| Previous Experience                | §"EXPERIÊNCIA ANTERIOR"                                                | 1340–1370 |
+| Starting Gear                      | §"EQUIPAMENTO INICIAL" → §"PÔNEIS E CAVALOS"                           | 1370–1517 |
+| Starting Reward and Virtue         | §"RECOMPENSA INICIAL E VIRTUDE"                                        | 1517–1551 |
+| The Company                        | §"A COMPANHIA" → §"O REFÚGIO SEGURO"                                   | 1552–1604 |
+| Fellowship rating + Focus          | §"VALOR DE SOCIEDADE" → §"FOCO DA SOCIEDADE"                           | 1608–1646 |
+| Adventuring Career / Heirs         | §"EXPERIÊNCIA" → §"CRIANDO O HERDEIRO"                                 | 1646–1746 |
+| Characteristics (skills, etc.)     | §"CARACTERÍSTICAS"                                                     | 1730–2390 |
+| Skills (18)                        | §"PERÍCIAS" → §"VIGILÂNCIA"                                            | 1746–1948 |
+| Combat Proficiencies (4)           | §"PROFICIÊNCIAS DE COMBATE" → §"ATAQUES DE BRIGA"                      | 1948–2013 |
+| Distinctive Features (24+6)        | §"CARACTERÍSTICAS NOTÁVEIS" → §"TEIMOSO"                               | 2013–2169 |
+| Endurance and Hope                 | §"RESISTÊNCIA E ESPERANÇA" → §"FERIMENTOS GRAVES"                      | 2131–2210 |
+| Standard of Living                 | §"PADRÕES DE VIDA" → §"MELHORAR O PADRÃO DE VIDA"                      | 2213–2289 |
+| War Gear (detail)                  | §"EQUIPAMENTO DE GUERRA" → §"ESCUDOS"                                  | 2289–2390 |
+| Valour and Wisdom                  | §"VALOR E SABEDORIA"                                                   | 2389–2414 |
+| Rewards (6 standard)               | §"RECOMPENSAS" → §"REFORÇADO"                                          | 2414–2475 |
+| Items of high value, Named Weapons | §"ITENS DE VALOR SUPERIOR" → §"ARMAS NOMEADAS"                         | 2476–2495 |
+| Standard Virtues (6)               | §"VIRTUDES" → §"RESILIÊNCIA"                                           | 2496–2542 |
+| Cultural Virtues (6 × 6 = 36)      | §"VIRTUDES CULTURAIS" → §"REALEZA REVELADA"                            | 2544–2873 |
+| Combat (sheet-touching parts)      | §"COMBATE" → §"FUJAM, SEUS TOLOS!"                                     | 2923–3357 |
+| Wounds + First Aid                 | §"FERIMENTOS" → §"COMPLICAÇÕES E VANTAGENS"                            | 3230–3284 |
+| Council                            | §"ENCONTROS SOCIAIS" → §"FIM DE UM CONSELHO"                           | 3359–3457 |
+| Journey                            | §"JORNADA" → §"DESCREVENDO EVENTOS DE JORNADA"                         | 3457–3690 |
+| Fellowship Phase + undertakings    | §"FASES DE SOCIEDADE" → §"RECONTAR UMA HISTÓRIA"                       | 3688–3932 |
+| Risk Levels                        | §"AS CONSEQUÊNCIAS DO FRACASSO" → §"DESASTRE!"                         | 4084–4150 |
+| Skill Challenges                   | §"DESAFIOS DE PERÍCIA" → §"PERSONAGENS DO HISTORIADOR"                 | 4147–4267 |
+| The Shadow                         | §"A SOMBRA" → §"HERÓIS FALHOS"                                         | 4315–4520 |
+| Shadow Paths (six)                 | §"MALDIÇÃO DA VINGANÇA" → §"LOUCURA DA VAGÂNCIA"                       | 4522–4596 |
+| Famous Weapons + Enchanted Rewards | §"ARMAS E ARMADURAS FAMOSAS" → §"VOO DIRETO"                           | 5557–5828 |
+| Cursed Items                       | §"ITENS AMALDIÇOADOS" → §"OBJETOS PRECIOSOS AMALDIÇOADOS"              | 5828–5870 |
+| Eye of Mordor (campaign mode)      | §"O OLHO DE MORDOR" → §"EPISÓDIOS DE REVELAÇÃO"                        | 5889–6050 |
+| Patrons (canonical 6 — appendix)   | §"PATRONOS" appendix (Balin, Bilbo, Círdan, Gandalf, Gilraen, Tom & Goldberry) | 6903–7160 |
 
 ---
 
