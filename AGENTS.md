@@ -99,9 +99,9 @@ CI runs: lint → typecheck → test → build → deploy (GitHub Pages).
 
 ## 7. Repo slash commands (Claude Code)
 
-- `/commit` — signed commit (`-S`), with confirmation, no co-author trailer, no `--amend`.
-- `/push` — push to `main` with explicit confirmation; verifies clean working tree first.
+- `/save` — end-of-session save: scope check → quality gates (`pnpm lint && tsc && test`) → `/audit` → organised commits (signed, no co-author, no `--amend`) → log learnings to `.agents/LEARNINGS.md` → push. Replaces `/commit` and `/push`.
 - `/audit` — sweep current diff against `docs/ARCHITECTURE.md`, `DESIGN.md`, `docs/CODE_STYLE.md`. Reports violations grouped by severity. No auto-fix.
+- `/learn` — promote entries from `.agents/LEARNINGS.md` into permanent docs, commands, or skills. Read-only until the user approves the proposal.
 
 ## 8. Models per task (Claude Code)
 
@@ -115,8 +115,7 @@ CI runs: lint → typecheck → test → build → deploy (GitHub Pages).
 
 - The agent **writes** code; the human **reviews**.
 - The agent **proposes** architectural decisions; the human **decides**.
-- Commits happen **only when the human asks**, via `/commit`.
-- Push happens **only when the human asks**, via `/push`.
+- Commits and pushes happen **only when the human asks**, via `/save`.
 - The agent **does not run** destructive actions without confirmation: `rm -rf`, `git reset --hard`, `git push --force`, drop table, delete file ranges, etc.
 
 ## 10. Out-of-scope flags
