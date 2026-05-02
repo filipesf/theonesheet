@@ -75,13 +75,17 @@ The webapp must:
 | Safe Haven          | Base of operations (e.g. Bree).                                                                                                                                                                                 | string              |
 | Fellowship rating   | Pool of points shared by the Company, spent to recover Hope or trigger Patron effects. Restored at session end.                                                                                                 | int (max + current) |
 | Fellowship Focus    | Another Company member to which this hero is more strongly bound.                                                                                                                                               | ref                 |
-| Inspired            | State on a single roll: roll 2 Feat Dice, keep best (only when triggered by a Distinctive Feature or Cultural Virtue).                                                                                          | per-roll flag       |
-| Favoured (roll)     | Same dice mechanic as Inspired (2 Feat Dice, keep best). Triggered by Favoured Skills or special abilities.                                                                                                     | per-roll flag       |
-| Ill-favoured        | Roll 2 Feat Dice, keep worst.                                                                                                                                                                                   | per-roll flag       |
+| Inspired            | Per-roll state granted by invoking a Distinctive Feature or Cultural Virtue. While Inspired, spending 1 Hope on this roll yields **2** Success Dice instead of 1.                                                | per-roll flag       |
+| Favoured (roll)     | Per-roll: roll 2 Feat Dice, keep best. Triggered by Favoured Skills or special abilities.                                                                                                                       | per-roll flag       |
+| Ill-favoured        | Per-roll: roll 2 Feat Dice, keep worst. If both Favoured and Ill-favoured apply on the same roll, **roll only 1 Feat Die** (BR:359).                                                                            | per-roll flag       |
+| Magical Success     | Per-roll: spending 1 Hope makes the roll succeed regardless of TN. Success Dice are still rolled to determine special icons.                                                                                    | per-roll flag       |
 | Miserable           | Condition: Shadow ≥ current Hope. Eye-of-Sauron icon on Feat Die → automatic failure.                                                                                                                           | bool (derived)      |
 | Weary               | Condition: current Endurance ≤ Load total. Success Dice showing 1/2/3 count as zero.                                                                                                                            | bool (derived)      |
 | Wounded             | Condition: suffered a Piercing Blow. Slow recovery; risk of death if active.                                                                                                                                    | bool                |
 | Loremaster          | The Game Master (canonical term in The One Ring).                                                                                                                                                               | role                |
+| Feat Die            | The d12 used for action resolution. Faces 1–10 are numeric. Face 11 is the Eye of Sauron. Face 12 is the Gandalf rune (✦).                                                                                      | die                 |
+| Gandalf rune (✦)    | Face 12 of the Feat Die. Automatic success regardless of TN; under Favoured/Ill-favoured, takes priority over numeric faces when picking best/worst.                                                            | per-roll outcome    |
+| Eye of Sauron (👁)  | Face 11 of the Feat Die. Counts as numeric **0** for non-Miserable heroes; if Miserable, the entire roll fails automatically.                                                                                   | per-roll outcome    |
 
 ---
 
@@ -106,6 +110,7 @@ Character {
     RANGERS_OF_THE_NORTH
   ]
   cultural_blessing: string              // copied from culture, read-only
+  languages: string[]                    // v0-optional; defaults from culture (e.g. ['Westron', 'Khuzdul'])
   calling: enum [
     CAPTAIN, CHAMPION, MESSENGER,
     SCHOLAR, TREASURE_HUNTER, WARDEN
@@ -135,10 +140,15 @@ Character {
   treasure: int
 
   conditions: {
-    weary: bool                          // derived
-    miserable: bool                      // derived
+    weary: bool                          // derived: current_endurance ≤ total_load
+    miserable: bool                      // derived: shadow ≥ current_hope
+    overwhelmed: bool                    // derived: shadow ≥ max_hope
     wounded: bool                        // explicit
+    dying: bool                          // explicit; only true while wounded and triggered by 2nd Wound or Critical severity
+    unconscious: bool                    // derived: current_endurance == 0 && !dying
   }
+
+  shadow_path_step: int                  // derived: flaws.length (clamped 0..4; 4 = Fallen, exits play)
 
   valour: int                            // 1–6
   wisdom: int                            // 1–6
@@ -159,7 +169,7 @@ Character {
   }
 
   company_id: UUID                       // FK to Company
-  fellowship_focus_id: UUID | null       // FK to another Character
+  fellowship_focus_ids: UUID[]           // FK to other Characters; max 1, or max 2 if hobbit hero has Three is Company
 
   heir: Heir | null                      // see §12.6
   notes: string                          // free text
@@ -222,6 +232,7 @@ Weapon {
   proficiency: enum
   notes: string
   rewards_applied: Reward[]              // see §10.1
+  protected: bool                        // derived: rewards_applied.length > 0 (UI shows lock; cannot be discarded — BR:2472)
   proper_name: string | null             // named weapon (§10.2)
 }
 
@@ -230,12 +241,15 @@ Armour {
   protection: int                        // in dice (1d, 2d, 3d, 4d)
   load: int
   rewards_applied: Reward[]
+  protected: bool                        // derived: rewards_applied.length > 0
 }
 
 Helm {
   protection_bonus: int                  // always +1d
   load: int                              // always 4
   rewards_applied: Reward[]
+  protected: bool                        // derived: rewards_applied.length > 0
+  removed_in_combat: bool                // v0-optional, transient; resets on combat exit
 }
 
 Shield {
@@ -244,8 +258,11 @@ Shield {
   load: int                              // 2, 4, 6
   destroyed: bool                        // can be smashed in combat
   rewards_applied: Reward[]
+  protected: bool                        // derived: rewards_applied.length > 0
 }
 ```
+
+> **Helm removed in combat (§4.4 amendment):** when `helm.removed_in_combat` is true, subtract `helm.load` from `total_load` for the duration of the current combat scene. The flag itself is transient (see §15 anti-patterns) and resets when combat ends.
 
 ### 3.6. `Reward` and `Virtue`
 
@@ -282,20 +299,51 @@ Company {
   name: string
   patron: Patron
   safe_haven: string
-  max_fellowship: int                    // computed (see §11)
-  current_fellowship: int
   members: Character[]
+
+  max_fellowship: int                    // derived (see §4.7 / §11.2)
+  current_fellowship: int
+
+  songs: Song[]                          // v1+; composed via Yule "Compose a Song" undertaking
+  temporary_modifiers: TemporaryModifier[]   // v0-optional; expires at next Fellowship Phase
 }
 
 Patron {
-  name: enum [BILBO, GANDALF, ...]       // 6 default + custom
-  fellowship_bonus: int
+  id: enum [BALIN, BILBO, CIRDAN, GANDALF, GILRAEN, TOM_AND_GOLDBERRY]
+  name: string
+  fellowship_bonus: int                  // 0..+2
   special_effect: string
   favoured_callings: enum[]
 }
+
+Song {                                   // v1+
+  id: UUID
+  name: string
+  type: enum [BALLAD, VICTORY, WALKING]
+  composed_by_character_id: UUID
+  used: bool                             // single-use until next Yule
+}
+
+TemporaryModifier {                      // v0-optional
+  kind: enum [
+    FELLOWSHIP_BONUS,                    // e.g. Strengthen Fellowship +1
+    JOURNEY_DETERMINATION_BONUS,         // e.g. Ponder Marked Maps +1
+    // …extend as undertakings are added
+  ]
+  source: enum [
+    STRENGTHEN_FELLOWSHIP,
+    FIND_PATRON_BILBO,
+    PONDER_MARKED_MAPS,
+    // …
+  ]
+  value: int
+  expires_at_phase_id: UUID              // cleared at the start of the next Fellowship Phase
+}
 ```
 
-### 3.8. `UsefulItem`, `Mount`, `Heir`
+> The `temporary_modifiers[]` array is the canonical home for ephemeral undertaking effects. They are **never** folded into `max_fellowship` (§15 anti-pattern); the UI applies them at display time and the migration sweep clears expired entries on Fellowship Phase entry.
+
+### 3.8. `UsefulItem`, `Mount`, `Heir`, `WoundState`, `JourneyState`
 
 ```
 UsefulItem {
@@ -309,13 +357,46 @@ Mount {
   vigour: int (1..3)
 }
 
-Heir {
+Heir {                                   // v1+ scope
   name: string
   family_skill: enum                     // inherited as additional Favoured
   previous_experience_pool: int          // 0..20
-  heirlooms: Item[]                      // up to 1 (≥15 pts) or 2 (=20 pts)
+  heirlooms: Heirloom[]                  // up to 1 (pool ≥15) or 2 (pool = 20)
+}
+
+Heirloom {
+  kind: enum [ENCHANTED_REWARD, FAMOUS_WEAPON, WONDROUS_ARTEFACT]
+  ref: UUID                              // reference into ref-data
+  active_qualities: int                  // for FAMOUS_WEAPON: 1 by default; raised at Yule
 }
 ```
+
+> **Heir creation cost (Yule undertaking):** spend up to 5 Treasure + 5 Adventure points per session; the AP raise the `previous_experience_pool` (max 20). Heir is ready to play when `pool ≥ 10`. The heir inherits the **Standard of Living of the original hero** (not the cultural baseline). See §12.6.
+
+```
+WoundState {                             // v1; v0 keeps `conditions.wounded: bool`
+  active: bool
+  severity: enum [MODERATE, GRAVE, CRITICAL] | null
+  recovery_days_remaining: int | null    // null for MODERATE
+  first_aid_used: bool
+}
+
+JourneyState {                           // v1; separate entity, not persisted on the sheet
+  id: UUID
+  company_id: UUID
+  start_location: string
+  end_location: string
+  difficulty: enum [NORMAL, BORDER, WILD, DARK]
+  roles: Map<character_id, JourneyRole>  // GUIDE, HUNTER, LOOK_OUT, SCOUT
+  events_resolved: JourneyEvent[]
+  fatigue_at_start: Map<character_id, int>
+  status: enum [IN_PROGRESS, COMPLETED, ABORTED]
+}
+```
+
+> **v0 → v1 wound migration:** an existing `conditions.wounded == true` becomes `WoundState { active: true, severity: null, recovery_days_remaining: null, first_aid_used: false }`. v0 sheets are imported clean.
+>
+> **JourneyState is not on the sheet.** It lives as a temporary object while the Company is on a journey. The sheet only stores the resulting Fatigue and any Wounds incurred.
 
 ---
 
@@ -355,7 +436,7 @@ The formula is **culture-dependent**. See §6.2.
 > - Elven Cultural Virtue **Elbereth Gilthoniel!** → +1 max Hope.
 > - Bree-folk Cultural Virtue **Bree-Pony** → +1 max Hope.
 
-> **Starting Reward / Starting Virtue** (chosen at creation) follow the same effects as the corresponding Standard Virtues — see §10.3 and §10.4.
+> **Starting Virtue** (chosen at creation) uses the same effect as the corresponding Standard Virtue — see §10.4. The **Starting Reward** is always tied to a gear item (see §10.3) and never modifies stats directly.
 
 ### 4.3. Effective Parry (in combat)
 
@@ -368,20 +449,22 @@ Temporary modifiers (Path of Durin, Small Folk, etc.) apply contextually — the
 ### 4.4. Total Load
 
 ```
-load = sum(weapon.load ∀ equipped weapon)
-     + (armour ? armour.load : 0)
-     + (helm ? helm.load : 0)
-     + (shield ? shield.load : 0)
-     + treasure_in_load
-     + fatigue                           // only during journeys
+total_load = sum(weapon.load ∀ equipped weapon)
+           + (armour ? armour.load : 0)
+           + (helm ? helm.load : 0)
+           + (shield ? shield.load : 0)
+           + treasure_in_load
+           + fatigue
 ```
 
+> **Fatigue** (BR:2155–2157) is **always** added to total Load — both during journeys (where it accrues from journey events) and outside them, until cleared by rest. Fatigue is therefore a permanent component of Load whenever its value is `> 0`.
+>
 > **Dwarven Cultural Blessing "Redoubtable"** halves the Load of armour + helm (rounded up). Apply **before** summing.
 
 ### 4.5. Derived conditions
 
 ```
-weary     = current_endurance ≤ load
+weary     = current_endurance ≤ total_load
 miserable = shadow ≥ current_hope
 wounded   = explicit flag; affects Endurance recovery
 ```
@@ -407,10 +490,14 @@ The Standard of Living rises when accumulated Treasure reaches the threshold of 
 
 ```
 max_fellowship = number_of_player_heroes_in_company
-               + virtue_bonuses          // e.g. Three is Company hobbit = +1
-               + cultural_blessing_bonuses // Bree-Blood (+1 per Bree-man)
-               + patron_bonus
+               + (any_hobbit_hero_has_three_is_company ? 1 : 0)   // fixed +1 per Company, not per hobbit
+               + (count_of_bree_folk_heroes_with_bree_blood × 1)  // +1 per Bree-folk hero
+               + patron_bonus                                      // varies (0..+2)
 ```
+
+> **Three is Company** is a Hobbit Cultural Virtue that adds **+1 fixed** to the Company's max Fellowship — the bonus does **not** stack across multiple hobbits taking the Virtue.
+>
+> **Bree-Blood** is the Men of Bree Cultural Blessing: it adds +1 per Bree-folk hero in the Company (BR:1080).
 
 ### 4.8. Age — cultural windows (validation)
 
@@ -526,9 +613,7 @@ This phase has 4 sequential sub-steps:
 - Pick **1 Starting Reward** from the 6 listed (§10.3).
 - Pick **1 Starting Virtue** from the 6 listed (§10.4) — must be a **Standard Virtue** (Cultural Virtues require WISDOM ≥ 2).
 
-> **Starting Reward vs War-Gear Reward:** some Starting Rewards (Hardiness, Confidence, Nimbleness, Prowess, Dour-Handed) modify stats, not gear. Others (Close-Fitting, Cunning Make, etc. — when chosen as Starting Reward) modify a specific item. The webapp should present these two reward families as separate selection lists when the chosen Starting Reward affects gear.
->
-> **Note:** in the canonical rules, Starting Rewards and Starting Virtues are presented as a single combined choice list (one of each). Implementers may split for clarity.
+> **Starting Reward vs Starting Virtue:** the Starting Reward is always a gear upgrade (Close-Fitting, Cunning Make, Fell, Grievous, Keen, Reinforced) applied to a specific item from the starting equipment. The Starting Virtue is always a Standard Virtue (Confidence, Dour-Handed, Hardiness, Mastery, Nimbleness, Prowess) and may modify stats. The two choices are independent and made together.
 
 ### Phase 9 — Form the Company
 
@@ -550,9 +635,9 @@ This phase is **collaborative across all players and the Loremaster**. The webap
 | Dwarves of Durin's Folk | Redoubtable (½ Load on armour + helm)                              | Prosperous         | Axes OR Swords (2) + 1 (1)   | No Great Bow, Great Spear, Great Shield                     |
 | Bardings                | Stout-Hearted (VALOUR rolls Favoured)                              | Prosperous         | Bows OR Swords (2) + 1 (1)   | —                                                           |
 | Elves of Lindon         | Elven-Skill (spend Hope → Magical success on Skill roll)           | Frugal             | Bows OR Spears (2) + 1 (1)   | The Long Defeat: removes only 1 Shadow per Fellowship Phase |
-| Hobbits of the Shire    | Hobbit-Sense (WISDOM rolls Favoured; +1d on Shadow Tests vs Greed) | Common             | Bows OR Swords (2) + 1 (1)   | —                                                           |
+| Hobbits of the Shire    | Hobbit-Sense (WISDOM rolls Favoured; +1d on Shadow Tests vs Greed) | Common             | Bows OR Swords (2) + 1 (1)   | Small Folk — only Dagger, Bow, Club, Short Sword, Short Spear, Spear, Axe, Mace; no Great Shield |
 | Men of Bree             | Bree-Blood (+1 Fellowship per Bree-man in Company)                 | Common             | Axes OR Spears (2) + 1 (1)   | —                                                           |
-| Rangers of the North    | Kings of Men (+1 to a chosen Attribute)                            | Frugal             | Spears OR Swords (2) + 1 (1) | —                                                           |
+| Rangers of the North    | Kings of Men (+1 to a chosen Attribute)                            | Frugal             | Spears OR Swords (2) + 1 (1) | Fidelity of the Dúnedain — Fellowship Phase Hope recovery is ⌈HEART/2⌉ instead of HEART |
 
 ### 6.2. Attribute Sets (roll 1 Success Die or pick)
 
@@ -571,14 +656,12 @@ This phase is **collaborative across all players and the Loremaster**. The webap
 
 | Result | STRENGTH | HEART | WITS |
 | ------ | -------- | ----- | ---- |
-| 1      | 6        | 4     | 4    |
-| 2      | 5        | 4     | 5    |
-| 3      | 5        | 5     | 4    |
+| 1      | 5        | 7     | 2    |
+| 2      | 4        | 7     | 3    |
+| 3      | 5        | 6     | 3    |
 | 4      | 4        | 6     | 4    |
 | 5      | 5        | 5     | 4    |
 | 6      | 6        | 6     | 2    |
-
-> Implementer note: rows 1–3 in this spec are stale from an earlier extraction; the canonical values are in basic-rules §"BARDESES — ATRIBUTOS" (linhas 782–789). See the refinement plan in `docs/plans/2026-05-01-domain-spec-refinement.md` Phase 0.1.
 
 #### Elves of Lindon
 
@@ -595,14 +678,12 @@ This phase is **collaborative across all players and the Loremaster**. The webap
 
 | Result | STRENGTH | HEART | WITS |
 | ------ | -------- | ----- | ---- |
-| 1      | 3        | 4     | 7    |
-| 2      | 3        | 5     | 6    |
-| 3      | 4        | 4     | 6    |
+| 1      | 3        | 6     | 5    |
+| 2      | 3        | 7     | 4    |
+| 3      | 2        | 7     | 5    |
 | 4      | 4        | 6     | 4    |
 | 5      | 4        | 5     | 5    |
 | 6      | 2        | 6     | 6    |
-
-> Implementer note: rows 1–3 in this spec are stale from an earlier extraction; the canonical values are in basic-rules §"HOBBITS DO CONDADO — ATRIBUTOS" (linhas 968–975). See the refinement plan in `docs/plans/2026-05-01-domain-spec-refinement.md` Phase 0.2.
 
 #### Men of Bree
 
@@ -713,7 +794,7 @@ Craft      0 | Battle        2 | Lore      2
 
 | Culture     | Available Distinctive Features                                                       |
 | ----------- | ------------------------------------------------------------------------------------ |
-| Dwarves     | Cunning, Wary, Fierce, Lordly, Proud, Stern, Secretive, Wilful (basic-rules §"ANÕES DO POVO DE DURIN — CARACTERÍSTICAS NOTÁVEIS" ~linha 738) |
+| Dwarves     | Cunning, Wary, Fierce, Lordly, Proud, Stern, Secretive, Wilful                       |
 | Bardings    | Tall, Eager, Fair, Bold, Fierce, Generous, Proud, Stern                              |
 | Elves       | Swift, Merry, Fair, Wary, Lordly, Keen-Eyed, Patient, Subtle                         |
 | Hobbits     | Merry, Eager, Fair-Spoken, Faithful, Honourable, Inquisitive, Keen-Eyed, Rustic      |
@@ -858,10 +939,48 @@ Each pack animal can carry up to **10 Load points** of Treasure.
 
 ### 9.3. Shadow
 
-- **Accumulated by:** fear attacks, dark sorcery, journey events, witnessing atrocities, Fellowship Focus being Wounded (1 point, no Shadow Test).
-- **Removed by:**
-  - **Fellowship Phase — Spiritual Recovery:** removes up to 2 points (Elves: max 1).
-  - **Shadow Scar:** trade current Shadow for 1 permanent Scar (hardens but reduces max Hope by 1 per Scar in some rulings — verify with full rulebook).
+Shadow is the corruption track. It accumulates from external sources, can be cleared during rest, and triggers two derived conditions: **Miserable** (`shadow ≥ current_hope`) and **Overwhelmed** (`shadow ≥ max_hope`).
+
+#### Cap
+
+- **Hard cap:** `shadow ≤ max_hope`. Points received above the cap are **discarded** (clamp on receive — never block the gain).
+
+#### Sources (4 canonical categories — BR:4325–4475)
+
+| Source        | pt-BR        | Test attribute | Shadow Test? |
+| ------------- | ------------ | -------------- | ------------ |
+| **Dread**     | Pavor        | VALOUR         | yes          |
+| **Greed**     | Ganância     | WISDOM         | yes          |
+| **Sorcery**   | Feitiçaria   | WISDOM         | yes          |
+| **Misdeeds**  | Transgressões | —              | no — points apply directly |
+
+Additional flat-rate gains (no test): **Fellowship Focus is Wounded / suffers madness** → 1 Shadow point.
+
+#### Shadow Test mechanic
+
+Roll 1 Feat Die + (VALOUR or WISDOM) Success Dice against the assigned TN. On success, **reduce points received by 1, plus 1 per Tengwar (✦)** rolled. Failure leaves the full amount. The Eye of Sauron face on a Shadow Test causes automatic failure if the hero is already Miserable.
+
+#### Removed by
+
+- **Fellowship Phase — Spiritual Recovery:** removes up to 2 points (Elves: max 1, due to "The Long Defeat").
+- **Steadfast Will (Firmar Vontade):** only when `shadow < max_hope`. Convert **all** current Shadow into 1 Shadow Scar. Scars are permanent; counted as Shadow points for Miserable / Overwhelmed triggers; removable only via the Yule undertaking "Heal Scars".
+
+#### Overwhelmed state (derived)
+
+```
+overwhelmed = shadow ≥ max_hope
+```
+
+While Overwhelmed, **every roll** the hero makes is Ill-favoured until `shadow < max_hope` again. This is distinct from **Miserable** (`shadow ≥ current_hope`), which only triggers automatic failure on Eye-of-Sauron results.
+
+#### Madness Attack (BR:4451–4474)
+
+A hero who is Overwhelmed may suffer (or voluntarily trigger) a **Madness Attack** to escape the state:
+
+1. Reset `shadow = 0` and clear Overwhelmed.
+2. Add the **next Flaw on the Calling's Shadow Path** to the hero's `flaws[]`.
+3. The Madness Attack must occur within the current Adventuring Phase. Otherwise, the hero leaves the Company permanently.
+4. After the 4th Flaw on the Path, the hero is **Fallen** (`shadow_path_step = 4`) and exits play.
 
 ### 9.4. Load and Fatigue
 
@@ -875,16 +994,51 @@ Each pack animal can carry up to **10 Load points** of Treasure.
 - **Effect:** at risk of death if remaining active; slow Endurance recovery.
 - **Removed by:** Healing care + Prolonged Rest in a safe place (detailed Combat rules out of scope).
 
-### 9.6. Inspired / Favoured / Ill-Favoured
+#### Severity (rolled on a Feat Die immediately after the first Wound) — BR:3232–3268
 
-| State         | Mechanic                                                                  | Persistence |
-| ------------- | ------------------------------------------------------------------------- | ----------- |
-| Favoured      | Roll 2 Feat Dice, keep best                                               | Per roll    |
-| Ill-favoured  | Roll 2 Feat Dice, keep worst                                              | Per roll    |
-| Inspired (1d) | Receive 1 bonus Success Die (costs 1 Hope)                                | Per roll    |
-| Inspired (2d) | Receive 2 bonus Success Dice (costs 1 Hope + invoked Distinctive Feature) | Per roll    |
+| Feat Die result    | Severity     | Effect                                                                                                              |
+| ------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Gandalf rune (✦)   | **Moderate** | No persistent effect. Recovers fully within hours after combat ends; clear the Wounded mark.                        |
+| Numeric 1–10       | **Grave**    | Wound persists for that many days (record the value).                                                               |
+| Eye of Sauron (👁) | **Critical** | Endurance drops to 0; the hero is **Dying** (as if Wounded twice).                                                  |
 
-> These states are **transient** — they do not persist on the sheet. The webapp may offer a "Roll dice" modal that applies the modifiers.
+#### Dying (sub-state)
+
+A hero is Dying if Wounded twice in succession, or on a Critical severity roll. Within ~1h of becoming Dying:
+
+- A successful **HEALING** roll restores consciousness with **1 Endurance**. Failure → death.
+- A hero saved from Dying gains a permanent narrative scar (limp, missing finger, etc.) and adds **+10 days** to the recovery time of the underlying Wound.
+
+#### Second Wound
+
+Suffering a Wound while already Wounded → immediate Endurance 0 + Dying.
+
+#### First Aid
+
+A successful **HEALING** roll reduces severity by **1 day, plus 1 day per Tengwar icon** rolled (minimum 1 day). One First Aid attempt per Wound; on failure, no retry until 1 day has passed.
+
+> **v0 schema note:** the v0 sheet keeps a single `wounded: bool` for simplicity. The optional `wound_severity`, `dying`, and `recovery_days` fields land in Phase 2 / v1 (see refinement plan §2.10).
+
+### 9.6. Inspired / Favoured / Ill-Favoured / Magical Success
+
+| State           | Mechanic                                                                                            | Persistence |
+| --------------- | --------------------------------------------------------------------------------------------------- | ----------- |
+| Favoured        | Roll 2 Feat Dice, keep best                                                                         | Per roll    |
+| Ill-favoured    | Roll 2 Feat Dice, keep worst                                                                        | Per roll    |
+| Inspired        | State granted by Distinctive Feature or Cultural Virtue. While Inspired, spending 1 Hope on this roll yields **2** Success Dice (otherwise 1) | Per roll    |
+| Magical Success | Spend 1 Hope to make the roll succeed regardless of TN. Success Dice still rolled to determine special icons | Per roll    |
+
+> If both Favoured and Ill-favoured apply on the same roll, **roll only 1 Feat Die** (BR:359). These states are **transient** — they do not persist on the sheet. The webapp may offer a "Roll dice" modal that applies the modifiers.
+
+#### Feat Die mechanics
+
+- **Gandalf rune (✦, face 12)** — automatic success regardless of TN; under Favoured / Ill-favoured, the rune takes priority over numeric faces when picking best/worst.
+- **Eye of Sauron (👁, face 11)** — counts as numeric **0** for non-Miserable heroes. If the hero is **Miserable**, an Eye result causes automatic failure regardless of Success Dice.
+
+#### Weary effect on Success Dice
+
+- Success Dice (d6) showing numeric face **1, 2, or 3** contribute **0** while Weary.
+- The Tengwar (✦) on face 6 is **unaffected by Weary** — it still scores its full value and counts as a special icon.
 
 ---
 
@@ -918,14 +1072,16 @@ Cultural naming conventions:
 
 ### 10.3. Starting Rewards (pick 1 at creation)
 
-| Starting Reward | Type                        | Effect                |
+The Starting Reward is always a gear upgrade applied to a single item from the starting equipment. The 6 options match §10.1.
+
+| Starting Reward | Valid target                | Effect                |
 | --------------- | --------------------------- | --------------------- |
-| Close-fitting   | gear (armour or helm)       | +2 to PROTECTION roll |
-| Cunning Make    | gear (armour, helm, shield) | −2 Load               |
-| Fell            | gear (weapon)               | +2 to Injury          |
-| Grievous        | gear (weapon)               | +1 to Damage          |
-| Keen            | gear (weapon)               | Piercing Blow on 9+   |
-| Reinforced      | gear (shield)               | +1 to Parry bonus     |
+| Close-fitting   | armour or helm              | +2 to PROTECTION roll |
+| Cunning Make    | armour, helm, shield        | −2 Load               |
+| Fell            | weapon                      | +2 to Injury          |
+| Grievous        | weapon                      | +1 to Damage          |
+| Keen            | weapon                      | Piercing Blow on 9+   |
+| Reinforced      | shield                      | +1 to Parry bonus     |
 
 ### 10.4. Starting Virtues (pick 1 at creation)
 
@@ -995,18 +1151,18 @@ Each culture has **6 exclusive Cultural Virtues**. Summary:
 
 #### Men of Bree
 
-- **Bold and Hale** — (verify basic-rules §"VIRTUDES DOS HOMENS DE BREE" linhas 2770–2822 — likely mistranslation; the canonical 6 are listed there)
 - **Bree-Pony** — +1 max Hope; pony Vigour 4.
 - **Defiance** — End of each Combat (if not Wounded/Miserable): recover Endurance equal to HEART or VALOUR (higher).
+- **Desperate Courage** — Spending Hope on a roll: may also gain 1 Shadow to be Inspired on that roll.
+- **Friendly and Familiar** — +1 to the maximum number of Skill checks you may attempt during a council; folk encountered always begin Friendly toward you.
 - **Pipe-Smoking** — Whenever you recover Hope, recover 1 extra Hope.
-- **Stout** — (verify basic-rules §"VIRTUDES DOS HOMENS DE BREE" linhas 2770–2822 — likely mistranslation; the canonical 6 are listed there)
 - **Strange as News from Bree** — In Fellowship Phase: INSIGHT or RIDDLE roll → receive a rumour.
 
 #### Rangers of the North
 
 - **Foresight of His Folk** — +WISDOM uses per Adventuring Phase: re-roll all dice on any roll.
 - **Heir of Arnor** — Create a Wondrous Artefact / Famous Weapon with 1 Enchanted Reward (passable to heir).
-- **Hidden Sentinel** — (verify basic-rules §"VIRTUDES DOS PATRULHEIROS DO NORTE" linhas 2824–2873 — likely a placeholder for **Ranger's Resilience** found there)
+- **Ranger's Resilience** — If wearing leather armour or none, and no shield, gain no Fatigue from journey events.
 - **Royalty Revealed** — 1×/combat in Open Stance: free Rally Comrades; Company Inspired next round.
 - **Strider** — In EXPLORE/HUNTING/TRAVEL: spend 1 Hope → Magical success; can cover multiple journey roles.
 - **Strong-willed** — (1d) on Shadow Tests vs Dread.
@@ -1017,29 +1173,44 @@ Each culture has **6 exclusive Cultural Virtues**. Summary:
 
 ## 11. Company, Patrons, and Fellowship
 
-### 11.1. Patrons (6 default)
-
-The full list is in basic-rules §"PATRONO" (linhas 1569–1604) and §"PATRONOS" appendix (linhas 6903–7160). The webapp should load:
+### 11.1. Patrons (6 canonical)
 
 ```
 Patron {
+  id                            // enum (see table below)
   name
-  fellowship_bonus              // e.g. +1 or +2
-  special_effect                // e.g. 1×/session, spend 1 Fellowship → ...
-  favoured_callings             // narrative hint
+  fellowship_bonus              // 0..+2
+  special_effect                // typically: spend 1 Fellowship → effect
+  favoured_callings             // narrative hint; not gating
 }
 ```
 
-Canonical Patrons (6 default): Balin son of Fundin, Bilbo Baggins, Círdan the Shipwright, Gandalf the Grey, Gilraen the Fair, Tom Bombadil & Goldberry — full descriptions in basic-rules §"PATRONOS" appendix (linhas 6903–7160).
+Canonical Patrons (BR:6903–7160). Each special effect costs **1 Fellowship** to invoke unless noted otherwise.
+
+| ID                  | Patron                      | Fellowship Bonus | Favoured Callings           | Special Effect                                                                                |
+| ------------------- | --------------------------- | ---------------: | --------------------------- | --------------------------------------------------------------------------------------------- |
+| `BALIN`             | Balin, son of Fundin        | +1               | Captain, Champion           | Make a combat roll Favoured                                                                   |
+| `BILBO`             | Bilbo Baggins               | +2               | Treasure Hunter, Scholar    | "Find Patron" undertaking visiting Bilbo: +1 Fellowship until next Fellowship Phase           |
+| `CIRDAN`            | Círdan the Shipwright       | +1               | Messenger, Scholar          | Re-roll any roll. Find Patron visiting Círdan: receive a rumour                               |
+| `GANDALF`           | Gandalf the Grey            | +2               | Messenger, Captain          | Make a Shadow Test Favoured                                                                   |
+| `GILRAEN`           | Gilraen the Fair            | 0                | Champion, Warden            | Within former Arnor: Journey Events resolved as Border Land (passive). Visit Gilraen: rumour  |
+| `TOM_AND_GOLDBERRY` | Tom Bombadil & Goldberry    | +2               | Warden, Treasure Hunter     | Spend **all remaining** Fellowship: invoke Tom or Goldberry within Tom's domain               |
+
+**Notes:**
+- `fellowship_bonus: 0` is valid (Gilraen).
+- `TOM_AND_GOLDBERRY` is a **single combined entry**, not two patrons.
+- Bilbo's "Find Patron" effect is an **ephemeral modifier** that expires at the next Fellowship Phase; it should be modelled as a `TemporaryModifier` on the Company (see Phase 2 schema), never persisted into `max_fellowship` directly.
 
 ### 11.2. Fellowship rating computation
 
 ```
 max_fellowship = number_of_player_heroes
-               + virtue_bonuses           // e.g. Three is Company hobbit
-               + cultural_blessing_bonuses // Bree-Blood (+1 per Bree-man)
-               + patron_bonus             // varies by Patron
+               + (any_hobbit_hero_has_three_is_company ? 1 : 0)   // fixed +1 per Company
+               + (count_of_bree_folk_heroes_with_bree_blood × 1)  // +1 per Bree-folk hero
+               + patron_bonus                                      // varies by Patron (0..+2)
 ```
+
+> The Three is Company bonus is a **single +1**, regardless of how many hobbits in the Company have selected the Virtue. See §4.7 for the same formula in the derived-stats context.
 
 **Current Fellowship:**
 
@@ -1084,29 +1255,38 @@ max_fellowship = number_of_player_heroes
 
 #### Skills
 
-| Target rating | Cost (Skill points)    |
-| ------------- | ---------------------- |
-| 0 → 1         | 1                      |
-| 1 → 2         | 2                      |
-| 2 → 3         | 3                      |
-| 3 → 4         | 5                      |
-| 4 → 5         | (verify full rulebook) |
-| 5 → 6         | (verify full rulebook) |
+| Target rating | Cost (Skill points) |
+| ------------- | ------------------- |
+| 0 → 1         | 1                   |
+| 1 → 2         | 2                   |
+| 2 → 3         | 3                   |
+| 3 → 4         | 5                   |
+| 4 → 5         | 8 [VERIFICAR-PDF]   |
+| 5 → 6         | 12 [VERIFICAR-PDF]  |
 
 #### Combat Proficiencies
 
-| Target rating  | Cost (Adventure points) |
-| -------------- | ----------------------- |
-| 0 → 1          | 2                       |
-| 1 → 2          | 4                       |
-| 2 → 3          | 6                       |
-| (higher ranks) | (verify full rulebook)  |
+| Target rating | Cost (Adventure points) |
+| ------------- | ----------------------- |
+| 0 → 1         | 2                       |
+| 1 → 2         | 4                       |
+| 2 → 3         | 6                       |
+| 3 → 4         | 10 [VERIFICAR-PDF]      |
+| 4 → 5         | 16 [VERIFICAR-PDF]      |
+| 5 → 6         | 24 [VERIFICAR-PDF]      |
 
 ### 12.4. Raising VALOUR and WISDOM
 
-- Costs not fully extracted from the consulted excerpt — implementer must seed table from full rulebook.
 - Each new **VALOUR** rank → pick **1 Reward**.
 - Each new **WISDOM** rank → pick **1 Virtue** (Standard, or Cultural if WISDOM ≥ 2).
+
+| New rank | Cost (Adventure points) |
+| -------- | ----------------------- |
+| 2        | 8                       |
+| 3        | 12                      |
+| 4        | 20                      |
+| 5        | 26                      |
+| 6        | 30                      |
 
 ### 12.5. Adventuring career (expected pace)
 
@@ -1210,8 +1390,8 @@ Total spent: **10 points**. ✓
 
 #### VALOUR and WISDOM = 1
 
-- Starting Reward: **Hardiness** (+2 max Endurance → 22 + 2 = **24**).
-- Starting Virtue: **Mastery** (picks **HEALING** and **PERSUADE** as Favoured).
+- Starting Reward: **Keen** applied to her **Sword** (Piercing Blow on Feat Die 9+).
+- Starting Virtue: **Hardiness** (+2 max Endurance → 22 + 2 = **24**).
 
 ### Step 9 — Company
 
@@ -1246,7 +1426,7 @@ Load: 7
 Distinctive Features: Keen-Eyed, Inquisitive, Burglary
 Flaws: —
 
-Favoured Skills: STEALTH, SCAN, EXPLORE, HEALING, PERSUADE
+Favoured Skills: STEALTH, SCAN, EXPLORE
 
 Combat Proficiencies:
   Swords 2
@@ -1255,12 +1435,12 @@ Combat Proficiencies:
   Axes 0
 
 War Gear:
-  Sword (4/16, Load 2)
+  Sword (4/16, Load 2) — Keen (Piercing Blow on 9+)
   Bow (3/14, Load 2)
   Leather Shirt (1d, Load 3)
 
-Rewards: Hardiness (Starting)
-Virtues: Mastery (Starting)
+Rewards: Keen on Sword (Starting)
+Virtues: Hardiness (Starting)
 
 VALOUR 1 / WISDOM 1
 Skill points: 0
@@ -1292,7 +1472,14 @@ The webapp **must** reject (or warn-with-confirmation) violations of these invar
 - [ ] `shadow ≥ 0`.
 - [ ] Each Reward applied **only once** to the same item.
 - [ ] Cultural Virtue selectable only when `wisdom ≥ 2`.
-- [ ] Fellowship Focus cannot be the same character.
+- [ ] `fellowship_focus_ids` cannot include the hero's own `id`; max length 1 (or 2 if a hobbit hero in the Company has the **Three is Company** Cultural Virtue).
+- [ ] A single roll cannot consume more than **1 Hope point** from the same hero (BR:379).
+
+#### Per-Phase invariants
+
+- [ ] Per Fellowship Phase: at most **1 Skill rank purchase per Skill**.
+- [ ] Per Fellowship Phase: at most **1 Combat Proficiency rank purchase**.
+- [ ] Per Yule: rank up **VALOUR or WISDOM**, not both.
 
 ### 14.2. Warnings (do not block)
 
@@ -1306,7 +1493,8 @@ The webapp **must** reject (or warn-with-confirmation) violations of these invar
 - [ ] `tn_X = 20 − attributes.X` on every Attribute change.
 - [ ] `max_endurance`, `max_hope`, `base_parry` recomputed when culture, attributes, virtues, or rewards change.
 - [ ] `load` recomputed on every gear change.
-- [ ] `conditions.weary` and `conditions.miserable` recomputed on every state change.
+- [ ] `conditions.weary`, `conditions.miserable`, and `conditions.overwhelmed` recomputed on every state change.
+- [ ] Shadow gained beyond `max_hope` is **discarded** (clamp), never persisted above the cap.
 - [ ] `max_fellowship` recomputed when members, virtues, blessings, or patron change.
 
 ---
@@ -1326,8 +1514,11 @@ DO NOT do any of the following in the webapp:
 - **DO NOT** allow spending Hope / Fellowship when current = 0.
 - **DO NOT** apply two identical Rewards to the same item.
 - **DO NOT** assume Virtues are unique — most Standard Virtues are repeatable; store as array.
-- **DO NOT** confuse Starting Reward (chosen at creation, may affect stats directly) with War-Gear Reward (always tied to a specific item).
+- **DO NOT** treat the Starting Reward as a stat modifier — it is always a gear upgrade applied to a specific item, like any War-Gear Reward. Only the Starting Virtue can modify stats at creation.
 - **DO NOT** display Cultural Virtues before WISDOM ≥ 2.
+- **DO NOT** persist combat stance. Stance is chosen per round; not a sheet field.
+- **DO NOT** persist `helm_removed_in_combat` across sessions. It is a runtime, combat-scoped flag — its effect on Load is real, but the flag itself resets on combat exit.
+- **DO NOT** recompute permanent Fellowship from temporary undertaking modifiers. Keep `max_fellowship` (permanent, derived from §4.7) separate from `Company.temporary_modifiers[]` (e.g. Strengthen Fellowship +1, Find Patron Bilbo +1) which expire at the next Fellowship Phase.
 
 ---
 
@@ -1381,7 +1572,9 @@ Lets you reconstruct any state and gives a complete narrative history of the her
 
 ### 16.4. Internationalisation
 
-The English terms in this spec are canonical. To support a `pt-BR` UI surface (matching the Devir translation that some players use), maintain a translation map:
+The English terms in this spec are canonical. To support a `pt-BR` UI surface (matching the Devir translation that some players use), maintain a translation map. The dictionary below is the canonical seed; it must be kept in sync with `src/app/i18n/`.
+
+#### Core terminology
 
 ```json
 {
@@ -1392,7 +1585,9 @@ The English terms in this spec are canonical. To support a `pt-BR` UI surface (m
   "Hope": "Esperança",
   "Parry": "Bloqueio",
   "Shadow": "Sombra",
+  "Shadow Scar": "Cicatriz de Sombra",
   "Load": "Carga",
+  "Fatigue": "Fadiga",
   "Standard of Living": "Padrão de Vida",
   "Treasure": "Tesouro",
   "VALOUR": "VALOR",
@@ -1410,12 +1605,6 @@ The English terms in this spec are canonical. To support a `pt-BR` UI surface (m
   "Fellowship Focus": "Foco da Sociedade",
   "Patron": "Patrono",
   "Safe Haven": "Refúgio Seguro",
-  "Inspired": "Inspirado",
-  "Favoured": "Favorecida",
-  "Ill-favoured": "Desfavorecida",
-  "Miserable": "Arrasado",
-  "Weary": "Exausto",
-  "Wounded": "Ferido",
   "Loremaster": "Historiador",
   "Feat Die": "Dado de Façanha",
   "Success Die": "Dado de Sucesso",
@@ -1424,23 +1613,176 @@ The English terms in this spec are canonical. To support a `pt-BR` UI surface (m
 }
 ```
 
+#### Conditions and roll states
+
+```json
+{
+  "Inspired": "Inspirado",
+  "Favoured": "Favorecida",
+  "Ill-favoured": "Desfavorecida",
+  "Miserable": "Arrasado",
+  "Weary": "Exausto",
+  "Wounded": "Ferido",
+  "Dying": "Morrendo",
+  "Overwhelmed": "Sucumbindo à Sombra",
+  "Magical Success": "Sucesso Mágico",
+  "Special Success": "Sucesso Especial",
+  "Standard Risk": "Risco Padrão",
+  "Perilous Risk": "Perigoso",
+  "Reckless": "Imprudente",
+  "Mishap": "Infortúnio",
+  "Disaster": "Desastre",
+  "Steadfast Will": "Firmar Vontade",
+  "Madness Attack": "Ataque de Loucura",
+  "Gandalf rune": "Runa de Gandalf",
+  "Eye of Sauron": "Olho de Sauron"
+}
+```
+
+#### Shadow sources
+
+```json
+{
+  "Dread": "Pavor",
+  "Greed": "Ganância",
+  "Sorcery": "Feitiçaria",
+  "Misdeeds": "Transgressões"
+}
+```
+
+#### Heroic Cultures
+
+```json
+{
+  "Dwarves of Durin's Folk": "Anões do Povo de Durin",
+  "Bardings": "Bardeses",
+  "Elves of Lindon": "Elfos de Lindon",
+  "Hobbits of the Shire": "Hobbits do Condado",
+  "Men of Bree": "Homens de Bri",
+  "Rangers of the North": "Patrulheiros do Norte"
+}
+```
+
+#### Callings
+
+```json
+{
+  "Captain": "Capitão",
+  "Champion": "Campeão",
+  "Messenger": "Mensageiro",
+  "Scholar": "Erudito",
+  "Treasure Hunter": "Caçador de Tesouros",
+  "Warden": "Guardião"
+}
+```
+
+#### Shadow Paths
+
+```json
+{
+  "Dragon-Sickness": "Doença do Dragão",
+  "Curse of Vengeance": "Maldição da Vingança",
+  "Lure of Power": "Tentação do Poder",
+  "Lure of Secrets": "Tentação dos Segredos",
+  "Path of Despair": "Caminho do Desespero",
+  "Wandering-Madness": "Loucura da Vagância"
+}
+```
+
+#### Skills (18)
+
+```json
+{
+  "Awe": "FASCÍNIO",
+  "Athletics": "ATLETISMO",
+  "Awareness": "VIGILÂNCIA",
+  "Hunting": "CAÇADA",
+  "Song": "MÚSICA",
+  "Craft": "OFÍCIO",
+  "Enhearten": "INDUÇÃO",
+  "Travel": "VIAGEM",
+  "Insight": "DISCERNIMENTO",
+  "Healing": "CURA",
+  "Courtesy": "CORTESIA",
+  "Battle": "BATALHA",
+  "Persuade": "PERSUASÃO",
+  "Stealth": "FURTIVIDADE",
+  "Scan": "BUSCA",
+  "Explore": "EXPLORAÇÃO",
+  "Riddle": "ENIGMA",
+  "Lore": "HISTÓRIA"
+}
+```
+
+#### Distinctive Features — 24 cultural
+
+```json
+{
+  "Bold": "Bravo",
+  "Cunning": "Astuto",
+  "Eager": "Ansioso",
+  "Faithful": "Fiel",
+  "Fair": "Belo",
+  "Fair-Spoken": "Eloquente",
+  "Fierce": "Feroz",
+  "Generous": "Generoso",
+  "Honourable": "Honrado",
+  "Inquisitive": "Inquisitivo",
+  "Keen-Eyed": "Olhar Aguçado",
+  "Lordly": "Nobre",
+  "Merry": "Alegre",
+  "Patient": "Paciente",
+  "Proud": "Orgulhoso",
+  "Rustic": "Rústico",
+  "Secretive": "Sigiloso",
+  "Stern": "Severo",
+  "Subtle": "Sutil",
+  "Swift": "Ágil",
+  "Tall": "Alto",
+  "True-Hearted": "Sincero",
+  "Wary": "Cauteloso",
+  "Wilful": "Teimoso"
+}
+```
+
+#### Distinctive Features — 6 calling-exclusive
+
+```json
+{
+  "Burglary": "Ladroagem",
+  "Enemy-Lore": "Conhecimento sobre Inimigos",
+  "Leadership": "Liderança",
+  "Rhymes of Lore": "Rimas de História",
+  "Shadow-Lore": "História da Sombra",
+  "Folk-Lore": "História dos Povos"
+}
+```
+
+#### Devir-canon corrections
+
+The Devir translation has a few known cases where the canonical pt-BR term diverges from earlier drafts. These are normative:
+
+| English          | Canonical pt-BR (Devir) | Stale form to avoid |
+| ---------------- | ----------------------- | ------------------- |
+| Stern            | Severo                  | Teimoso             |
+| Wilful           | Teimoso                 | Severo              |
+| Great Spear      | Lança Grande            | Lança Longa         |
+| Reinforced       | Reforçado               | Reforço de Bloqueio |
+
 > Code identifiers, schema field names, enum values, and event names stay English. Only display labels are localised.
 
 ### 16.5. Known gaps (verify against `THE_ONE_RING_BASIC_RULES.md`)
 
-The following items were not fully resolved in earlier drafts of this spec. Each one should be reconciled against the section anchor cited below in `THE_ONE_RING_BASIC_RULES.md`:
+The following items remain pending or are deferred to a later version. Each cites a section anchor in `THE_ONE_RING_BASIC_RULES.md` for context.
 
-1. Distinctive Features list for Dwarves (8 to choose 2) — basic-rules §"ANÕES — CARACTERÍSTICAS NOTÁVEIS" linha ~738. Resolved by inspection: Cunning, Wary, Fierce, Lordly, Proud, Stern, Secretive, Wilful.
-2. Underlined Skills per culture (1 of 2 marked as Favoured at creation) — markdown extraction does not preserve underline formatting; resolved in `src/ref-data/cultural-skills.ts`. Confirm visually against the Devir PDF if doubt remains.
-3. Full table of Patrons and their effects — basic-rules §"PATRONOS" appendix (linhas 6903–7160). Resolved: Balin, Bilbo, Círdan, Gandalf, Gilraen, Tom & Goldberry.
-4. Skill costs for ranks 4→5 and 5→6 — basic-rules §"FAZER ATUALIZAÇÕES — CUSTOS DE PONTOS DE EXPERIÊNCIA" (linhas 3739–3756). Table extraction is partial; values 8 and 12 are likely but require visual confirmation.
-5. Combat Proficiency costs for ranks 3→4 and beyond — same anchor as item 4.
-6. Costs to raise VALOUR and WISDOM — basic-rules same anchor (linhas 3741–3752): rank 2=8, 3=12, 4=20, 5=26, 6=30 Adventure points.
-7. Full mechanical text of Cultural Virtues — basic-rules §"VIRTUDES CULTURAIS" linhas 2544–2873. The placeholders "Bold and Hale", "Stout", and "Hidden Sentinel" in §10.6 above are likely mistranslations: the canonical Bree virtues are Friendly and Familiar, Pipe-Smoking, Desperate Courage, Strange as News from Bree, Bree-Pony, Defiance; the canonical Rangers virtues include Ranger's Resilience.
-8. Full Enchanted Rewards list — basic-rules §"RECOMPENSAS ENCANTADAS" (linhas 5658+).
-9. Special Successes table per Skill (Tengwar / magical-success effects) — not fully captured in basic-rules excerpt; confirm against Free League PDF.
+1. Underlined Skills per culture (1 of 2 marked as Favoured at creation) — the markdown extraction does not preserve underline formatting; resolved in `src/ref-data/cultural-skills.ts`. Confirm visually against the Devir PDF if doubt remains.
+2. Skill costs for ranks **4→5 and 5→6** (8, 12) — basic-rules §"FAZER ATUALIZAÇÕES — CUSTOS DE PONTOS DE EXPERIÊNCIA" (linhas 3739–3756). The combined PDF table dropped its rank icons; flagged `[VERIFICAR-PDF]` in §12.3 pending visual confirmation.
+3. Combat Proficiency costs for ranks **3→4, 4→5, 5→6** (10, 16, 24) — same anchor; flagged `[VERIFICAR-PDF]` in §12.3.
+4. **Enchanted Rewards** — basic-rules §"RECOMPENSAS ENCANTADAS" (linhas 5658+). v1+ scope.
+5. **Cursed Items** — basic-rules §"ITENS AMALDIÇOADOS" (linhas 5828–5870). v1+ scope.
+6. **Special Successes table per Skill** (Tengwar effects per skill) — not fully captured in the basic-rules excerpt. v1+ scope (Phase 4 of refinement plan).
 
-> **Recommendation:** the implementer should fill these from `THE_ONE_RING_BASIC_RULES.md` before finalising the database seed; the refinement plan in `docs/plans/2026-05-01-domain-spec-refinement.md` walks through the corrections.
+> Items removed from this list once resolved: Bardings/Hobbit attribute rows, Dwarven Distinctive Features, Patron table, Bree virtue placeholders ("Bold and Hale", "Stout"), Ranger virtue placeholder ("Hidden Sentinel") — see Phase 0 / Phase 1 of `docs/plans/2026-05-01-domain-spec-refinement.md`.
 
 ---
 
@@ -1617,17 +1959,11 @@ export function computeMaxEndurance(
   culture: HeroicCulture,
   attributes: Attributes,
   virtues: Virtue[],
-  rewards: Reward[],
 ): number {
   const base = CULTURE_FORMULAS[culture].endurance(attributes.strength);
   const hardinessBonus =
     virtues.filter((v) => v.name === 'Hardiness').length * 2;
-  const startingHardiness = rewards.some(
-    (r) => r.name === 'Hardiness' && r.origin === 'STARTING',
-  )
-    ? 2
-    : 0;
-  return base + hardinessBonus + startingHardiness;
+  return base + hardinessBonus;
 }
 ```
 
@@ -1639,7 +1975,6 @@ const maxEndurance = useMemo(
       character.heroic_culture,
       character.attributes,
       character.virtues,
-      character.rewards,
     ),
   [character],
 );
