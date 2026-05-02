@@ -95,6 +95,11 @@ const callingStepShape = z.object({
   calling: z.enum(CALLINGS),
   calling_feature: z.string().min(1),
   starting_reward: z.string().min(1),
+  // DOMAIN_SPEC §10.3: the starting Reward applies to one item from the
+  // starting equipment. v0 attaches it to a single weapon. Empty string is
+  // tolerated only while the player has not yet picked weapons; cross-step
+  // refine enforces that a non-empty target matches a chosen weapon id.
+  starting_reward_target: z.string(),
   starting_virtue: z.string().min(1),
   starting_virtue_selection: virtueSelectionSchema,
   standard_of_living: z.enum(STANDARD_OF_LIVING),
@@ -178,6 +183,26 @@ function refineVirtueSelection<T extends z.ZodTypeAny>(schema: T): T {
         });
       }
     }
+    // DOMAIN_SPEC §10.3: the starting Reward must be applied to one of the
+    // chosen starting weapons. Empty target is allowed while no weapons are
+    // selected (the picker hides itself); once both reward and weapons are
+    // present, the target id must match a weapon in the draft.
+    const rewardDraft = data as Partial<{
+      starting_reward: string;
+      starting_reward_target: string;
+      weapons: ReadonlyArray<{ id: string }>;
+    }>;
+    if (rewardDraft.starting_reward && (rewardDraft.weapons?.length ?? 0) > 0) {
+      const target = rewardDraft.starting_reward_target ?? '';
+      const matches = (rewardDraft.weapons ?? []).some((weapon) => weapon.id === target);
+      if (!target || !matches) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['starting_reward_target'],
+          message: 'reward-target-required',
+        });
+      }
+    }
   }) as unknown as T;
 }
 
@@ -207,6 +232,7 @@ export const STEP_FIELDS = {
     'calling',
     'calling_feature',
     'starting_reward',
+    'starting_reward_target',
     'starting_virtue',
     'starting_virtue_selection',
     'standard_of_living',

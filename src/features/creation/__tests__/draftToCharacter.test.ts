@@ -34,6 +34,7 @@ function makeDraft(): CreationDraft {
     calling: 'TREASURE_HUNTER',
     calling_feature: 'burglary',
     starting_reward: 'keen',
+    starting_reward_target: 'sword',
     starting_virtue: 'mastery',
     starting_virtue_selection: {
       kind: 'mastery',
@@ -94,6 +95,27 @@ describe('draftToCharacter', () => {
     expect(character.experience.total_skill_points_spent).toBe(10);
     const blocking = validateCreation(character).filter((issue) => issue.blocking);
     expect(blocking.some((i) => i.code === 'previous-experience-overspent')).toBe(false);
+  });
+
+  it('attaches the starting Reward to the targeted weapon and leaves others bare', () => {
+    const draft = makeDraft();
+    draft.weapons = [
+      { id: 'sword', load: 2 },
+      { id: 'bow', load: 2 },
+    ];
+    draft.starting_reward = 'keen';
+    draft.starting_reward_target = 'sword';
+    const character = draftToCharacter(draft);
+    const sword = character.war_gear.weapons.find((w) => w.id === 'sword');
+    const bow = character.war_gear.weapons.find((w) => w.id === 'bow');
+    expect(sword?.rewards_applied).toEqual([
+      { id: 'keen', name: 'keen', origin: 'STARTING' },
+    ]);
+    expect(bow?.rewards_applied).toEqual([]);
+    // The character-level rewards list still mirrors the Reward for the
+    // sidebar listing (BR:2470 — Reward names are also tracked at the hero
+    // level so the sheet can summarise them).
+    expect(character.rewards[0]?.id).toBe('keen');
   });
 
   it('marks the chosen underlined skill as Favoured', () => {

@@ -105,9 +105,30 @@ export function draftToCharacter(draft: CreationDraft): Character {
     ],
     virtues: [buildStartingVirtue(draft)],
     war_gear: {
-      weapons: draft.weapons.map((w) => ({ id: w.id as WeaponId, type: w.id, load: w.load })),
+      weapons: draft.weapons.map((w) => {
+        const isRewardTarget = w.id === draft.starting_reward_target && !!draft.starting_reward;
+        return {
+          id: w.id as WeaponId,
+          type: w.id,
+          load: w.load,
+          rewards_applied: isRewardTarget
+            ? [
+                {
+                  id: draft.starting_reward as RewardId,
+                  name: draft.starting_reward,
+                  origin: 'STARTING' as const,
+                },
+              ]
+            : [],
+        };
+      }),
       armour: draft.armour
-        ? { id: draft.armour.id as ArmourId, type: draft.armour.id, load: draft.armour.load }
+        ? {
+            id: draft.armour.id as ArmourId,
+            type: draft.armour.id,
+            load: draft.armour.load,
+            rewards_applied: [],
+          }
         : null,
       helm: null,
       shield: draft.shield
@@ -117,6 +138,7 @@ export function draftToCharacter(draft: CreationDraft): Character {
             load: draft.shield.load,
             parry_bonus: draft.shield.parry_bonus,
             destroyed: false,
+            rewards_applied: [],
           }
         : null,
     },

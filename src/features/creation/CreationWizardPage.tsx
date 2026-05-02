@@ -53,6 +53,7 @@ const DEFAULT_VALUES: CreationDraft = {
   calling: undefined as unknown as Calling,
   calling_feature: '',
   starting_reward: '',
+  starting_reward_target: '',
   starting_virtue: '',
   starting_virtue_selection: null,
   standard_of_living: undefined as unknown as StandardOfLiving,

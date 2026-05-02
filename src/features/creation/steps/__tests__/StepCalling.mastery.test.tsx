@@ -34,6 +34,7 @@ function makeDefaults(): CreationDraft {
     calling: 'TREASURE_HUNTER',
     calling_feature: 'burglary',
     starting_reward: 'keen',
+    starting_reward_target: '',
     starting_virtue: 'mastery',
     starting_virtue_selection: null,
     standard_of_living: 'COMMON',

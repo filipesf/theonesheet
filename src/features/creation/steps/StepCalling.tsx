@@ -32,6 +32,7 @@ export function StepCalling() {
   const callingFeature = useWatch({ control, name: 'calling_feature' });
   const sol = useWatch({ control, name: 'standard_of_living' });
   const startingReward = useWatch({ control, name: 'starting_reward' });
+  const startingRewardTarget = useWatch({ control, name: 'starting_reward_target' });
   const startingVirtue = useWatch({ control, name: 'starting_virtue' });
   const startingVirtueSelection = useWatch({ control, name: 'starting_virtue_selection' });
   const weapons = useWatch({ control, name: 'weapons' });
@@ -64,6 +65,11 @@ export function StepCalling() {
         ? [...weapons, { id: weaponId, load: entry.load }]
         : weapons;
     setValue('weapons', next, { shouldDirty: true, shouldValidate: true });
+    // If the player just removed the weapon currently holding the starting
+    // Reward, clear the target so the cross-step refine forces a re-pick.
+    if (exists && startingRewardTarget === weaponId) {
+      setValue('starting_reward_target', '', { shouldValidate: true });
+    }
   }
 
   return (
@@ -131,11 +137,49 @@ export function StepCalling() {
           value={startingReward}
           placeholder={t('common.choose')}
           options={STANDARD_REWARD_IDS.map((id) => ({ value: id, label: t(`ref.rewards.standard.${id}`) }))}
-          onChange={(value) =>
-            setValue('starting_reward', value, { shouldDirty: true, shouldValidate: true })
-          }
+          onChange={(value) => {
+            setValue('starting_reward', value, { shouldDirty: true, shouldValidate: true });
+            // Reset the target so the player has to re-pick when changing
+            // Reward — keeps the cross-step refine honest.
+            setValue('starting_reward_target', '', { shouldValidate: true });
+          }}
         />
       </Block>
+
+      {startingReward && weapons.length > 0 && (
+        <Block title={t('creation.step.calling.reward-target')}>
+          <p className="font-body text-sm text-ink-navy/70 mb-2">
+            {t('creation.step.calling.reward-target-body')}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {weapons.map((weapon) => {
+              const entry = WEAPON_BY_ID.get(weapon.id);
+              if (!entry) return null;
+              const active = startingRewardTarget === weapon.id;
+              return (
+                <SelectionCard
+                  key={weapon.id}
+                  active={active}
+                  padding="sm"
+                  onClick={() =>
+                    setValue('starting_reward_target', active ? '' : weapon.id, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                >
+                  <p className="font-display text-sm tracking-section uppercase text-ink-navy">
+                    {t(`ref.equipment.weapons.${entry.id}`)}
+                  </p>
+                  <p className="font-body text-xs text-ink-navy/70 mt-1">
+                    {t('creation.step.calling.reward-target-load', { load: entry.load })}
+                  </p>
+                </SelectionCard>
+              );
+            })}
+          </div>
+        </Block>
+      )}
 
       <Block title={t('creation.step.calling.starting-virtue')}>
         <SelectRow
