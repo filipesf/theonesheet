@@ -20,8 +20,9 @@ describe('Belba worked example', () => {
   it('backfills canonical IDs onto Belba\'s legacy strings', () => {
     const belba = createBelbaWorkedExample();
 
-    expect(belba.rewards[0]?.id).toBe('hardiness');
-    expect(belba.virtues[0]?.id).toBe('mastery');
+    // DOMAIN_SPEC §13: Starting Reward = Keen on Sword; Starting Virtue = Hardiness.
+    expect(belba.rewards[0]?.id).toBe('keen');
+    expect(belba.virtues[0]?.id).toBe('hardiness');
     expect(belba.war_gear.weapons[0]?.id).toBe('sword');
     expect(belba.war_gear.weapons[1]?.id).toBe('bow');
     expect(belba.war_gear.armour?.id).toBe('leather-shirt');
@@ -30,6 +31,7 @@ describe('Belba worked example', () => {
     const stealth = belba.skills.find((skill) => skill.id === 'stealth');
     expect(stealth?.rating).toBe(4);
     expect(stealth?.favoured).toBe(true);
-    expect(belba.skills.find((s) => s.id === 'persuade')?.favoured).toBe(true);
+    expect(belba.skills.find((s) => s.id === 'scan')?.favoured).toBe(true);
+    expect(belba.skills.find((s) => s.id === 'explore')?.favoured).toBe(true);
   });
 });

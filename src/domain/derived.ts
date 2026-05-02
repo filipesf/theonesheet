@@ -1,8 +1,8 @@
 import { BLESSINGS_BY_ID, legacyNameToBlessingId } from '../ref-data/blessings';
 import { CULTURES } from '../ref-data/cultures';
-import { legacyNameToRewardId } from '../ref-data/rewards';
+import { patronEntry } from '../ref-data/patrons';
 import { legacyNameToVirtueId, VIRTUES_BY_ID, type VirtueEffect } from '../ref-data/virtues';
-import type { Character, Reward, Virtue } from './types';
+import type { Character, StandardOfLiving, Virtue } from './types';
 
 // Cultural Blessing effects partially wired in v0:
 // - `attribute-plus` (Rangers / Kings of Men) adjusts the chosen attribute
@@ -29,10 +29,6 @@ function resolveVirtueId(virtue: Virtue): string | null {
   return virtue.id ?? legacyNameToVirtueId(virtue.name);
 }
 
-function resolveRewardId(reward: Reward): string | null {
-  return reward.id ?? legacyNameToRewardId(reward.name);
-}
-
 function virtueEffectAmount(virtues: Character['virtues'], kind: VirtueEffect['kind']): number {
   return virtues.reduce((total, virtue) => {
     const id = resolveVirtueId(virtue);
@@ -45,10 +41,6 @@ function virtueEffectAmount(virtues: Character['virtues'], kind: VirtueEffect['k
     }, 0);
     return total + fromEffects;
   }, 0);
-}
-
-function countReward(values: Character['rewards'], id: string): number {
-  return values.filter((reward) => resolveRewardId(reward) === id).length;
 }
 
 function applyBlessingAttributePlus(character: Character): Character {
@@ -104,13 +96,9 @@ export function recomputeDerivedStats(character: Character): Character {
   const hopeVirtueBonus = virtueEffectAmount(character.virtues, 'max_hope_plus');
   const parryVirtueBonus = virtueEffectAmount(character.virtues, 'base_parry_plus');
 
-  const hardinessRewardBonus = countReward(character.rewards, 'hardiness') * 2;
-  const confidenceRewardBonus = countReward(character.rewards, 'confidence') * 2;
-  const nimblenessRewardBonus = countReward(character.rewards, 'nimbleness');
-
-  const maxEndurance = character.attributes.strength + formula.endurance + enduranceVirtueBonus + hardinessRewardBonus;
-  const maxHope = character.attributes.heart + formula.hope + hopeVirtueBonus + confidenceRewardBonus;
-  const baseParry = character.attributes.wits + formula.parry + parryVirtueBonus + nimblenessRewardBonus;
+  const maxEndurance = character.attributes.strength + formula.endurance + enduranceVirtueBonus;
+  const maxHope = character.attributes.heart + formula.hope + hopeVirtueBonus;
+  const baseParry = character.attributes.wits + formula.parry + parryVirtueBonus;
   const effectiveParry = baseParry + (character.war_gear.shield?.parry_bonus ?? 0);
 
   return {
@@ -139,12 +127,86 @@ export function recomputeLoad(character: Character): Character {
 }
 
 export function recomputeConditions(character: Character): Character {
+  const wounded = character.conditions.wounded;
+  const dying = character.conditions.dying ?? false;
+  const atZeroEndurance = character.current_endurance <= 0;
   return {
     ...character,
     conditions: {
       ...character.conditions,
       weary: character.current_endurance <= character.load,
       miserable: character.shadow >= character.current_hope,
+      overwhelmed: character.shadow >= character.max_hope && character.max_hope > 0,
+      dying: wounded && atZeroEndurance ? true : dying,
+      unconscious: atZeroEndurance && !dying && !wounded,
     },
   };
+}
+
+export function recomputeShadowPathStep(character: Character): Character {
+  // 0..3 = playable; 4 = Fallen.
+  return { ...character, shadow_path_step: Math.min(character.flaws.length, 4) };
+}
+
+const STANDARD_OF_LIVING_ORDER: readonly StandardOfLiving[] = [
+  'POOR',
+  'FRUGAL',
+  'COMMON',
+  'PROSPEROUS',
+  'RICH',
+  'VERY_RICH',
+];
+
+const STANDARD_OF_LIVING_THRESHOLDS: Record<StandardOfLiving, number | null> = {
+  POOR: null,
+  FRUGAL: 30,
+  COMMON: 90,
+  PROSPEROUS: 180,
+  RICH: 300,
+  VERY_RICH: null,
+};
+
+export function recomputeStandardOfLiving(character: Character): Character {
+  // DOMAIN_SPEC §4.6: rises automatically when treasure crosses the next-tier
+  // threshold; never drops automatically. Walk up tiers while the next
+  // threshold is met.
+  let currentIndex = STANDARD_OF_LIVING_ORDER.indexOf(character.standard_of_living);
+  if (currentIndex < 0) return character;
+  while (currentIndex < STANDARD_OF_LIVING_ORDER.length - 1) {
+    const tier = STANDARD_OF_LIVING_ORDER[currentIndex];
+    if (!tier) break;
+    const threshold = STANDARD_OF_LIVING_THRESHOLDS[tier];
+    if (threshold === null || character.treasure < threshold) break;
+    currentIndex += 1;
+  }
+  const next = STANDARD_OF_LIVING_ORDER[currentIndex];
+  if (!next || next === character.standard_of_living) return character;
+  return { ...character, standard_of_living: next };
+}
+
+// Per-character fellowship contribution. The Company-wide max_fellowship
+// (DOMAIN_SPEC §4.7) is a Company-level derived field — see
+// `computeMaxFellowship` below for the aggregate formula.
+export function characterHasThreeIsCompany(character: Character): boolean {
+  return character.virtues.some((virtue) => {
+    const id = resolveVirtueId(virtue);
+    return id === 'three-is-company';
+  });
+}
+
+export function characterHasBreeBlood(character: Character): boolean {
+  if (character.heroic_culture !== 'MEN_OF_BREE') return false;
+  return resolveBlessingId(character.cultural_blessing) === 'bree-blood';
+}
+
+export function computeMaxFellowship(input: {
+  members: readonly Character[];
+  patronId?: string | null;
+}): number {
+  const heroes = input.members.length;
+  const threeIsCompany = input.members.some(characterHasThreeIsCompany) ? 1 : 0;
+  const breeBlood = input.members.filter(characterHasBreeBlood).length;
+  const patron = input.patronId ? patronEntry(input.patronId) : null;
+  const patronBonus = patron?.fellowshipBonus ?? 0;
+  return heroes + threeIsCompany + breeBlood + patronBonus;
 }

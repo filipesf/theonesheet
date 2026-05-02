@@ -105,6 +105,9 @@ export type Armour = {
 export type Helm = {
   id?: HelmId;
   load: number;
+  // Transient combat-scoped flag — see DOMAIN_SPEC §4.4. Never persists across
+  // sessions; resets on combat exit.
+  removed_in_combat?: boolean;
 };
 
 export type Shield = {
@@ -152,6 +155,13 @@ export type Character = {
     weary: boolean;
     miserable: boolean;
     wounded: boolean;
+    // Derived: shadow >= max_hope. UI applies Ill-favoured to every roll while
+    // active. See DOMAIN_SPEC §9.3.
+    overwhelmed: boolean;
+    // Wounded + dropped to Endurance 0. See DOMAIN_SPEC §9.5.
+    dying: boolean;
+    // Derived: current_endurance == 0 && !dying.
+    unconscious: boolean;
   };
   wound: string;
   valour: number;
@@ -169,7 +179,21 @@ export type Character = {
     total_adventure_points_spent: number;
   };
   company_id: string;
-  fellowship_focus_id: string | null;
+  // Per DOMAIN_SPEC §3.7 / §11.1: the Company-wide Safe Haven. A v1 Company
+  // entity will eventually own this field; in v0 we stage it on the hero so
+  // the wizard's Step 9 has somewhere to write to and the printed sheet can
+  // surface it. The optional shape avoids a forced migration on existing v0
+  // saves.
+  safe_haven?: string;
+  // Per DOMAIN_SPEC §3.1 / §11.3: max 1 entry, or 2 if a hobbit hero in the
+  // Company has the Three is Company virtue. Storage holds the canonical array;
+  // legacy single-id fields migrate into a 0/1-element array.
+  fellowship_focus_ids: readonly string[];
+  // Derived: flaws.length, capped at 4 (Fallen). DOMAIN_SPEC §3.1.
+  shadow_path_step: number;
+  // Optional in v0: copied from culture defaults; surfaced for table reference
+  // only — no mechanical effect yet.
+  languages?: readonly string[];
   heir: null;
   notes: string;
   change_log: unknown[];

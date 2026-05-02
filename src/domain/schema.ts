@@ -45,6 +45,9 @@ export function createEmptyCharacter(culture: HeroicCulture = 'HOBBITS_OF_THE_SH
       weary: false,
       miserable: false,
       wounded: false,
+      overwhelmed: false,
+      dying: false,
+      unconscious: false,
     },
     wound: '',
     valour: 0,
@@ -67,7 +70,8 @@ export function createEmptyCharacter(culture: HeroicCulture = 'HOBBITS_OF_THE_SH
       total_adventure_points_spent: 0,
     },
     company_id: '',
-    fellowship_focus_id: null,
+    fellowship_focus_ids: [],
+    shadow_path_step: 0,
     heir: null,
     notes: '',
     change_log: [],
@@ -89,20 +93,17 @@ export function createBelbaWorkedExample(): Character {
   character.age = 28;
   character.calling = 'TREASURE_HUNTER';
   character.shadow_path = 'Dragon-Sickness';
-  character.company_id = 'gandalf';
+  character.company_id = 'bilbo';
   // Hobbit row 4 (4/5/5) is the canonical set matching Belba's (str/hrt/wts).
   character.attributes.strength = 4;
   character.attributes.heart = 5;
   character.attributes.wits = 5;
   character.distinctive_features = ['keen-eyed', 'inquisitive', 'burglary'];
-  character.rewards = [{ name: 'Hardiness', origin: 'STARTING' }];
-  character.virtues = [
-    {
-      name: 'Mastery',
-      origin: 'STARTING',
-      selection: { kind: 'mastery', skill_ids: ['explore', 'healing'] },
-    },
-  ];
+  // Per DOMAIN_SPEC §13: Starting Reward = Keen (applied to Sword); Starting
+  // Virtue = Hardiness. The previous shape (Hardiness as Reward, Mastery as
+  // Virtue) reflected the v0 mistake corrected in Phase 0.3.
+  character.rewards = [{ id: 'keen', name: 'Keen', origin: 'STARTING' }];
+  character.virtues = [{ id: 'hardiness', name: 'Hardiness', origin: 'STARTING' }];
   character.current_endurance = 24;
   character.current_hope = 15;
   character.treasure = 30;
@@ -114,7 +115,7 @@ export function createBelbaWorkedExample(): Character {
   character.experience.total_skill_points_spent = 10;
   character.experience.total_adventure_points_spent = 0;
 
-  const favouredSkillIds = new Set(['stealth', 'scan', 'explore', 'healing', 'persuade']);
+  const favouredSkillIds = new Set(['stealth', 'scan', 'explore']);
   const ratedSkillIds = new Set(['athletics', 'travel', 'hunting', 'lore']);
   character.skills = character.skills.map((skill) => {
     if (skill.id === 'stealth') {
