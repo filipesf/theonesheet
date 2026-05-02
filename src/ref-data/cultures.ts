@@ -54,3 +54,41 @@ export const MEDIAN_AGE_BY_CULTURE: Record<HeroicCulture, number> = {
   MEN_OF_BREE: 30,
   RANGERS_OF_THE_NORTH: 50,
 };
+
+// Adventuring-age windows from DOMAIN_SPEC §4.8. Used as warnings, never
+// blockers — players may craft outliers narratively.
+export const ADVENTURING_AGE_RANGE: Record<HeroicCulture, { min: number; max: number | null }> = {
+  DWARVES_OF_DURINS_FOLK: { min: 50, max: 90 },
+  BARDINGS:               { min: 18, max: 40 },
+  ELVES_OF_LINDON:        { min: 100, max: null },
+  HOBBITS_OF_THE_SHIRE:   { min: 20, max: 50 },
+  MEN_OF_BREE:            { min: 18, max: 40 },
+  RANGERS_OF_THE_NORTH:   { min: 20, max: 50 },
+};
+
+// Cultural gear restrictions from DOMAIN_SPEC §6.1. Each entry lists weapon
+// or shield ids the culture may not wield. Hobbits' "Small Folk" inverts to
+// an allow-list; we model it as a deny-list of everything else by tagging
+// the entries it DOES allow elsewhere.
+export type CulturalGearRestriction = {
+  forbiddenWeaponIds?: readonly string[];
+  forbiddenShieldIds?: readonly string[];
+  allowedWeaponIds?: readonly string[];
+};
+
+export const CULTURAL_GEAR_RESTRICTIONS: Record<HeroicCulture, CulturalGearRestriction> = {
+  DWARVES_OF_DURINS_FOLK: {
+    forbiddenWeaponIds: ['great-bow', 'great-spear'],
+    forbiddenShieldIds: ['great-shield'],
+  },
+  BARDINGS: {},
+  ELVES_OF_LINDON: {},
+  HOBBITS_OF_THE_SHIRE: {
+    // Small Folk: dagger, bow, club, short-sword, short-spear, spear, axe, mace.
+    // The basic rules' "mace" maps onto the cudgel/club family in our data.
+    allowedWeaponIds: ['unarmed', 'dagger', 'cudgel', 'club', 'short-sword', 'short-spear', 'spear', 'axe', 'bow'],
+    forbiddenShieldIds: ['great-shield'],
+  },
+  MEN_OF_BREE: {},
+  RANGERS_OF_THE_NORTH: {},
+};

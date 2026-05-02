@@ -1,65 +1,119 @@
 import type { HeroicCulture } from '../domain/types';
 import { CALLING_DISTINCTIVE_FEATURES, type CallingDistinctiveFeature } from './callings';
 
-export const CULTURAL_DISTINCTIVE_FEATURES: Record<HeroicCulture, readonly string[]> = {
-  DWARVES_OF_DURINS_FOLK: ['bold', 'grim', 'keen-eyed', 'proud', 'robust', 'stern'],
-  BARDINGS:               ['cunning', 'fair-spoken', 'generous', 'lordly', 'patient', 'tall'],
-  ELVES_OF_LINDON:        ['curious', 'eloquent', 'fair', 'lordly', 'mirthful', 'wise'],
-  HOBBITS_OF_THE_SHIRE:   ['cheerful', 'curious', 'hospitable', 'inquisitive', 'keen-eyed', 'merry'],
-  MEN_OF_BREE:            ['bluff', 'cautious', 'honest', 'steadfast', 'stout', 'trusty'],
-  RANGERS_OF_THE_NORTH:   ['fair-spoken', 'grim', 'just', 'patient', 'vigilant', 'wise'],
-} as const;
+// The 24 canonical cultural Distinctive Features (DOMAIN_SPEC §6.6).
+export const CANONICAL_DISTINCTIVE_FEATURES = [
+  'bold',
+  'cunning',
+  'eager',
+  'faithful',
+  'fair',
+  'fair-spoken',
+  'fierce',
+  'generous',
+  'honourable',
+  'inquisitive',
+  'keen-eyed',
+  'lordly',
+  'merry',
+  'patient',
+  'proud',
+  'rustic',
+  'secretive',
+  'stern',
+  'subtle',
+  'swift',
+  'tall',
+  'true-hearted',
+  'wary',
+  'wilful',
+] as const;
 
-export type CulturalDistinctiveFeatureId =
-  (typeof CULTURAL_DISTINCTIVE_FEATURES)[HeroicCulture][number];
+export type CulturalDistinctiveFeatureId = (typeof CANONICAL_DISTINCTIVE_FEATURES)[number];
+
+// Per-culture pool (DOMAIN_SPEC §6.5): each culture exposes 8; the player
+// picks 2 during creation.
+export const CULTURAL_DISTINCTIVE_FEATURES: Record<
+  HeroicCulture,
+  readonly CulturalDistinctiveFeatureId[]
+> = {
+  DWARVES_OF_DURINS_FOLK: ['cunning', 'wary', 'fierce', 'lordly', 'proud', 'stern', 'secretive', 'wilful'],
+  BARDINGS:               ['tall', 'eager', 'fair', 'bold', 'fierce', 'generous', 'proud', 'stern'],
+  ELVES_OF_LINDON:        ['swift', 'merry', 'fair', 'wary', 'lordly', 'keen-eyed', 'patient', 'subtle'],
+  HOBBITS_OF_THE_SHIRE:   ['merry', 'eager', 'fair-spoken', 'faithful', 'honourable', 'inquisitive', 'keen-eyed', 'rustic'],
+  MEN_OF_BREE:            ['cunning', 'inquisitive', 'fair-spoken', 'faithful', 'generous', 'patient', 'rustic', 'true-hearted'],
+  RANGERS_OF_THE_NORTH:   ['swift', 'tall', 'bold', 'honourable', 'stern', 'secretive', 'true-hearted', 'subtle'],
+} as const;
 
 export type DistinctiveFeatureId = CulturalDistinctiveFeatureId | CallingDistinctiveFeature;
 
 const CALLING_DISTINCTIVE_FEATURE_SET = new Set<string>(CALLING_DISTINCTIVE_FEATURES);
+const CANONICAL_FEATURE_SET = new Set<string>(CANONICAL_DISTINCTIVE_FEATURES);
 
 export function isCallingDistinctiveFeatureId(value: string): value is CallingDistinctiveFeature {
   return CALLING_DISTINCTIVE_FEATURE_SET.has(value);
 }
 
-const ALL_KNOWN_FEATURE_IDS = new Set<string>([
-  ...CALLING_DISTINCTIVE_FEATURES,
-  ...Object.values(CULTURAL_DISTINCTIVE_FEATURES).flat(),
-]);
+export function isCulturalDistinctiveFeatureId(value: string): value is CulturalDistinctiveFeatureId {
+  return CANONICAL_FEATURE_SET.has(value);
+}
 
 export function isKnownDistinctiveFeatureId(value: string): boolean {
-  return ALL_KNOWN_FEATURE_IDS.has(value);
+  return CANONICAL_FEATURE_SET.has(value) || CALLING_DISTINCTIVE_FEATURE_SET.has(value);
+}
+
+// Pre-Phase-3 IDs that are not in the canonical 24. Stored characters may
+// still hold them; the migration maps each to its closest canonical
+// equivalent. The mappings are documented inline.
+const DEPRECATED_TO_CANONICAL: Record<string, CulturalDistinctiveFeatureId> = {
+  grim: 'stern',          // Dwarves / Rangers — closest semantic match.
+  robust: 'fierce',       // Dwarves.
+  curious: 'inquisitive', // Elves / Hobbits.
+  eloquent: 'fair-spoken', // Elves.
+  mirthful: 'merry',      // Elves.
+  wise: 'patient',        // Elves / Rangers — patience reads closer than honour.
+  cheerful: 'merry',      // Hobbits.
+  hospitable: 'faithful', // Hobbits.
+  bluff: 'true-hearted',  // Bree.
+  cautious: 'patient',    // Bree.
+  honest: 'true-hearted', // Bree.
+  steadfast: 'faithful',  // Bree.
+  stout: 'cunning',       // Bree — "stout" in Devir basic rules is canon-adjacent only.
+  trusty: 'faithful',     // Bree.
+  just: 'honourable',     // Rangers.
+  vigilant: 'wary',       // Rangers.
+};
+
+export function deprecatedDistinctiveFeatureCanonical(value: string): CulturalDistinctiveFeatureId | null {
+  return DEPRECATED_TO_CANONICAL[value] ?? null;
 }
 
 const LEGACY_NAME_TO_ID: Record<string, DistinctiveFeatureId> = {
   Bold: 'bold',
-  Grim: 'grim',
-  'Keen-Eyed': 'keen-eyed',
-  Proud: 'proud',
-  Robust: 'robust',
-  Stern: 'stern',
   Cunning: 'cunning',
-  'Fair-spoken': 'fair-spoken',
-  Generous: 'generous',
-  Lordly: 'lordly',
-  Patient: 'patient',
-  Tall: 'tall',
-  Curious: 'curious',
-  Eloquent: 'eloquent',
+  Eager: 'eager',
+  Faithful: 'faithful',
   Fair: 'fair',
-  Mirthful: 'mirthful',
-  Wise: 'wise',
-  Cheerful: 'cheerful',
-  Hospitable: 'hospitable',
+  'Fair-Spoken': 'fair-spoken',
+  'Fair-spoken': 'fair-spoken',
+  Fierce: 'fierce',
+  Generous: 'generous',
+  Honourable: 'honourable',
   Inquisitive: 'inquisitive',
+  'Keen-Eyed': 'keen-eyed',
+  Lordly: 'lordly',
   Merry: 'merry',
-  Bluff: 'bluff',
-  Cautious: 'cautious',
-  Honest: 'honest',
-  Steadfast: 'steadfast',
-  Stout: 'stout',
-  Trusty: 'trusty',
-  Just: 'just',
-  Vigilant: 'vigilant',
+  Patient: 'patient',
+  Proud: 'proud',
+  Rustic: 'rustic',
+  Secretive: 'secretive',
+  Stern: 'stern',
+  Subtle: 'subtle',
+  Swift: 'swift',
+  Tall: 'tall',
+  'True-Hearted': 'true-hearted',
+  Wary: 'wary',
+  Wilful: 'wilful',
   Burglary: 'burglary',
   'Enemy-Lore': 'enemy-lore',
   Leadership: 'leadership',
@@ -69,7 +123,7 @@ const LEGACY_NAME_TO_ID: Record<string, DistinctiveFeatureId> = {
 };
 
 export function legacyNameToDistinctiveFeatureId(value: string): DistinctiveFeatureId | null {
-  return (LEGACY_NAME_TO_ID[value] as DistinctiveFeatureId | undefined) ?? null;
+  return LEGACY_NAME_TO_ID[value] ?? null;
 }
 
 const CULTURE_BY_FEATURE_ID = (() => {

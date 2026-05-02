@@ -54,18 +54,18 @@ export const VIRTUES = [
   { id: 'unobtrusive',       kind: 'cultural', parentId: 'HOBBITS_OF_THE_SHIRE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
 
   { id: 'bree-pony',                  kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'max_hope_plus', amount: 1 }] },
-  { id: 'crafty',                     kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'determined',                 kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'old-bones',                  kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'stout-hearted',              kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'defiance',                   kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'desperate-courage',          kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'friendly-and-familiar',      kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'pipe-smoking',               kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
   { id: 'strange-as-news-from-bree',  kind: 'cultural', parentId: 'MEN_OF_BREE', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
 
-  { id: 'bow-mastery',                 kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'foresight-of-their-kindred',  kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'heir-of-arnor',               kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'hunter-of-the-unseen',        kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'lore-of-eriador',             kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
-  { id: 'wandering-days',              kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'foresight-of-his-folk',  kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'heir-of-arnor',          kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'rangers-resilience',     kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'royalty-revealed',       kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'strider',                kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
+  { id: 'strong-willed',          kind: 'cultural', parentId: 'RANGERS_OF_THE_NORTH', repeatable: false, prerequisites: { wisdomMin: 2 }, effects: [{ kind: 'narrative_only' }] },
 ] as const satisfies readonly VirtueEntry[];
 
 export type VirtueId = (typeof VIRTUES)[number]['id'];
@@ -82,8 +82,33 @@ const VIRTUE_ID_BY_LEGACY_NAME: Record<string, VirtueId> = {
   Mastery: 'mastery',
   Nimbleness: 'nimbleness',
   Prowess: 'prowess',
+  // Phase 1.9 / 0.6–0.7: pre-Phase-3 ids that were renamed to canonical
+  // Devir pt-BR names. Stored characters still resolve via this map.
+  'Bold and Hale': 'friendly-and-familiar',
+  Stout: 'desperate-courage',
+  'Hidden Sentinel': 'rangers-resilience',
 };
 
 export function legacyNameToVirtueId(value: string): VirtueId | null {
   return VIRTUE_ID_BY_LEGACY_NAME[value] ?? null;
+}
+
+// Maps pre-Phase-3 cultural-virtue ids to their canonical replacement.
+// Used by the v0 migration so persisted characters do not lose semantics.
+const DEPRECATED_VIRTUE_TO_CANONICAL: Record<string, VirtueId> = {
+  // Bree
+  crafty: 'friendly-and-familiar',
+  determined: 'desperate-courage',
+  'old-bones': 'defiance',
+  'stout-hearted': 'pipe-smoking',
+  // Rangers
+  'bow-mastery': 'strider',
+  'foresight-of-their-kindred': 'foresight-of-his-folk',
+  'hunter-of-the-unseen': 'rangers-resilience',
+  'lore-of-eriador': 'strong-willed',
+  'wandering-days': 'royalty-revealed',
+};
+
+export function deprecatedVirtueIdCanonical(value: string): VirtueId | null {
+  return DEPRECATED_VIRTUE_TO_CANONICAL[value] ?? null;
 }

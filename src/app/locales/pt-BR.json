@@ -323,6 +323,8 @@
         "body": "Escolha seu chamado, recompensa e virtude iniciais, padrão de vida e equipamento de partida.",
         "choose-calling": "Chamado",
         "calling-feature": "Característica do chamado",
+        "calling-favoured-skills": "Perícias Favoráveis do Chamado",
+        "calling-favoured-skills-body": "Cada Chamado lista 3 perícias. Escolha 2 para marcar como Favoráveis.",
         "starting-reward": "Recompensa inicial",
         "starting-virtue": "Virtude inicial",
         "mastery-skills": "Perícias da Mestria",
@@ -333,6 +335,18 @@
         "weapons": "Armas ({{count}}/{{max}})",
         "armour": "Armadura",
         "shield": "Escudo"
+      },
+      "company": {
+        "title": "Formação da Companhia",
+        "body": "Defina o Patrono da Companhia e o Refúgio Seguro inicial. O Foco de Companheirismo será definido depois — ele aponta para outro herói da Companhia.",
+        "patron": "Patrono",
+        "patron-body": "O Patrono é a figura tutelar da Companhia. Cada Patrono tem uma vantagem especial e contribui com pontos de Companheirismo.",
+        "patron-fellowship": "Bônus de Companheirismo: +{{bonus}}",
+        "patron-callings": "Chamados favorecidos",
+        "safe-haven": "Refúgio Seguro",
+        "safe-haven-body": "O lugar para onde a Companhia retorna nas Fases de Sociedade. Sugestões: Bri, Tharbad, Valfenda, Lago dos Cisnes.",
+        "safe-haven-placeholder": "Ex.: Pônei Empinado (Bri)",
+        "fellowship-focus-note": "O Foco de Companheirismo aponta para outro herói da Companhia. Você poderá definí-lo após criar todos os heróis."
       },
       "review": {
         "title": "Revisão",
@@ -354,7 +368,10 @@
       "derived_state": "Estado derivado",
       "underlined_skill": "Perícia sublinhada",
       "cultural_blessing_choice": "Bênção cultural",
-      "starting_virtue_selection": "Virtude inicial"
+      "starting_virtue_selection": "Virtude inicial",
+      "calling_favoured_skills": "Perícias favoráveis do chamado",
+      "patron_id": "Patrono",
+      "safe_haven": "Refúgio Seguro"
     },
     "issue": {
       "name-required": "Informe um nome antes de finalizar.",
@@ -369,7 +386,8 @@
       "rangers-attribute-choice-required": "Escolha o Atributo que recebe +1 pela Bênção Reis dos Homens.",
       "mastery-selection-required": "Mestria exige a escolha de duas perícias.",
       "mastery-skills-distinct": "As duas perícias de Mestria devem ser diferentes.",
-      "prowess-selection-required": "Proeza exige a escolha de um Atributo."
+      "prowess-selection-required": "Proeza exige a escolha de um Atributo.",
+      "calling-favoured-skills-pick-two": "Escolha exatamente 2 das 3 perícias do chamado para marcar como Favoráveis."
     }
   },
   "common": {
@@ -417,55 +435,31 @@
         "shadow-lore": "Conhecimento da Sombra",
         "folk-lore": "Folclore"
       },
-      "cultures": {
-        "dwarves-of-durins-folk": {
-          "bold": "Audacioso",
-          "grim": "Sombrio",
-          "keen-eyed": "Vista Aguçada",
-          "proud": "Orgulhoso",
-          "robust": "Robusto",
-          "stern": "Severo"
-        },
-        "bardings": {
-          "cunning": "Astuto",
-          "fair-spoken": "Eloquente",
-          "generous": "Generoso",
-          "lordly": "Senhoril",
-          "patient": "Paciente",
-          "tall": "Alto"
-        },
-        "elves-of-lindon": {
-          "curious": "Curioso",
-          "eloquent": "Eloquente",
-          "fair": "Belo",
-          "lordly": "Senhoril",
-          "mirthful": "Alegre",
-          "wise": "Sábio"
-        },
-        "hobbits-of-the-shire": {
-          "cheerful": "Animado",
-          "curious": "Curioso",
-          "hospitable": "Hospitaleiro",
-          "inquisitive": "Inquiridor",
-          "keen-eyed": "Vista Aguçada",
-          "merry": "Jovial"
-        },
-        "men-of-bree": {
-          "bluff": "Direto",
-          "cautious": "Cauteloso",
-          "honest": "Honesto",
-          "steadfast": "Firme",
-          "stout": "Resoluto",
-          "trusty": "Confiável"
-        },
-        "rangers-of-the-north": {
-          "fair-spoken": "Eloquente",
-          "grim": "Sombrio",
-          "just": "Justo",
-          "patient": "Paciente",
-          "vigilant": "Vigilante",
-          "wise": "Sábio"
-        }
+      "canonical": {
+        "bold": "Bravo",
+        "cunning": "Astuto",
+        "eager": "Ansioso",
+        "faithful": "Fiel",
+        "fair": "Belo",
+        "fair-spoken": "Eloquente",
+        "fierce": "Feroz",
+        "generous": "Generoso",
+        "honourable": "Honrado",
+        "inquisitive": "Inquisitivo",
+        "keen-eyed": "Olhar Aguçado",
+        "lordly": "Nobre",
+        "merry": "Alegre",
+        "patient": "Paciente",
+        "proud": "Orgulhoso",
+        "rustic": "Rústico",
+        "secretive": "Sigiloso",
+        "stern": "Severo",
+        "subtle": "Sutil",
+        "swift": "Ágil",
+        "tall": "Alto",
+        "true-hearted": "Sincero",
+        "wary": "Cauteloso",
+        "wilful": "Teimoso"
       }
     },
     "enemyLore": {
@@ -562,19 +556,19 @@
         },
         "men-of-bree": {
           "bree-pony": "Pônei de Bree",
-          "crafty": "Astuto",
-          "determined": "Determinado",
-          "old-bones": "Ossos Velhos",
-          "stout-hearted": "Coração de Aço",
-          "strange-as-news-from-bree": "Estranho como Notícias de Bree"
+          "defiance": "Desafio",
+          "desperate-courage": "Coragem Desesperada",
+          "friendly-and-familiar": "Amigável e Familiar",
+          "pipe-smoking": "Fumar Cachimbo",
+          "strange-as-news-from-bree": "Estranho como Notícias de Bri"
         },
         "rangers-of-the-north": {
-          "bow-mastery": "Maestria com Arco",
-          "foresight-of-their-kindred": "Presciência dos Seus",
+          "foresight-of-his-folk": "Presciência dos Seus",
           "heir-of-arnor": "Herdeiro de Arnor",
-          "hunter-of-the-unseen": "Caçador do Invisível",
-          "lore-of-eriador": "Saber de Eriador",
-          "wandering-days": "Dias de Errância"
+          "rangers-resilience": "Resiliência do Patrulheiro",
+          "royalty-revealed": "Realeza Revelada",
+          "strider": "Passolargo",
+          "strong-willed": "Vontade Firme"
         }
       }
     },
@@ -589,14 +583,12 @@
       }
     },
     "patrons": {
-      "gandalf": "Gandalf, o Cinzento",
+      "balin": "Balin, filho de Fundin",
       "bilbo": "Bilbo Bolseiro",
-      "balin": "Balin filho de Fundin",
-      "beorn": "Beorn, o Trocador de Pele",
-      "bard": "Bardo, o Arqueiro",
-      "dain": "Dáin Pé-de-Ferro",
-      "thranduil": "Rei Thranduil",
-      "radagast": "Radagast, o Castanho"
+      "cirdan": "Círdan, o Armador",
+      "gandalf": "Gandalf, o Cinzento",
+      "gilraen": "Gilraen, a Bela",
+      "tom-and-goldberry": "Tom Bombadil & Frutadeiroira"
     },
     "blessings": {
       "redoubtable": "Inabalável",
