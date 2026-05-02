@@ -742,10 +742,22 @@ function WarGearPanel({ character }: { character: Character }) {
 						const label = weapon.id
 							? t(`ref.equipment.weapons.${weapon.id}`)
 							: weapon.type;
+						const rewards = weapon.rewards_applied ?? [];
+						const isProtected = rewards.length > 0;
+						const rewardLabels = rewards.map((r) => rewardLabel(t, r)).join(", ");
 						return (
 							<tr key={`${weapon.id ?? weapon.type}-${index}`}>
 								<td className="font-body italic text-xl text-ink-navy py-0.5">
-									{label}
+									<span className="inline-flex items-center gap-1.5">
+										{label}
+										{isProtected && (
+											<LockGlyph
+												title={t("sheet.weapon.protected", {
+													rewards: rewardLabels,
+												})}
+											/>
+										)}
+									</span>
 								</td>
 								<td className="font-body tabular-nums text-xl text-ink-navy text-center">
 									{t("common.dash")}
@@ -756,7 +768,9 @@ function WarGearPanel({ character }: { character: Character }) {
 								<td className="font-body tabular-nums text-xl text-ink-navy text-center">
 									{weapon.load}
 								</td>
-								<td className="font-body italic text-xl text-ink-navy" />
+								<td className="font-body italic text-xl text-ink-navy">
+									{isProtected ? rewardLabels : ""}
+								</td>
 							</tr>
 						);
 					})}
@@ -782,11 +796,13 @@ function ArmourPanel({ character }: { character: Character }) {
 					secondaryLabel={t("sheet.armour.label.protection")}
 					secondaryValue=""
 					load={character.war_gear.armour?.load}
+					rewards={character.war_gear.armour?.rewards_applied}
 				/>
 				<ArmourRow
 					label={t("sheet.armour.label.helm")}
 					type={character.war_gear.helm ? t("sheet.armour.helm-name") : ""}
 					load={character.war_gear.helm?.load}
+					rewards={character.war_gear.helm?.rewards_applied}
 				/>
 				<ArmourRow
 					label={t("sheet.armour.label.shield")}
@@ -802,6 +818,7 @@ function ArmourPanel({ character }: { character: Character }) {
 							: ""
 					}
 					load={character.war_gear.shield?.load}
+					rewards={character.war_gear.shield?.rewards_applied}
 				/>
 			</div>
 		</div>
@@ -1341,6 +1358,7 @@ type ArmourRowProps = {
 	secondaryLabel?: string;
 	secondaryValue?: string;
 	load?: number;
+	rewards?: Reward[];
 };
 
 function ArmourRow({
@@ -1349,8 +1367,11 @@ function ArmourRow({
 	secondaryLabel,
 	secondaryValue,
 	load,
+	rewards,
 }: ArmourRowProps) {
 	const { t } = useTranslation();
+	const isProtected = (rewards?.length ?? 0) > 0;
+	const rewardLabels = (rewards ?? []).map((r) => rewardLabel(t, r)).join(", ");
 	return (
 		<div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-3 py-1">
 			<div className="flex flex-col min-w-0">
@@ -1358,7 +1379,14 @@ function ArmourRow({
 					{label}
 				</span>
 				<span className="font-body italic text-xl text-ink-navy truncate min-h-[1.5rem]">
-					{type || ""}
+					<span className="inline-flex items-center gap-1.5">
+						{type || ""}
+						{isProtected && (
+							<LockGlyph
+								title={t("sheet.weapon.protected", { rewards: rewardLabels })}
+							/>
+						)}
+					</span>
 				</span>
 			</div>
 			<div className="flex flex-col items-center min-w-[64px]">
@@ -1378,5 +1406,38 @@ function ArmourRow({
 				</span>
 			</div>
 		</div>
+	);
+}
+
+function LockGlyph({ title }: { title: string }) {
+	return (
+		<svg
+			role="img"
+			aria-label={title}
+			viewBox="0 0 16 16"
+			width="14"
+			height="14"
+			className="text-ink-red shrink-0"
+		>
+			<title>{title}</title>
+			<path
+				d="M5 7 V5.2 a3 3 0 0 1 6 0 V7"
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="1.4"
+				strokeLinecap="round"
+			/>
+			<rect
+				x="3.6"
+				y="7"
+				width="8.8"
+				height="6.4"
+				rx="1.2"
+				fill="currentColor"
+				opacity="0.18"
+				stroke="currentColor"
+				strokeWidth="1.2"
+			/>
+		</svg>
 	);
 }
