@@ -635,13 +635,13 @@ As perícias representam as habilidades que os aventureiros empregam com mais fr
 
 | NÍVEL | PERÍCIA  | PROFICIÊNCIA DE COMBATE |
 | ----- | -------- | ----------------------- |
-| -     | Inábil   | Sem treinamento         |
-|       | Pobre    | Iniciante               |
-|       | Mediano  | Mediano                 |
-|       | Bom      | Experiente              |
-|       | Superior | Veterano                |
-|       | Incrível | Mestre                  |
-|       | Prodígio | Heroico                 |
+| —     | Inábil   | Sem treinamento         |
+| 1     | Pobre    | Iniciante               |
+| 2     | Mediano  | Mediano                 |
+| 3     | Bom      | Experiente              |
+| 4     | Superior | Veterano                |
+| 5     | Incrível | Mestre                  |
+| 6     | Prodígio | Heroico                 |
 
 ## CARACTERÍSTICAS NOTÁVEIS
 
@@ -1349,24 +1349,24 @@ Os jogadores podem aumentar suas perícias como quiserem, desde que tenham ponto
 
 ## EXEMPLO:
 
-Um jogador que quisesse ir de **HISTÓRIA** para **HISTÓRIA** gastaria um total de 10 pontos (2 para aumentar a Perícia de para , 3 para ir de para e 5 para ir de para .
+Um jogador que quisesse ir de **HISTÓRIA 1** para **HISTÓRIA 4** gastaria um total de 10 pontos (2 para aumentar a Perícia de 1 para 2, 3 para ir de 2 para 3 e 5 para ir de 3 para 4).
 
 ## CUSTOS DE PERÍCIA:
 
 | NÍVEL DE PERÍCIA A ATINGIR | CUSTO    |
 | -------------------------- | -------- |
-| De - a                     | 1 ponto  |
-| De a                       | 2 pontos |
-| De a                       | 3 pontos |
-| De a                       | 5 pontos |
+| De — a 1                   | 1 ponto  |
+| De 1 a 2                   | 2 pontos |
+| De 2 a 3                   | 3 pontos |
+| De 3 a 4                   | 5 pontos |
 
 ## CUSTOS DE PROFICIÊNCIA DE COMBATE:
 
 | NÍVEL A ATINGIR | CUSTO    |
 | --------------- | -------- |
-| De - a          | 2 pontos |
-| De a            | 4 pontos |
-| De a            | 6 pontos |
+| De — a 1        | 2 pontos |
+| De 1 a 2        | 4 pontos |
+| De 2 a 3        | 6 pontos |
 
 ## EQUIPAMENTO INICIAL
 
@@ -1777,7 +1777,7 @@ Os testes de Perícia de **ASTÚCIA** são resolvidos usando o Número Alvo de *
 
 ## GRUPOS DE PERÍCIA
 
-| **FORÇA**      | **CORAÇÃO**       | **ASTÚCIA**     |               |
+| **FORÇA**      | **CORAÇÃO**       | **ASTÚCIA**     | GRUPO         |
 | -------------- | ----------------- | --------------- | ------------- |
 | **FASCÍNIO**   | **INDUÇÃO**       | **PERSUASÃO**   | Personalidade |
 | **ATLETISMO**  | **VIAGEM**        | **FURTIVIDADE** | Movimento     |
@@ -3253,9 +3253,9 @@ RESULTADO DO
 
 | DADO DE FAÇANHA | DESCRIÇÃO          | EFEITO                                                                                                                                                                                                                                                                |
 | --------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                 | Ferimento Moderado | O golpe recebido foi violento o suficiente para expô-lo ao risco de consequências piores se ferido novamente, mas nenhum dano duradouro real foi infligido. No final do combate, você se recuperará totalmente em questão de horas (remova a marca do espaço Ferido). |
+| Runa de Gandalf | Ferimento Moderado | O golpe recebido foi violento o suficiente para expô-lo ao risco de consequências piores se ferido novamente, mas nenhum dano duradouro real foi infligido. No final do combate, você se recuperará totalmente em questão de horas (remova a marca do espaço Ferido). |
 | 1-10            | Ferimento Grave    | Ovalor indica quanto tempo levará para a lesão se recuperar, expresso em dias (escreva o resultado no espaço Ferimento na ficha de personagem).                                                                                                                       |
-|                 | Ferimento Crítico  | Você está inconsciente com Resistência zero e agora está Morrendo (como se tivesse sido Ferido duas vezes).                                                                                                                                                           |
+| Olho de Sauron  | Ferimento Crítico  | Você está inconsciente com Resistência zero e agora está Morrendo (como se tivesse sido Ferido duas vezes).                                                                                                                                                           |
 
 ## HERÓIS MORRENDO
 
@@ -3612,13 +3612,13 @@ A tabela identifica os possíveis alvos entre os Heróis-jogadores que cobrem os
 
 | DADO DE FAÇANHA | EVENTO             | CONSEQUÊNCIAS DO TESTE DE PERÍCIA                                                                                  | PONTOS DE FADIGA GANHOS |
 | --------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-|                 | Infortúnio Terível | Se a jogada falhar, o alvo está Ferido.                                                                            | 3                       |
+| Olho de Sauron  | Infortúnio Terível | Se a jogada falhar, o alvo está Ferido.                                                                            | 3                       |
 | 1               | Desespero          | Se a jogada falhar, todos na Companhia ganham 1 ponto de Sombra (Pavor).                                           | 2                       |
 | 2-3             | Escolhas Ruins     | Se a jogada falhar, o alvo ganha 1 ponto de Sombra (Pavor).                                                        | 2                       |
 | 4-7             | Azar               | Se a jogada falhar, adicione 1 dia à duração da jornada e o alvo ganha 1 de Fadiga adicional.                      | 2                       |
 | 8-9             | Atalho             | Se o teste for bem-sucedido, reduza a duração da viagem em 1 dia.                                                  | 1                       |
 | 10              | Encontro Fortuito  | Se o teste for bem sucedido, não se ganha Fadiga, e o His- toriador improvisa um encontro favorecendo a Companhia. | 1                       |
-|                 | Visão Alegre       | Se o teste for bem-sucedido, todos na Companhia recupe- ram 1 de Esperança.                                        | -                       |
+| Runa de Gandalf | Visão Alegre       | Se o teste for bem-sucedido, todos na Companhia recupe- ram 1 de Esperança.                                        | -                       |
 
 ## DETERMINE O EVENTO
 
@@ -3737,6 +3737,18 @@ Os jogadores agora podem gastar seus Pontos de Experiência acumulados para melh
 TREINAMENTO: os jogadores gastam Pontos de Perícia para aumentar os níveis de Perícia de seu Herói-jogador, usando a tabela de Custos de Pontos de Experiência abaixo. Eles não precisam gastar todos os seus pontos ao mesmo tempo - os pontos de Perícia podem ser guardados para se adquirir atua lizações mais caras durante uma Fase de Sociedade posterior. Quaisquer pontos restantes são registrados usando o espaço apropriado na ficha de personagem.
 
 ## CUSTOS DE PONTOS DE EXPERIÊNCIA:
+
+<!--
+NOTA DE EXTRAÇÃO (2026-05-02): a primeira coluna desta tabela perdeu os
+ícones de rank durante a conversão PDF→Markdown (mesmo bug das tabelas
+"CUSTOS DE PERÍCIA" e "CUSTOS DE PROFICIÊNCIA DE COMBATE" em §"EXPERIÊNCIA
+ANTERIOR" e do quadro de níveis de Perícia em §"PERÍCIAS E PROFICIÊNCIAS DE
+COMBATE"). A reconstrução exata depende de conferência visual no PDF Devir;
+os valores em col2/col3 estão preservados conforme extração. O custo "4" da
+primeira linha é anômalo em relação às progressões canônicas conhecidas
+(Perícia 0→1=1, Proficiência 0→1=2, VALOR/SABEDORIA 1→2=8) e merece
+inspeção. Veja docs/plans/2026-05-01-domain-spec-refinement.md Fase 0.9.
+-->
 
 | NOVA PERÍCIA OU NÍVEL EM PROFICIÊNCIA DE COMBATE | NOVO NÍVEL DE **VALOR** OU **SABEDORIA** | CUSTO EM PONTOS DE PERÍCIA OU AVENTURA |
 | ------------------------------------------------ | ---------------------------------------- | -------------------------------------- |
@@ -4228,9 +4240,9 @@ Em termos de jogo, o dano sofrido por um Herói-jogador é ge ralmente traduzido
 
 | RESULTADO DO DADO DE FAÇANHA; | HERÓI-JOGADOR ESTÁ... | EFEITO                                                                          |
 | ----------------------------- | --------------------- | ------------------------------------------------------------------------------- |
-|                               | Nocauteado            | O Herói-jogador é reduzido a zero de Resistência                                |
+| Olho de Sauron                | Nocauteado            | O Herói-jogador é reduzido a zero de Resistência                                |
 | 1-10                          | Contundido            | O Herói-jogador perde uma quantidade de Resistência igual ao resultado numérico |
-|                               | Ileso                 | O Herói-jogador está intacto                                                    |
+| Runa de Gandalf               | Ileso                 | O Herói-jogador está intacto                                                    |
 
 Diferentes fontes de lesões causam dano de forma diferente, conforme mostrado na tabela abaixo. Por exemplo, os danos por queda podem variar com base na altura caída ou na super fície de pouso, enquanto os danos por fogo podem depender da intensidade e do nível de exposição.
 
@@ -6219,7 +6231,7 @@ Raramente há uma noite tranquila no Pônei. Quando os Heróis-jogadores passam 
 
 | JOGADA DO DADO DE FAÇANHA | RESULTADO                         | DESCRIÇÃO                                                                                                                                                                                                                                            |
 | ------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                           | O Peregrino Cinzento              | O próprio Gandalf está visitando o Pônei esta noite e sua presença por si só deixa a casa inteira em alvoroço! Talvez esteja numa missão secreta, ou atrás dos Heróis-joga- dores para obter ajuda contra alguma ameaça oculta.                      |
+| Runa de Gandalf           | O Peregrino Cinzento              | O próprio Gandalf está visitando o Pônei esta noite e sua presença por si só deixa a casa inteira em alvoroço! Talvez esteja numa missão secreta, ou atrás dos Heróis-joga- dores para obter ajuda contra alguma ameaça oculta.                      |
 | 1                         | Patrulheiro Desfavorecido         | Um dos Patrulheiros do Norte está cuidando da própria vida em um canto da sala comunal da pousada. Vários moradores locais estão encarando ou fazendo observações irritadas, mas ninguém sabe por que ele está aqui.                                 |
 | 2                         | Visitantes da Terra dos Buques    | Uma pequena companhia de Hobbits da Terra dos Cervos está passando uma noite no Pônei, se encontrando com primos distantes e esperando negociar algumas das planta- ções locais de erva de fumo.                                                     |
 | 3                         | Viajantes Anões                   | Os anões, viajando para a terra de seus parentes ao longo da grande Estrada Leste- -Oeste, estão experimentando um pouco da Melhor de Cevado e começaram a cantar uma canção estridente esta noite.                                                  |
@@ -6230,7 +6242,7 @@ Raramente há uma noite tranquila no Pônei. Quando os Heróis-jogadores passam 
 | 8                         | Mostrando Algum Dinheiro          | Um comerciante rico está passando por Bri e pagou uma rodada de bebidas para to - dos os presentes esta noite. Infelizmente, alguns clientes menos bem intencionados parecem estar de olho em sua bolsa de dinheiro.                                 |
 | 9                         | Pôneis à solta no Pônei!          | O cavalariço da Pônei vem correndo para a sala comunal, gritando que os cavalos se soltaram dos estábulos da pousada! Será que foi um acidente ou uma tentativa de roubo?                                                                            |
 | 10                        | Caçadores de Tesouro Ostentadores | Um grupo de ladrões de tumbas superestimados vieram gastar suas riquezas ilícitas que alegam ter conseguido nas Colinas dos Túmulos. As moedas são antigas e marcadas com uma escrita estranha.                                                      |
-|                           | Sulista Esquivo                   | Umsulista de rosto pálido está vagando pelas sombras da sala comunal, fazendo perguntas rudes e intimidando os moradores para obter as últimas notícias da Terra de Bri .                                                                            |
+| Olho de Sauron            | Sulista Esquivo                   | Umsulista de rosto pálido está vagando pelas sombras da sala comunal, fazendo perguntas rudes e intimidando os moradores para obter as últimas notícias da Terra de Bri .                                                                            |
 
 ## CEVADO CARRAPICHO
 
@@ -6400,13 +6412,13 @@ O Historiador pode usar a tabela a seguir se os Heróis-jogadores decidirem se a
 
 | RESULTADO DO DADO | RESULTADO                  | DESCRIÇÃO                                                                                                                                                                                                                                                                                                               |
 | ----------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                   | Fitch Arvoralta            | Os Heróis-jogadores encontram o próprio Mateiro de Archet. Dependendo da natureza de sua missão, ele pode ajudá-los ou oferecer-lhes informações sobre os acontecimentos de Bosque Chet. Também pode facilmente guiá-los de volta a Archet.                                                                             |
+| Runa de Gandalf   | Fitch Arvoralta            | Os Heróis-jogadores encontram o próprio Mateiro de Archet. Dependendo da natureza de sua missão, ele pode ajudá-los ou oferecer-lhes informações sobre os acontecimentos de Bosque Chet. Também pode facilmente guiá-los de volta a Archet.                                                                             |
 | 1-2               | Confundidos com orcs       | Um caçador de Bosque Chet dispara uma flecha contra os Heróis-jogadores de uma posição oculta a alguma distância. Ele os confundiu com um grupo de orcs na luz sombria da floresta.                                                                                                                                     |
 | 3-4               | Propriedade Abandonada     | Os Heróis-jogadores se deparam com uma cabana abandonada que parece ter sido saqueada por goblins, com sinais de uma luta sangrenta.                                                                                                                                                                                    |
 | 5-6               | Caçados por Lobos          | Os Heróis-jogadores notam que estão sendo rastreados por um pequeno bando de lobos. Se forem bem-sucedidos em um teste de **CAÇADA** , provavelmente atacarão nas próximas horas.                                                                                                                                       |
 | 7-8               | Buraco Oculto              | Surpreendidos ao pisar numa grande poça de lama escondida por uma camada de folhas e líquen, os personagens afundam e se encontram presos. Eles precisarão fazer um teste de **ATLETISMO** bem-sucedido para se libertarem, e a luta para se soltarem fará com que ganhem 3 pontos de Fadiga e percam um dia de viagem. |
 | 9-10              | Batedores Goblins          | Goblins vieram das Colinas do Vento para explorar o Bosque Chet. Eles avistaram os Heróis-jogadores e tentarão emboscá-los.                                                                                                                                                                                             |
-|                   | Troll das Colinas do Tempo | Um troll está atravessando o Bosque Chet, sem se importar com sutileza ou discrição. Ele localiza os Heróis-jogadores e imediatamente se move para atacar, em busca de uma refeição fresca.                                                                                                                             |
+| Olho de Sauron    | Troll das Colinas do Tempo | Um troll está atravessando o Bosque Chet, sem se importar com sutileza ou discrição. Ele localiza os Heróis-jogadores e imediatamente se move para atacar, em busca de uma refeição fresca.                                                                                                                             |
 
 perigosa, especialmente após o pôr do sol. Mesmo durante o dia, seu dossel verde espesso pode bloquear o sol do verão, forçando um andarilho perdido a encontrar seu caminho por raios de luz estreitos quebrados por longas sombras. Aqui, ape nas pássaros e feras são bem-vindos.
 
@@ -6475,7 +6487,7 @@ O Caminho Verde está repleto de ruínas antigas. Se os Heróis-jogadores decidi
 
 | RESULTADO DO DADO DE FAÇANHA | RESULTADO                | DESCRIÇÃO                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | ---------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                              | Hospitalidade Antiga     | Os Heróis-jogadores se deparam com umpequeno forte umpouco distante do Caminho Verde, cuidado por umvelho nobre que lhes oferece hospitalidade. Se aceitarem e o tratarem bem fazendo uma jogada bem-sucedida de **CORTESIA** , naquela noite sonharão com a glória das torres de Annúminas e as margens brilhantes do Lago Vesperturvo .Ao amanhecer, reduzem sua Sombra em 1, embora de manhã o bondo - so e velho nobre tenha desaparecido, e não haja sinal de que a fortaleza já tenha sido habitada. |
+| Runa de Gandalf              | Hospitalidade Antiga     | Os Heróis-jogadores se deparam com umpequeno forte umpouco distante do Caminho Verde, cuidado por umvelho nobre que lhes oferece hospitalidade. Se aceitarem e o tratarem bem fazendo uma jogada bem-sucedida de **CORTESIA** , naquela noite sonharão com a glória das torres de Annúminas e as margens brilhantes do Lago Vesperturvo .Ao amanhecer, reduzem sua Sombra em 1, embora de manhã o bondo - so e velho nobre tenha desaparecido, e não haja sinal de que a fortaleza já tenha sido habitada. |
 | 1                            | Estábulo Abandonado      | Encontrando acidentalmente as ruínas de um estábulo abandonado à beira da estrada, os Heróis-jo- gadores veem um corcel selvagem pastando na grama.A criatura majestosa pode ser acalmada com uma jogada bem-sucedida de **CAÇADA** ou de **INDUÇÃO** . Cada obtido representa uma oportunidade de treinamento e se um herói fizer três testes com pelo menos um obtido a cada vez dentro de uma semana, então o cavalo pode ser montado.                                                                  |
 | 2                            | O Fim do Turno           | Uma torre maltratada fica a uma pequena distância da estrada. Uma lua crescente é esculpida em pedra em sua entrada em arco. Se os Heróis-jogadores subirem ao topo em uma noite com lua crescente, encontrarão um único soldado de vigia. Oguarda pergunta educadamente se estão lá para rendê-lo e, se disserem que sim, o soldado se curva e depois desce as escadas - se alguém o seguir, perde o guarda de vista.                                                                                     |
 | 3                            | Anel de Pétalas e Pedras | Umpequeno anel de pedras brancas, coberto de belas flores silvestres, está não muito longe da estrada. Nenhum predador natural perigoso entrará nesse círculo.                                                                                                                                                                                                                                                                                                                                             |
@@ -6486,7 +6498,7 @@ O Caminho Verde está repleto de ruínas antigas. Se os Heróis-jogadores decidi
 | 8                            | Fazenda Queimada         | Aquilo que foi a casa de alguém que viveu no Caminho Verde, é agora uma pilha arruinada de escom- bros queimados. Umteste de **BUSCA** bem-sucedido revela que os ocupantes não escaparam do fogo, e que vários parecem ter sido mortos por flechas de orcs antes que as chamas os levassem.                                                                                                                                                                                                               |
 | 9                            | Sulista Deslocado        | Umsulista errante, exaurido e cansado de viajar, pede a caridade dos Heróis-jogadores, deixando-o compartilhar sua comida e fogo para a noite. Se for bem tratado, lhes fornecerá muitas histórias sobre seu país distante.                                                                                                                                                                                                                                                                                |
 | 10                           | Andarilho Morto          | Os personagens se deparam com o cadáver de um homem morto não mais do que alguns dias atrás com cortes cruéis e flechas de orcs. Suas roupas estão esfarrapadas, e um pequeno broche está preso sob sua capa, na forma de uma estrela radiante. Qualquerum que faça uma jogada bem-sucedida de **HISTÓRIA** pode identificá-lo como um Patrulheiro do Norte. Se seu broche for devolvido ao seu povo, um pequeno favor pode ser pedido em troca.                                                           |
-|                              | Tumba Corrompida         | Há muito tempo, guerras assolaram essas terras enquanto os reinos lutavam contra os exércitos do Rei Bruxo e entre si. Este túmulo já foi local de repouso de um grande capitão, mas agora é apenas o lar dos Espectros Mortais da antiga Angmar que irão assediar e atrasar a companhia.                                                                                                                                                                                                                  |
+| Olho de Sauron               | Tumba Corrompida         | Há muito tempo, guerras assolaram essas terras enquanto os reinos lutavam contra os exércitos do Rei Bruxo e entre si. Este túmulo já foi local de repouso de um grande capitão, mas agora é apenas o lar dos Espectros Mortais da antiga Angmar que irão assediar e atrasar a companhia.                                                                                                                                                                                                                  |
 
 ## AS COLINAS DOS TÚMULOS
 
@@ -6566,7 +6578,7 @@ Personagens que exploram as Colinas do Norte muitas vezes tropeçam em ruínas e
 
 | RESULTADO DO DADO DE FAÇANHA | RESULTADO                        | DESCRIÇÃO                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                              | Um Tesouro Secreto               | Os Heróis-jogadores descobrem um mosaico em espiral no chão de um prédio em ruínas. Um sucesso numa jogada de **BUSCA** revela uma placa removível de mármore. Debaixo dela está um tesouro, escon- dido ali desde antes da cidade ser saqueada. Pratos dourados, taças cravejadas de pedras preciosas, chifres de bebida envernizados e um pequeno amontoado de itens de valor estão ocultos aqui. A quantidade de pontos do Tesouro depende do Historiador. |
+| Runa de Gandalf              | Um Tesouro Secreto               | Os Heróis-jogadores descobrem um mosaico em espiral no chão de um prédio em ruínas. Um sucesso numa jogada de **BUSCA** revela uma placa removível de mármore. Debaixo dela está um tesouro, escon- dido ali desde antes da cidade ser saqueada. Pratos dourados, taças cravejadas de pedras preciosas, chifres de bebida envernizados e um pequeno amontoado de itens de valor estão ocultos aqui. A quantidade de pontos do Tesouro depende do Historiador. |
 | 1                            | Palavras Esquecidas              | Os Heróis-jogadores descobrem uma inscrição em adûnaico (numa parede, numa placa de mármore, ou num chão em mosaico, por exemplo). É preciso uma jogada bem sucedida de **HISTÓRIA** para tradu- zí-la. Oconteúdo sugere o paradeiro de um lugar que pode serA Cúpula da Visão (página 196), A Sala do Trono de Arvedui (veja a seguir) ou Os Registros do Último Rei (página 198).                                                                           |
 | 2                            | Uma Sombra Persistente           | Em uma jogada de **VIGILÂNCIA** bem-sucedida, os Heróis-jogadores descobrem que estão sendo segui- dos por alguém. O misterioso espião desaparece depois de algumas horas, ou se for chamado.                                                                                                                                                                                                                                                                 |
 | 3                            | Lar em Ruínas                    | Os jogadores descobrem os restos de uma casa de pedra que ainda é acessível. As inscrições permi- tem que a identifiquem como a antiga casa de um nobre de Arthedain, mas rabiscos frívolos e símbo - los imundos também indicam que o edifício sofreu com a ruína que Angmar trouxe à cidade.                                                                                                                                                                |
@@ -6575,7 +6587,7 @@ Personagens que exploram as Colinas do Norte muitas vezes tropeçam em ruínas e
 | 6-8                          | Estrutura Instável               | A terra sob seus pés cede, e os Heróis Jogadores caem em uma câmara de uma construção há muito caída.                                                                                                                                                                                                                                                                                                                                                         |
 | 9                            | Equipamento de Guerra Desgastado | Os Heróis-jogadores descobrem um elmo que, embora amassado e desgastado pelo tempo, parece que pode ser facilmente reparado e polido. Ele porta o brasão dos Reis de Arnor, e pode mais uma vez proteger uma fronte nobre.                                                                                                                                                                                                                                    |
 | 10                           | Alma Inquieta                    | Os Heróis-jogadores compartilham um sonho em que um guerreiro de Arthedain pede que eles dêem a seus restos mortais um enterro adequado. Uma jogada de **BUSCA** ao redor do acampamento revela uma torre de vigia desmoronada e o esqueleto de um guarda.                                                                                                                                                                                                    |
-|                              | Espíritos de Angmar              | Um grupo de Espectros Mortais de igual número aos Heróis-jogadores se ergue da escuridão de uma ruína queimada que se projeta dos campos das Colinas do Norte como uma ferida irregular. Eles ata- cam, cheios de maldade para com todos os que vivem e se atrevem a invadir o campo de vitória de seu Rei Bruxo há muito ausente.                                                                                                                            |
+| Olho de Sauron               | Espíritos de Angmar              | Um grupo de Espectros Mortais de igual número aos Heróis-jogadores se ergue da escuridão de uma ruína queimada que se projeta dos campos das Colinas do Norte como uma ferida irregular. Eles ata- cam, cheios de maldade para com todos os que vivem e se atrevem a invadir o campo de vitória de seu Rei Bruxo há muito ausente.                                                                                                                            |
 
 pessoa de entrar.
 
@@ -6707,13 +6719,13 @@ A Mata dos Trolls são literalmente cheios de cavernas, abertas ou escavadas por
 
 | RESULTADO DO DADO DE FAÇANHA | RESULTADO            | DESCRIÇÃO                                                                                                                                                                                                                                                       |
 | ---------------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                              | Abandonado           | Os Heróis-jogadores encontram um troll que foi transformado em pedra pelo sol enquanto estava perto de seu buraco. Uma jogada de **BUSCA** bem-sucedida revela itens que valem 1-2 pontos de Tesouro entre os ganhos ilícitos do troll.                         |
+| Runa de Gandalf              | Abandonado           | Os Heróis-jogadores encontram um troll que foi transformado em pedra pelo sol enquanto estava perto de seu buraco. Uma jogada de **BUSCA** bem-sucedida revela itens que valem 1-2 pontos de Tesouro entre os ganhos ilícitos do troll.                         |
 | 1-2                          | Ninho nas Raízes     | Uma grande árvore se abre em sua base e desce em um buraco raso e lamacento que serve como covil para um troll. É escorregadio e difícil de se andar nele.                                                                                                      |
 | 3-4                          | Torre Desmoronada    | Uma torre outrora magnífica que desmoronou tornou-se o lar de um troll. É de estabili- dade duvidosa e pode desmoronar inteiramente a qualquer momento.                                                                                                         |
 | 5-6                          | Caverna Rasa         | Uma caverna que não passa de alguns metros de profundidade fica ao lado de uma pequena colina de pedra e é tão parecida com um buraco de troll tradicional como se pode imaginar, e poderia ser facilmente evitada se não estivesse tão perto da Estrada Leste. |
 | 7-8                          | Atrás das Cachoeiras | Um pequeno lago com uma cachoeira baixa saindo de uma elevação de pedra serve como o lar de um troll, que entra na água antes de se abaixar sob a cachoeira e entrar, por trás dela, em um covil bem escondido.                                                 |
 | 9-10                         | Em Construção        | Os personagens encontram um troll que está arrancando árvores e rochas, liberando uma abertura que leva a uma caverna.                                                                                                                                          |
-|                              | Acompanhados         | Os Heróis-jogadores começam a explorar uma caverna que parece abandonada. Mas as aparências enganam e quando entram nas câmaras mais profundas na caverna, de repente ficam cara a cara com um troll!                                                           |
+| Olho de Sauron               | Acompanhados         | Os Heróis-jogadores começam a explorar uma caverna que parece abandonada. Mas as aparências enganam e quando entram nas câmaras mais profundas na caverna, de repente ficam cara a cara com um troll!                                                           |
 
 ## MONTE GRAM
 
@@ -7555,19 +7567,19 @@ JOGUE UM DADO DE FAÇANHA
 
 JOGUE UM DADO DE SUCESSO UMA VEZ PARA CADA COLUNA
 
-|     | O Fim         | 1 ...na Escuridão    | ...pelos Homens       |
-| --- | ------------- | -------------------- | --------------------- |
-| 1   | O Flagelo     | 1 ...na Escuridão    | ...pelos Homens       |
-| 2   | O Horror      | 2 ... do Abismo      | ...pelos Elfos        |
-| 3   | OTerror       | 2 ... do Abismo      | ...pelos Elfos        |
-| 4   | O Profanador  | 3 ...nas Profundezas | ...pelos Anões        |
-| 5   | O Devorador   | 3 ...nas Profundezas | ...pelos Anões        |
-| 6   | O Perseguidor | 4 ...do Poço         | ...pelos Orcs         |
-| 7   | O Caçador     | 4 ...do Poço         | ...pelos Orcs         |
-| 8   | A Sentinela   | 5 ...de Udûn         | ...pelos Sábios       |
-| 9   | O Rastejante  | 5 ...de Udûn         | ...pelos Sábios       |
-| 10  | O Espreitador | 6 ...na Água         | ...na história antiga |
-|     | A Chama       | 6 ...na Água         | ...na história antiga |
+| Olho de Sauron | O Fim         | 1 ...na Escuridão    | ...pelos Homens       |
+| -------------- | ------------- | -------------------- | --------------------- |
+| 1              | O Flagelo     | 1 ...na Escuridão    | ...pelos Homens       |
+| 2              | O Horror      | 2 ... do Abismo      | ...pelos Elfos        |
+| 3              | OTerror       | 2 ... do Abismo      | ...pelos Elfos        |
+| 4              | O Profanador  | 3 ...nas Profundezas | ...pelos Anões        |
+| 5              | O Devorador   | 3 ...nas Profundezas | ...pelos Anões        |
+| 6              | O Perseguidor | 4 ...do Poço         | ...pelos Orcs         |
+| 7              | O Caçador     | 4 ...do Poço         | ...pelos Orcs         |
+| 8              | A Sentinela   | 5 ...de Udûn         | ...pelos Sábios       |
+| 9              | O Rastejante  | 5 ...de Udûn         | ...pelos Sábios       |
+| 10             | O Espreitador | 6 ...na Água         | ...na história antiga |
+| Runa de Gandalf | A Chama      | 6 ...na Água         | ...na história antiga |
 
 - A Tabela 3 é usada para determinar o que os Heróis-jogadores notam momentos antes da Coisa aparecer e, em seguida, o que veem primeiro.
 - A Tabela 4 é usada para gerar um rumor sobre a Coisa.
@@ -7636,19 +7648,19 @@ O QUE VOCÊ VÊ PRIMEIRO...
 
 (JOGUE UM DADO DE FAÇANHA UMA VEZ)
 
-|     | ...nota um silêncio mortal           |     | ...é uma grande sombra, no meio da qual está uma forma escura                                |
-| --- | ------------------------------------ | --- | -------------------------------------------------------------------------------------------- |
-| 1   | ...ouve um assobio sinistro          | 1   | ...são suas grandes garras                                                                   |
-| 2   | ...ouve um rosnado baixo             | 2   | ...são seus olhos, brilhando no escuro                                                       |
-| 3   | ...vê os ossos de suas vítimas       | 3   | ...é que seu corpo é flácido e translúcido, como se fosse com - posto de material gelatinoso |
-| 4   | ...sente um calafrio                 | 4   | ...é sua boca aberta, abrindo e fechando como se estivesse bus - cando por ar                |
-| 5   | ...ouve um som ensurdecedor ou grito | 5   | ...é uma boca grande, com presas estranhamente semelhantes a dentes humanos                  |
-| 6   | ...nota seus rastros                 | 6   | ...é que enxames de insetos ou outros vermes estão rastejando diante dele                    |
-| 7   | ...ouve um grito aterrorizante       | 7   | ...é um tentáculo longo e sinuoso, deslizando em sua direção                                 |
-| 8   | ...sente um fedor horrível           | 8   | ...são suas enormes presas, tão grandes e longas que não conse - guem fechar a boca          |
-| 9   | ...sente uma rajada violenta de ar   | 9   | ...são seus olhos grandes e cegos                                                            |
-| 10  | ...ouve um som de zumbido            | 10  | ...são muitos chifres retorcidos de marfim manchado                                          |
-|     | ...sente um frio terrível            |     | ...é uma visão de uma bela criatura, um fantasma da mente                                    |
+| Olho de Sauron  | ...nota um silêncio mortal           | Olho de Sauron  | ...é uma grande sombra, no meio da qual está uma forma escura                                |
+| --------------- | ------------------------------------ | --------------- | -------------------------------------------------------------------------------------------- |
+| 1               | ...ouve um assobio sinistro          | 1               | ...são suas grandes garras                                                                   |
+| 2               | ...ouve um rosnado baixo             | 2               | ...são seus olhos, brilhando no escuro                                                       |
+| 3               | ...vê os ossos de suas vítimas       | 3               | ...é que seu corpo é flácido e translúcido, como se fosse com - posto de material gelatinoso |
+| 4               | ...sente um calafrio                 | 4               | ...é sua boca aberta, abrindo e fechando como se estivesse bus - cando por ar                |
+| 5               | ...ouve um som ensurdecedor ou grito | 5               | ...é uma boca grande, com presas estranhamente semelhantes a dentes humanos                  |
+| 6               | ...nota seus rastros                 | 6               | ...é que enxames de insetos ou outros vermes estão rastejando diante dele                    |
+| 7               | ...ouve um grito aterrorizante       | 7               | ...é um tentáculo longo e sinuoso, deslizando em sua direção                                 |
+| 8               | ...sente um fedor horrível           | 8               | ...são suas enormes presas, tão grandes e longas que não conse - guem fechar a boca          |
+| 9               | ...sente uma rajada violenta de ar   | 9               | ...são seus olhos grandes e cegos                                                            |
+| 10              | ...ouve um som de zumbido            | 10              | ...são muitos chifres retorcidos de marfim manchado                                          |
+| Runa de Gandalf | ...sente um frio terrível            | Runa de Gandalf | ...é uma visão de uma bela criatura, um fantasma da mente                                    |
 
 ## TABELA 4. UM BOATO SOBRE A COISA
 
@@ -7688,13 +7700,13 @@ O QUE VOCÊ VÊ PRIMEIRO...
 
 | JOGADA DO DADO DE FAÇANHA | NÍVEL DE ATRIBUTO E ÓDIO | ARMADURA | RESISTÊNCIA | PODER | PROFICIÊNCIA DE COMBATE | No. DE HABILIDADES MORTAIS |
 | ------------------------- | ------------------------ | -------- | ----------- | ----- | ----------------------- | -------------------------- |
-|                           | 12                       | 5d       | 120         | 3     | 4                       | 5                          |
+| Olho de Sauron            | 12                       | 5d       | 120         | 3     | 4                       | 5                          |
 | 1-2                       | 11                       | 4d       | 110         | 3     | 3                       | 4                          |
 | 3-4                       | 10                       | 4d       | 100         | 3     | 3                       | 4                          |
 | 5-6                       | 9                        | 3d       | 90          | 2     | 3                       | 3                          |
 | 7-8                       | 8                        | 3d       | 80          | 2     | 3                       | 3                          |
 | 9-10                      | 7                        | 3d       | 70          | 2     | 3                       | 2                          |
-|                           | 6                        | 2d       | 60          | 2     | 2                       | 2                          |
+| Runa de Gandalf           | 6                        | 2d       | 60          | 2     | 2                       | 2                          |
 
 ## TABELA 7. FORMAS DE ATAQUE
 
@@ -7708,16 +7720,16 @@ O QUE VOCÊ VÊ PRIMEIRO...
 
 ## JOGUE UM DADO DE FAÇANHA
 
-|     | Criatura de Terror     | No início da primeira rodada da batalha, todos os Heróis-jogadores à vista de uma ou mais cria - turas com essa habilidade ganham 3 pontos de Sombra (Pavor). Aqueles que falham em seu teste de Sombra estão assustados e não podem gastar Esperança pelo resto da luta. |
-| --- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Ferimento Mortal       | Alvos Feridos fazem uma jogada Desfavorecida do dado de Façanha para determinar a gravi - dade de seu ferimento.                                                                                                                                                          |
-| 2   | Habitante das Trevas   | Todos as jogadas são Favorecidas enquanto na escuridão.                                                                                                                                                                                                                   |
-| 3   | Grande Salto           | Gaste 1 de Ódio para atacar qualquer Herói-jogador, em qualquer posição de combate, incluindo na Retaguarda.                                                                                                                                                              |
-| 4   | Força Horrível         | Se a criatura acertar e causar um Golpe Perfurante , gaste 1 de Ódio para fazer a jogada de Pro- teção do alvo ser Desfavorecida.                                                                                                                                         |
-| 5   | Veneno                 | Se um ataque resultar em um Ferimento, o alvo também está envenenado (consulte a página 134).                                                                                                                                                                             |
-| 6   | Desumano               | A Coisa não é afetada pela tarefa de combate Intimidar Inimigo, a menos que um sucesso Mágico seja obtido.                                                                                                                                                                |
-| 7   | Pele Grossa            | Gaste 1 ponto de Ódio para ganhar (2d) em uma jogada de Proteção.                                                                                                                                                                                                         |
-| 8   | Causar Medo            | Gaste 1 de Ódio para fazer com que todos os Heróis-jogadores à vista ganhem um número de pontos de Sombra (Pavor) igual ao valor de Poder da criatura. Aqueles que falham no seu teste de Sombra estão assustados e não podem gastar Esperança pelo resto da luta.        |
-| 9   | Velocidade de Serpente | Quando alvo de um ataque, gaste 1 de Ódio para tornar a jogada de ataque Desfavorecida.                                                                                                                                                                                   |
-| 10  | Cheiro Fétido          | Gaste 1 ponto de Ódio para fazer com que todos os combatentes engajados com a coisa percam (1d) em todos os testes da rodada.                                                                                                                                             |
-|     | Medo de Fogo.          | A coisa perde 1 de Ódio no início de cada rodada em que está envolvida em combate corpo a corpo com um adversário empunhando uma tocha ou outro tipo de item em chamas.                                                                                                   |
+| Olho de Sauron  | Criatura de Terror     | No início da primeira rodada da batalha, todos os Heróis-jogadores à vista de uma ou mais cria - turas com essa habilidade ganham 3 pontos de Sombra (Pavor). Aqueles que falham em seu teste de Sombra estão assustados e não podem gastar Esperança pelo resto da luta. |
+| --------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1               | Ferimento Mortal       | Alvos Feridos fazem uma jogada Desfavorecida do dado de Façanha para determinar a gravi - dade de seu ferimento.                                                                                                                                                          |
+| 2               | Habitante das Trevas   | Todos as jogadas são Favorecidas enquanto na escuridão.                                                                                                                                                                                                                   |
+| 3               | Grande Salto           | Gaste 1 de Ódio para atacar qualquer Herói-jogador, em qualquer posição de combate, incluindo na Retaguarda.                                                                                                                                                              |
+| 4               | Força Horrível         | Se a criatura acertar e causar um Golpe Perfurante , gaste 1 de Ódio para fazer a jogada de Pro- teção do alvo ser Desfavorecida.                                                                                                                                         |
+| 5               | Veneno                 | Se um ataque resultar em um Ferimento, o alvo também está envenenado (consulte a página 134).                                                                                                                                                                             |
+| 6               | Desumano               | A Coisa não é afetada pela tarefa de combate Intimidar Inimigo, a menos que um sucesso Mágico seja obtido.                                                                                                                                                                |
+| 7               | Pele Grossa            | Gaste 1 ponto de Ódio para ganhar (2d) em uma jogada de Proteção.                                                                                                                                                                                                         |
+| 8               | Causar Medo            | Gaste 1 de Ódio para fazer com que todos os Heróis-jogadores à vista ganhem um número de pontos de Sombra (Pavor) igual ao valor de Poder da criatura. Aqueles que falham no seu teste de Sombra estão assustados e não podem gastar Esperança pelo resto da luta.        |
+| 9               | Velocidade de Serpente | Quando alvo de um ataque, gaste 1 de Ódio para tornar a jogada de ataque Desfavorecida.                                                                                                                                                                                   |
+| 10              | Cheiro Fétido          | Gaste 1 ponto de Ódio para fazer com que todos os combatentes engajados com a coisa percam (1d) em todos os testes da rodada.                                                                                                                                             |
+| Runa de Gandalf | Medo de Fogo.          | A coisa perde 1 de Ódio no início de cada rodada em que está envolvida em combate corpo a corpo com um adversário empunhando uma tocha ou outro tipo de item em chamas.                                                                                                   |
