@@ -108,7 +108,14 @@ export function createBelbaWorkedExample(): Character {
   character.current_hope = 15;
   character.treasure = 30;
   character.war_gear.weapons = [
-    { type: 'Sword', load: 2 },
+    {
+      type: 'Sword',
+      load: 2,
+      // §13: Belba's Keen Reward applies to her Sword. Persist the linkage so
+      // the printed sheet renders the lock glyph and the rule that the item is
+      // inalienable (BR:2472) holds across reloads.
+      rewards_applied: [{ id: 'keen', name: 'Keen', origin: 'STARTING' }],
+    },
     { type: 'Bow', load: 2 },
   ];
   character.war_gear.armour = { type: 'Leather Shirt', load: 3 };

@@ -32,28 +32,42 @@ function backfillShadowPath(character: Character): Character {
 function backfillWarGearIds(character: Character): Character {
   const { war_gear } = character;
   const weapons = war_gear.weapons.map((weapon) => {
-    if (weapon.id) return weapon;
-    const id = legacyNameToWeaponId(weapon.type);
-    return id ? { ...weapon, id } : weapon;
+    const withRewards = weapon.rewards_applied ? weapon : { ...weapon, rewards_applied: [] };
+    if (withRewards.id) return withRewards;
+    const id = legacyNameToWeaponId(withRewards.type);
+    return id ? { ...withRewards, id } : withRewards;
   });
 
   const armour = (() => {
     if (!war_gear.armour) return war_gear.armour;
-    if (war_gear.armour.id) return war_gear.armour;
-    const id = legacyNameToArmourId(war_gear.armour.type);
-    return id ? { ...war_gear.armour, id } : war_gear.armour;
+    const withRewards = war_gear.armour.rewards_applied
+      ? war_gear.armour
+      : { ...war_gear.armour, rewards_applied: [] };
+    if (withRewards.id) return withRewards;
+    const id = legacyNameToArmourId(withRewards.type);
+    return id ? { ...withRewards, id } : withRewards;
+  })();
+
+  const helm = (() => {
+    if (!war_gear.helm) return war_gear.helm;
+    return war_gear.helm.rewards_applied
+      ? war_gear.helm
+      : { ...war_gear.helm, rewards_applied: [] };
   })();
 
   const shield = (() => {
     if (!war_gear.shield) return war_gear.shield;
-    if (war_gear.shield.id) return war_gear.shield;
-    const id = legacyNameToShieldId(war_gear.shield.type);
-    return id ? { ...war_gear.shield, id } : war_gear.shield;
+    const withRewards = war_gear.shield.rewards_applied
+      ? war_gear.shield
+      : { ...war_gear.shield, rewards_applied: [] };
+    if (withRewards.id) return withRewards;
+    const id = legacyNameToShieldId(withRewards.type);
+    return id ? { ...withRewards, id } : withRewards;
   })();
 
   return {
     ...character,
-    war_gear: { ...war_gear, weapons, armour, shield },
+    war_gear: { ...war_gear, weapons, armour, helm, shield },
   };
 }
 

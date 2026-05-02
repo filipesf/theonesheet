@@ -94,12 +94,18 @@ export type Weapon = {
   id?: WeaponId;
   type: string;
   load: number;
+  // DOMAIN_SPEC §3.5 / §10.3: a piece of gear may carry one or more Rewards.
+  // BR:2472 makes such items inalienable — UI surfaces a lock glyph. Derived
+  // `protected` is computed at render (`rewards_applied.length > 0`); per the
+  // architecture rule derived flags never persist.
+  rewards_applied?: Reward[];
 };
 
 export type Armour = {
   id?: ArmourId;
   type: string;
   load: number;
+  rewards_applied?: Reward[];
 };
 
 export type Helm = {
@@ -108,6 +114,7 @@ export type Helm = {
   // Transient combat-scoped flag — see DOMAIN_SPEC §4.4. Never persists across
   // sessions; resets on combat exit.
   removed_in_combat?: boolean;
+  rewards_applied?: Reward[];
 };
 
 export type Shield = {
@@ -116,6 +123,7 @@ export type Shield = {
   load: number;
   parry_bonus: number;
   destroyed: boolean;
+  rewards_applied?: Reward[];
 };
 
 export type WarGear = {
